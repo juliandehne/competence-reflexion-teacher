@@ -1,0 +1,15 @@
+.span.competenceGridEntry {
+	min-width: 200px !important;
+}
+
+.flexiflex {
+	display: flex;
+}
+
+.suggestedCompetenceCluster {
+	border-color: black;
+	border-width: 1px;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+}
