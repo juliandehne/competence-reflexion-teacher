@@ -18,11 +18,13 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.GraphTriple;
+import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+
+import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "templateCompetenceView")
 @SessionScoped
@@ -43,26 +45,72 @@ public class TemplateCompetenceView implements Serializable{
 	private String selectedCompetenceToNode;
 	private String selectedCompetenceFromNode;
 	
-	private Graph graph;
+	private LearningTemplateResultSet learningTemplateResultSet;
 	
-	private TreeNode root;
+	private Map<String, List<TreeNode>> treeNodeMap;
 
 	@PostConstruct
 	public void init() {
-		graph = new Graph();
-		root = new DefaultTreeNode("Root", null);
-		
+		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate("TestLernprojekt");
+		treeNodeMap = new HashMap<String, List<TreeNode>>();
 		competencen = new HashMap<String, List<String>>();
 		catchWords = new ArrayList<String>();
 		
-		String[] test = {"java","pascal","C++"};
-		catchWords.addAll(Arrays.asList(test));
+		updateListAndMap();
 	}
 	
+	private void updateListAndMap() {
+		for(Entry<GraphTriple, String[]> entry : learningTemplateResultSet.getCatchwordMap().entrySet()) {
+			for(String catchword : entry.getValue()) {
+				if(!catchWords.contains(catchword)) {
+					catchWords.add(catchword);
+					treeNodeMap.put(catchword, getTreeForCatchword(catchword));
+				}	
+			}
+		}
+		catchWords.add("all");
+		treeNodeMap.put("all", getListTreeRootForGraph(learningTemplateResultSet.getResultGraph()));
+	}
+
 	public void update(String learnProject) {
 		this.learnProject = learnProject;
+		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learnProject);
+		updateListAndMap();
 	}
 	
+	private List<TreeNode> getTreeForCatchword(String catchword) {
+		Graph graph = getGraphForCatchword(catchword);
+		return getListTreeRootForGraph(graph);
+	}
+
+	private List<TreeNode> getListTreeRootForGraph(Graph graph) {
+		final Map<Integer, DefaultTreeNode> nodes = new HashMap<Integer, DefaultTreeNode>();
+		for(Entry<Integer, String> e: graph.getNodeIdValues().entrySet()) {
+			DefaultTreeNode node = new DefaultTreeNode(e.getValue());
+			node.setExpanded(true);
+			node.getChildren().add(new DefaultTreeNode("+"));
+			nodes.put(e.getKey(), node);
+		}
+		final List<TreeNode> roots = new ArrayList<TreeNode>();
+		for(GraphTriple t : graph.triples) {
+			roots.remove(nodes.get(t.getNode2id()));
+			roots.add(nodes.get(t.getNode1id()));
+			nodes.get(t.getNode1id()).getChildren().add(0,nodes.get(t.getNode2id()));
+		}
+		return roots;
+	}
+
+	private Graph getGraphForCatchword(String catchword) {
+		final Graph graph = new Graph();
+		for(Entry<GraphTriple, String[]> entry : learningTemplateResultSet.getCatchwordMap().entrySet()) {
+			if(Arrays.asList(entry.getValue()).contains(catchword)) {
+				GraphTriple triple = entry.getKey();
+				graph.addTriple(triple.fromNode, triple.toNode, triple.label, triple.directed);
+			}
+		}
+		return graph;
+	}
+
 	public void addNewCatchWord(ActionEvent e) {
 		catchWords.add(newCatchWord);
 	}
@@ -104,28 +152,7 @@ public class TemplateCompetenceView implements Serializable{
 	}
 	
 	public void branchCompetenceAction(ActionEvent e) {
-		System.out.println("From node: " + selectedCompetenceFromNode);
-		System.out.println("To Node: " + selectedCompetenceToNode);
-		
-		graph.addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, "", true);
-		
-		convertGraphToTree();
-	}
-	
-	private void convertGraphToTree() {
-		Map<Integer, DefaultTreeNode> nodes = new HashMap<Integer, DefaultTreeNode>();
-		for(GraphNode n : graph.nodes) {
-			nodes.put(n.getId(), new DefaultTreeNode(n.getLabel()));
-		}
-		int n = 0;
-		root.getChildren().clear();
-		for(GraphTriple t : graph.triples) {
-			if(n == 0) {
-				root.getChildren().add(nodes.get(t.getNode1id()));
-				n++;
-			}
-			nodes.get(t.getNode1id()).getChildren().add(nodes.get(t.getNode2id()));
-		}
+
 	}
 
 	public String getLearnProject() {
@@ -192,20 +219,20 @@ public class TemplateCompetenceView implements Serializable{
 		this.selectedCompetenceFromNode = selectedCompetenceFromNode;
 	}
 
-	public Graph getGraph() {
-		return graph;
+	public LearningTemplateResultSet getLearningTemplateResultSet() {
+		return learningTemplateResultSet;
 	}
 
-	public void setGraph(Graph graph) {
-		this.graph = graph;
+	public void setLearningTemplateResultSet(
+			LearningTemplateResultSet learningTemplateResultSet) {
+		this.learningTemplateResultSet = learningTemplateResultSet;
 	}
 
-	public TreeNode getRoot() {
-		return root;
+	public Map<String, List<TreeNode>> getTreeNodeMap() {
+		return treeNodeMap;
 	}
 
-	public void setRoot(TreeNode root) {
-		this.root = root;
+	public void setTreeNodeMap(Map<String, List<TreeNode>> treeNodeMap) {
+		this.treeNodeMap = treeNodeMap;
 	}
-	
 }

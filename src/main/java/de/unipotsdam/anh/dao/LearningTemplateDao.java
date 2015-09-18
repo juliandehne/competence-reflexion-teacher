@@ -101,43 +101,23 @@ public class LearningTemplateDao {
 	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, String... catchWords) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target("http://localhost:8084/competences/json/addOne/");
+		Response response = null;
 		try {
-			Response response = webResource
+			response = webResource
 				.queryParam("competence", competence)
 				.queryParam("operator", operator)
-				.queryParam("catchwords",(Object[]) catchWords)
+				.queryParam("catchwords", catchWords)
 				.queryParam("learningTemplateName", learningTemplate)
 				.request()
 				.post(null);
-			return response.getStatus();
+			
 		} catch ( Exception e) {
 			e.printStackTrace();
 		} finally {
 			client.close();
 		}
-		return -1;
-	}
-	
-	/**
-	 * GET the operator for a given competence
-	 * @param competence
-	 * @return
-	 */
-	public static synchronized String getOperatorFromCompetence(String competence) {
-		final Client client = ClientBuilder.newClient();
-		final WebTarget webResource = client.target("http://localhost:8084/competences/json/operator/");
-		try {
-			Response response = webResource
-				.queryParam("competence", competence)
-				.request()
-				.post(null);
-			return response.readEntity(String.class);
-		} catch ( Exception e) {
-			e.printStackTrace();
-		} finally {
-			client.close();
-		}
-		return null;
+		return response.getStatus();
+		
 	}
 	
 	/**
