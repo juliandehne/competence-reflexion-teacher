@@ -34,8 +34,8 @@ public class LearningTemplateDaoTest {
 		int result3 = LearningTemplateDao.createOneCompetence("Java 3", "analyse", "TestLernprojekt", "java");
 		
 		Assert.assertEquals(200, result1);
-//		Assert.assertEquals(200, result2);
-//		Assert.assertEquals(200, result3);
+		Assert.assertEquals(200, result2);
+		Assert.assertEquals(200, result3);
 	}
 
 //	@Test

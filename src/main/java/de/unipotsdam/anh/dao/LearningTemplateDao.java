@@ -98,7 +98,7 @@ public class LearningTemplateDao {
 	 * @param catchWords
 	 * @return
 	 */
-	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, String... catchWords) {
+	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, String catchWords) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target("http://localhost:8084/competences/json/addOne/");
 		Response response = null;

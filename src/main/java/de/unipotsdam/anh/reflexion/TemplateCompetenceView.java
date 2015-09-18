@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -48,6 +49,7 @@ public class TemplateCompetenceView implements Serializable{
 	private LearningTemplateResultSet learningTemplateResultSet;
 	
 	private Map<String, List<TreeNode>> treeNodeMap;
+	private TreeNode selectedNode;
 
 	@PostConstruct
 	public void init() {
@@ -111,6 +113,13 @@ public class TemplateCompetenceView implements Serializable{
 		return graph;
 	}
 
+	public void onNodeSelect(NodeSelectEvent event) {
+        this.selectedCompetenceFromNode = (String) event.getTreeNode().getParent().getData();
+        System.out.println(selectedCompetenceFromNode);
+        System.out.println("selected TreeNode: " + event.getTreeNode().getData());
+        System.out.println("Parent from selected TreeNode: " + event.getTreeNode().getParent().toString());
+    }
+	
 	public void addNewCatchWord(ActionEvent e) {
 		catchWords.add(newCatchWord);
 	}
@@ -234,5 +243,13 @@ public class TemplateCompetenceView implements Serializable{
 
 	public void setTreeNodeMap(Map<String, List<TreeNode>> treeNodeMap) {
 		this.treeNodeMap = treeNodeMap;
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
 	}
 }

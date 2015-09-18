@@ -76,8 +76,12 @@
 <!-- 			        </p:inplace> -->
 
 						<ui:repeat var="tree" value="#{templateCompetenceView.treeNodeMap.get(catchWord)}" >
-							<p:tree value="#{tree}" var="node"
+							<p:tree value="#{tree}" var="node" selectionMode="single" 
+								selection="#{templateCompetenceView.selectedNode}"
 								dynamic="true" orientation="horizontal">
+								<p:ajax event="select"
+									oncomplete="PF('branchCompetenceDialog').show()"
+									listener="#{templateCompetenceView.onNodeSelect}" />
 								<p:treeNode >
 									<h:outputText value="#{node}" />
 								</p:treeNode>
@@ -112,8 +116,9 @@
 					<p:commandButton value="abbrechen" onclick="PF('newCompetenceDialog').hide()"/>
 				</p:dialog>
 				
-				<p:dialog header="Kompetence abzweigen" widgetVar="branchCompetenceDialog" 
+				<p:dialog header="Kompetence abzweigen" widgetVar="branchCompetenceDialog"
 					modal="true" height="100" closeOnEscape="true">
+					<h:outputText value="Abzweigung von #{templateCompetenceView.selectedCompetenceFromNode}! " />
 				    <h:outputText value="Wählen Sie eine Kompetenz aus! " />
 				    <br />
 				    <p:autoComplete maxResults="10"
