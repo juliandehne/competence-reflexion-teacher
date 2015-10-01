@@ -7,7 +7,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
->
+	xmlns:pe="http://primefaces.org/ui/extensions">
 	<h:head />
 	<h:body>
 		<h:form id="learningTemplateForm">
@@ -65,23 +65,23 @@
 
 				<h2>
 					<h:outputText id="selectedLearningProject"
-						value="Lernprojekte : #{templateCompetenceView.learnProject}" />
+						value="Lernprojekte : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
 				</h2>
-			    
-			    
-				<ui:repeat var="catchWord" value="#{templateCompetenceView.catchWords}" >
+						
+				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" >
 					<h5><h:outputText value="Überschrift : #{catchWord} " /></h5>
 <!-- 					<p:inplace id="ajax" editor="true"> -->
 <!-- 			            <p:inputText value="#{catchWord} " required="true" label="text" /> -->
 <!-- 			        </p:inplace> -->
 
-						<ui:repeat var="tree" value="#{templateCompetenceView.treeNodeMap.get(catchWord)}" >
+						<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}" >
 							<p:tree value="#{tree}" var="node" selectionMode="single" 
 								selection="#{templateCompetenceView.selectedNode}"
-								dynamic="true" orientation="horizontal">
+								dynamic="true" orientation="horizontal"
+								style="width:60%;height:60%;">
 								<p:ajax event="select"
-									oncomplete="PF('branchCompetenceDialog').show()"
-									listener="#{templateCompetenceView.onNodeSelect}" />
+									oncomplete="if(true) { PF('branchCompetenceDialog').show(); }"
+									listener="#{templateCompetenceView.onNodeSelect(catchWord)}" />
 								<p:treeNode >
 									<h:outputText value="#{node}" />
 								</p:treeNode>
@@ -89,13 +89,6 @@
 						</ui:repeat>
 						
 						
-						<ui:repeat var="competence" value="#{templateCompetenceView.competencen.get(catchWord)}" >
-			        	<h:outputText value=" #{competence}"/>
-			        	(<p:commandLink onclick="PF('branchCompetenceDialog').show()"
-			        		actionListener="#{templateCompetenceView.selecteCompetence(competence)}">
-					        <h:outputText value="Abzweigung" />
-					    </p:commandLink>) ->
-			        </ui:repeat>
 			        
 			        <p:commandButton icon="ui-icon-plus" onclick="PF('newCompetenceDialog').show()"
 			        	action="#{templateCompetenceView.selecteCatchWord(catchWord)}"/>
@@ -120,10 +113,10 @@
 					modal="true" height="100" closeOnEscape="true">
 					<h:outputText value="Abzweigung von #{templateCompetenceView.selectedCompetenceFromNode}! " />
 				    <h:outputText value="Wählen Sie eine Kompetenz aus! " />
-				    <br />
-				    <p:autoComplete maxResults="10"
-						value="#{templateCompetenceView.selectedCompetenceToNode}"
-						completeMethod="#{templateCompetenceView.complete}" />
+						
+					<br />
+					<p:inputText
+						value="#{templateCompetenceView.selectedCompetenceToNode}" />
 				    <br />
 					<p:commandButton value="abzweigen" icon="ui-icon-check"
 						update="learningProjectEdit"
@@ -142,7 +135,7 @@
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<h:outputText value="Geben sie eine Überschrift ein!  " />
 					<p:inputText
-						value="#{templateCompetenceView.newCatchWord}" />
+						value="#{competencenTreeView.newCatchWord}" />
 					<br />
 <!-- 					<h:outputText -->
 <!-- 						value="Geben Sie mind. ein Schlagwort ein (kommasepariert)!  " /> -->
@@ -151,15 +144,23 @@
 <!-- 					<br /> -->
 					<p:commandButton value="erstellen" icon="ui-icon-check"
 						update="learningProjectEdit"
-						actionListener="#{templateCompetenceView.addNewCatchWord}" />
+						actionListener="#{competencenTreeView.addNewCatchWord}" />
 					<p:button value="abbrechen" onclick="return false">
 						<p:effect type="fade" event="click" for="newHeadField">
 							<f:param name="mode" value="'hide'" />
 						</p:effect>
 					</p:button>
 				</h:panelGroup>
-				
-				<hr />
+			</p:panel>
+			
+			<br />
+			<br />
+			<br />
+			
+			<p:panel>
+								    <p:autoComplete maxResults="10"
+						completeMethod="#{templateCompetenceView.complete}" />
+
 				<ui:repeat var="competenceHeader" value="#{templateCompetenceView2.competenceHeaders}">
 					<h6>
 						<h:outputText value="Überschrift 1: " />
@@ -216,7 +217,6 @@
 					</h:panelGroup>
 					<hr />
 				</ui:repeat>
-				
 			</p:panel>
 		</p:outputPanel>
 		</h:form>

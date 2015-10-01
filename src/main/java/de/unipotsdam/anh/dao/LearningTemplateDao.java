@@ -12,6 +12,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.glassfish.jersey.filter.LoggingFilter;
+import java.util.logging.Logger;
+
 import uzuzjmd.competence.shared.DESCRIPTORSETType;
 import uzuzjmd.competence.shared.StringList;
 import uzuzjmd.competence.shared.dto.EPOSTypeWrapper;
@@ -23,6 +26,7 @@ import com.google.gson.GsonBuilder;
 
 public class LearningTemplateDao {
 
+	private static final LoggingFilter logginFilter = new LoggingFilter(Logger.getLogger(LearningTemplateDao.class.getName()), true);
 	
 	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
@@ -32,6 +36,7 @@ public class LearningTemplateDao {
 					.target("http://localhost:8084/competences/xml/learningtemplate/get/"
 										+ learningTemplateName);
 			LearningTemplateResultSet result = webResource
+												.register(logginFilter)
 												.request(MediaType.APPLICATION_XML)
 												.get(LearningTemplateResultSet.class);
 			return result;
@@ -53,6 +58,7 @@ public class LearningTemplateDao {
 		final WebTarget webResource = client.target("http://localhost:8084/competences/json/learningtemplate/add/");
 		try {
 			Response response = webResource
+				.register(logginFilter)
 				.queryParam("learningTemplateName", learningTemplateName)
 				.request(MediaType.APPLICATION_JSON)
 				.post(null);
@@ -73,6 +79,7 @@ public class LearningTemplateDao {
 			final WebTarget webResource = client
 					.target("http://localhost:8084/competences/xml/learningtemplate/add/"
 									+ learningTemplateName)
+					.register(logginFilter)
 					.queryParam("learningTemplateResultSet",
 							learningTemplateResultSet);
 			
@@ -104,6 +111,7 @@ public class LearningTemplateDao {
 		Response response = null;
 		try {
 			response = webResource
+				.register(logginFilter)
 				.queryParam("competence", competence)
 				.queryParam("operator", operator)
 				.queryParam("catchwords", catchWords)
@@ -129,6 +137,7 @@ public class LearningTemplateDao {
 		final WebTarget webResource = client.target("http://localhost:8084/competences/xml/learningtemplates/");
 		try {
 			StringList response = webResource
+				.register(logginFilter)
 				.request(MediaType.APPLICATION_XML)
 				.get(StringList.class);
 			
@@ -149,6 +158,7 @@ public class LearningTemplateDao {
 		final Gson gson = new GsonBuilder().create();
 		try {
 			Response response = webResource
+				.register(logginFilter)
 				.request(MediaType.APPLICATION_JSON)
 				.get();
 			return gson.fromJson(response.readEntity(String.class), Graph.class);
@@ -184,6 +194,7 @@ public class LearningTemplateDao {
 //		final WebTarget webResource = client.target("http://localhost:8084/competences/xml/learningtemplates/addEpos");
 //		try {
 //			Response response = webResource
+//									.register(logginFilter)
 //									.request(MediaType.APPLICATION_XML)
 //									.post(Entity.entity(typeWrapper, MediaType.APPLICATION_XML));
 //			
