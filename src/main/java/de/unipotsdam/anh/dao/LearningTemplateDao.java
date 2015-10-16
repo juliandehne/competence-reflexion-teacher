@@ -58,11 +58,11 @@ public class LearningTemplateDao {
 	public static synchronized int createTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(BASE_HOST
-				+ "competences/json/learningtemplate/add/");
+				+ "competences/xml/learningtemplate/add/"+learningTemplateName);
 		try {
 			Response response = webResource.register(logginFilter)
-					.queryParam("learningTemplateName", learningTemplateName)
-					.request(MediaType.APPLICATION_JSON).post(null);
+					.queryParam("learningTemplateName", learningTemplateName)				
+					.request(MediaType.APPLICATION_XML).post(null);
 			return response.getStatus();
 		} catch (Exception e) {
 			e.printStackTrace();
