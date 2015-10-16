@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,7 @@ public class CompetencenTreeView implements Serializable{
 	private List<String> catchWords;
 	
 	private String newCatchWord;
+	private String newOperation;
 	
 	@PostConstruct
 	public void init() {
@@ -37,32 +40,27 @@ public class CompetencenTreeView implements Serializable{
 		catchWords = new ArrayList<String>();
 	}
 	
+	//TODO update server with only one new catchword
 	public void addNewCatchWord(ActionEvent e) {
 		catchWords.add(newCatchWord);
 	}
 	
+	//TODO LearningTemplateResultSet have only GraphRoot
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
-		treeNodeMap.clear();
-		catchWords.clear();
-		
-		if(learningTemplateResultSet == null) {
+		if(learningTemplateResultSet == null || learningTemplateResultSet.getResultGraph() == null) {
 			return;
 		}
-		updateListAndMap(learningTemplateResultSet);
 		
-		// test all graph:
-		catchWords.add("all");
-		treeNodeMap.put("all", getListTreeRootForGraph(learningTemplateResultSet.getResultGraph()));
-	}
-
-	private void updateListAndMap(LearningTemplateResultSet learningTemplateResultSet) {
+		treeNodeMap.clear();
+		catchWords.clear();
+		final Set<String> tmp = new HashSet<String>();
 		for(Entry<GraphTriple, String[]> entry : learningTemplateResultSet.getCatchwordMap().entrySet()) {
-			for(String catchword : entry.getValue()) {
-				if(!catchWords.contains(catchword) && !"all".equals(catchword)) {
-					catchWords.add(catchword);
-					treeNodeMap.put(catchword, getTreeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
-				}	
-			}
+			tmp.addAll(Arrays.asList(entry.getValue()));
+		}
+		
+		catchWords.addAll(tmp);
+		for(String catchword : catchWords) {
+			treeNodeMap.put(catchword, getTreeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
 		}
 	}
 
@@ -100,6 +98,14 @@ public class CompetencenTreeView implements Serializable{
 		this.newCatchWord = newCatchWord;
 	}
 
+	public String getNewOperation() {
+		return newOperation;
+	}
+
+	public void setNewOperation(String newOperation) {
+		this.newOperation = newOperation;
+	}
+
 	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
 		Graph graph = getGraphForCatchword(catchwordMap, catchword);
 		return getListTreeRootForGraph(graph);
@@ -114,12 +120,12 @@ public class CompetencenTreeView implements Serializable{
 		for(Entry<Integer, String> e: graph.getNodeIdValues().entrySet()) {
 			nodes.put(e.getValue(), createTreeNode(e.getValue()));
 		}
+		
 		final List<TreeNode> roots = new ArrayList<TreeNode>();
 		for(GraphTriple t : graph.triples) {
-//			roots.remove(nodes.get(t.toNode));
-//			if(!roots.contains(nodes.get(t.fromNode)))
-//				roots.add(nodes.get(t.fromNode));
-			nodes.get(t.fromNode).getChildren().add(0,nodes.get(t.toNode));
+			TreeNode fromNode = nodes.get(t.fromNode);
+			TreeNode toNode = nodes.get(t.toNode);
+			fromNode.getChildren().add((fromNode.getChildCount() - 1),toNode);
 		}
 		
 		for(Entry<String, TreeNode> n : nodes.entrySet()) {
@@ -143,10 +149,9 @@ public class CompetencenTreeView implements Serializable{
 	}
 	
 	private TreeNode createTreeNode(String label) {
-		TreeNode node = new DefaultTreeNode(label);
+		final TreeNode node = new DefaultTreeNode(label);
 		node.setExpanded(true);
-		node.getChildren().add(new DefaultTreeNode("+"));
-		
+		node.getChildren().add( new DefaultTreeNode("+"));
 		return node;
 	}
 }

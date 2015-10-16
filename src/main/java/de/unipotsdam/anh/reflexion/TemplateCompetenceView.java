@@ -17,13 +17,12 @@ import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.TreeNode;
 
+import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
-
-import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "templateCompetenceView")
 @SessionScoped
@@ -49,15 +48,21 @@ public class TemplateCompetenceView implements Serializable{
 
 	@PostConstruct
 	public void init() {
-		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate("TestLernprojekt");
+		learningTemplateResultSet = null;
 		competencen = new HashMap<String, List<String>>();
 		
 		competencenTreeView.update(learningTemplateResultSet);
 	}
 
+	//TODO delete test method "getLearningTemplateTestData"
 	public void update(String learnProject) {
-		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learnProject);
+//		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learnProject);
+		learningTemplateResultSet = getLearningTemplateTestData();
 		competencen.clear();
+		
+		if(learningTemplateResultSet == null) {
+			learningTemplateResultSet = new LearningTemplateResultSet();
+		}
 		
 		competencenTreeView.update(learningTemplateResultSet);
 	}
@@ -69,17 +74,19 @@ public class TemplateCompetenceView implements Serializable{
         System.out.println("parent from node: " + selectedCompetenceFromNode);
     }
 	
+	//TODO create learningTemplateResultSet for one competence and update server
 	public void addNewCompetence(ActionEvent e) {
 		System.out.println("add new Competence for Catchword: " + selectedCatchword + ": " + newCompetence);	
 		competencenTreeView.addNewRootTreeNode(selectedCatchword, newCompetence);
 	}
 	
+	//TODO follow list is changed and need to update server
 	public void branchCompetenceAction(ActionEvent e) {
 		System.out.println("From node:" + selectedCompetenceFromNode);
 		System.out.println("To node:" + selectedCompetenceToNode);
 		
-		learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, learningTemplateResultSet.getNameOfTheLearningTemplate(), true);
-		final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, learningTemplateResultSet.getNameOfTheLearningTemplate(), true);
+		learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
+		final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
 		learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
 
 		competencenTreeView.update(learningTemplateResultSet);
@@ -92,9 +99,10 @@ public class TemplateCompetenceView implements Serializable{
 		System.out.println(selectedCatchword);
 	}
 	
+	//TODO get all competence from database
 	public List<String> complete(String query) {
 		final List<String> results = new ArrayList<String>();
-        final List<String> dbCompetencen = new ArrayList<String>();
+        final List<String> dbCompetencen = getDbCompetenceTestData();
         
         for(Entry<String, List<String>> entry : competencen.entrySet()) {
         	dbCompetencen.addAll(entry.getValue());
@@ -169,5 +177,52 @@ public class TemplateCompetenceView implements Serializable{
 
 	public void setSelectedNode(TreeNode selectedNode) {
 		this.selectedNode = selectedNode;
+	}
+	
+	//TODO Test data, to delete
+	private LearningTemplateResultSet getLearningTemplateTestData() {
+		final Graph graph = new Graph();
+		graph.addTriple("using tags", "using JSP tags", LABELNAME, true);
+		graph.addTriple("using JSP tags", "using primfaces tags", LABELNAME,
+				true);
+		graph.addTriple("using JSP tags", "using faces tags", LABELNAME, true);
+		graph.addTriple("programming", "creating api", LABELNAME, true);
+		graph.addTriple("creating api",
+				"being the first person to generate a universal api",
+				LABELNAME, true);
+
+		GraphTriple first = new GraphTriple("using tags", "using JSP tags",
+				LABELNAME, true);
+		GraphTriple second = new GraphTriple("using JSP tags",
+				"using primfaces tags", LABELNAME, true);
+		GraphTriple third = new GraphTriple("programming", "creating api",
+				LABELNAME, true);
+		GraphTriple fourth = new GraphTriple("using JSP tags",
+				"using faces tags", LABELNAME, true);
+		GraphTriple fifth = new GraphTriple("creating api",
+				"being the first person to generate a universal api",
+				LABELNAME, true);
+
+		HashMap<GraphTriple, String[]> map = new HashMap<GraphTriple, String[]>();
+		map.put(first, new String[] { "programming", "jsp" });
+		map.put(second, new String[] { "programming", "jsp" });
+		map.put(fourth, new String[] { "programming", "jsp" });
+		map.put(third, new String[] { "programming", "api" });
+		map.put(fifth, new String[] { "programming", "api", "universality" });
+
+		LearningTemplateResultSet learningTemplateResultSet = new LearningTemplateResultSet(graph, map,
+				"TestLernprojekt");
+		
+		return learningTemplateResultSet;
+	}
+	
+	private List<String> getDbCompetenceTestData() {
+		final List<String> competencen = new ArrayList<String>();
+		competencen.add("using tags");
+		competencen.add("using JSP tags");
+		competencen.add("creating api");
+		competencen.add("programming");
+		competencen.add("being the first person to generate a universal api");
+		return competencen;
 	}
 }
