@@ -13,6 +13,7 @@ import org.junit.Test;
 import uzuzjmd.competence.shared.DESCRIPTORType;
 import uzuzjmd.competence.shared.StringList;
 import uzuzjmd.competence.shared.dto.Graph;
+import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
@@ -68,8 +69,7 @@ public class LearningTemplateDaoTest {
 	@Test
 	public void testCreateTemplate() {
 		System.out.println("##### Test CreateTemplate #####");
-		Assert.assertEquals(200, LearningTemplateDao.createTemplate(
-				learningTemplateName, learningTemplateResultSet));
+		Assert.assertEquals(200, LearningTemplateDao.createTemplate(learningTemplateResultSet));
 	}
 
 	@Test
@@ -136,6 +136,10 @@ public class LearningTemplateDaoTest {
 	@Test
 	public void testCreateOneCompetence() {
 		System.out.println("##### Test CreateOneCompetence #####");
+		
+		Assert.assertEquals(200,
+				LearningTemplateDao.createTemplate("TestLernprojekt2"));
+		
 		final int result1 = LearningTemplateDao.createOneCompetence("Java 1",
 				"analyse", "TestLernprojekt2", "java");
 		final int result2 = LearningTemplateDao.createOneCompetence("Java 2",
@@ -153,14 +157,22 @@ public class LearningTemplateDaoTest {
 
 		Assert.assertNotNull(result);
 	}
+	
+	@Test
+	public void testCreateOneNode() {
+		System.out.println("##### Test CreateOneNode #####");
+		final LearningTemplateResultSet learningTemplateResultSet = new LearningTemplateResultSet();
+		learningTemplateResultSet.setNameOfTheLearningTemplate("TestLernprojekt2");
+		learningTemplateResultSet.setRoot(new GraphNode("Java 2"));
+		Assert.assertEquals(200, LearningTemplateDao.createTemplate(learningTemplateResultSet));
+	}
 
 	@Test
 	public void testCreateTemplateWithGraph() {
 		System.out.println("##### Test CreateTemplateWithGraph #####");
 		Assert.assertEquals(200,
 				LearningTemplateDao.createTemplate(learningTemplateName));
-		Assert.assertEquals(200, LearningTemplateDao.createTemplate(
-				learningTemplateName, learningTemplateResultSet));
+		Assert.assertEquals(200, LearningTemplateDao.createTemplate(learningTemplateResultSet));
 	}
 
 	@Test

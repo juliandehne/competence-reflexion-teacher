@@ -13,7 +13,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -27,12 +26,15 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 public class CompetencenTreeView implements Serializable{
 
 	private static final long serialVersionUID = 1L;
+	public static final String LABELNAME = "SuggestedCompetencePrerequisite";
 	
 	private Map<String, List<TreeNode>> treeNodeMap;
 	private List<String> catchWords;
 	
-	private String newCatchWord;
-	private String newOperation;
+	private String selectedCompetenceToNode;
+	private String selectedCompetenceFromNode;
+	private TreeNode selectedNode;
+	private String selectedCatchword;
 	
 	@PostConstruct
 	public void init() {
@@ -40,10 +42,12 @@ public class CompetencenTreeView implements Serializable{
 		catchWords = new ArrayList<String>();
 	}
 	
-	//TODO update server with only one new catchword
-	public void addNewCatchWord(ActionEvent e) {
-		catchWords.add(newCatchWord);
-	}
+	public void onNodeSelect(String catchword) {
+        this.selectedCompetenceFromNode = (String) selectedNode.getParent().getData();
+        this.selectedCatchword = catchword;
+        System.out.println("catchword: " + selectedCatchword);
+        System.out.println("parent from node: " + selectedCompetenceFromNode);
+    }
 	
 	//TODO LearningTemplateResultSet have only GraphRoot
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
@@ -88,22 +92,6 @@ public class CompetencenTreeView implements Serializable{
 
 	public void setCatchWords(List<String> catchWords) {
 		this.catchWords = catchWords;
-	}
-
-	public String getNewCatchWord() {
-		return newCatchWord;
-	}
-
-	public void setNewCatchWord(String newCatchWord) {
-		this.newCatchWord = newCatchWord;
-	}
-
-	public String getNewOperation() {
-		return newOperation;
-	}
-
-	public void setNewOperation(String newOperation) {
-		this.newOperation = newOperation;
 	}
 
 	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
@@ -153,5 +141,37 @@ public class CompetencenTreeView implements Serializable{
 		node.setExpanded(true);
 		node.getChildren().add( new DefaultTreeNode("+"));
 		return node;
+	}
+
+	public String getSelectedCompetenceToNode() {
+		return selectedCompetenceToNode;
+	}
+
+	public void setSelectedCompetenceToNode(String selectedCompetenceToNode) {
+		this.selectedCompetenceToNode = selectedCompetenceToNode;
+	}
+
+	public String getSelectedCompetenceFromNode() {
+		return selectedCompetenceFromNode;
+	}
+
+	public void setSelectedCompetenceFromNode(String selectedCompetenceFromNode) {
+		this.selectedCompetenceFromNode = selectedCompetenceFromNode;
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	public String getSelectedCatchword() {
+		return selectedCatchword;
+	}
+
+	public void setSelectedCatchword(String selectedCatchword) {
+		this.selectedCatchword = selectedCatchword;
 	}
 }

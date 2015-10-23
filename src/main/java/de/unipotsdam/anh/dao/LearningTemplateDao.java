@@ -73,14 +73,13 @@ public class LearningTemplateDao {
 		return -1;
 	}
 
-	public static synchronized int createTemplate(String learningTemplateName,
-			LearningTemplateResultSet learningTemplateResultSet) {
+	public static synchronized int createTemplate(LearningTemplateResultSet learningTemplateResultSet) {
 		final Client client = ClientBuilder.newClient();
 
 		try {
 			final WebTarget webResource = client
 					.target(BASE_HOST + "competences/xml/learningtemplate/add/"
-							+ learningTemplateName)
+							+ learningTemplateResultSet.getNameOfTheLearningTemplate())
 					.register(logginFilter)
 					.queryParam("learningTemplateResultSet",
 							learningTemplateResultSet);

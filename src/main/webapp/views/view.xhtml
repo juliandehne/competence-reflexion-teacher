@@ -109,11 +109,11 @@
 					<div class="marginTop">
 					<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">
 						<p:tree value="#{tree}" var="node" selectionMode="single" 
-							selection="#{templateCompetenceView.selectedNode}"
+							selection="#{competencenTreeView.selectedNode}"
 							dynamic="true" orientation="horizontal" >
 							<p:ajax event="select"
 								oncomplete="if(true) { PF('branchCompetenceDialog').show(); }"
-								listener="#{templateCompetenceView.onNodeSelect(catchWord)}" />
+								listener="#{competencenTreeView.onNodeSelect(catchWord)}" />
 							<p:treeNode >
 								<h:outputText value="#{node}" />
 							</p:treeNode>
@@ -130,13 +130,18 @@
 
 
 				<p:dialog header="Kompetence hinzufügen" widgetVar="newCompetenceDialog" 
-					modal="true" height="120" closeOnEscape="true" >
+					modal="true" height="100%" closeOnEscape="true" >
 					<div class="centered marginTop">
 						<div class="marginTop">
-							<h:outputText value="Geben Sie eine Kompetenz ein! " />
+							<h:outputText value="Geben Sie zwei Kompetenzen ein! " />
 						</div>
 						<div class="marginTop">
-							<p:inputText value="#{templateCompetenceView.newCompetence}" />
+							erste Kompetenze: 
+							<p:inputText value="#{templateCompetenceView.firstNewCompetence}" />
+						</div>
+						<div class="marginTop">
+							zweite Kompetenze: 
+							<p:inputText value="#{templateCompetenceView.secondNewCompetence}" />
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="erstellen" icon="ui-icon-check"
@@ -157,7 +162,7 @@
 						</div>
 						<div class="marginTop">
 							<p:inputText
-								value="#{templateCompetenceView.selectedCompetenceToNode}" />
+								value="#{competencenTreeView.selectedCompetenceToNode}" />
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="abzweigen" icon="ui-icon-check"
@@ -183,14 +188,16 @@
 					    	<h:outputText value="Wählen Sie eine Kompetenz aus! " />
 						</div>
 						<div class="marginTop">
+
 							<p:autoComplete maxResults="10"
 								dropdown="true"
-								completeMethod="#{templateCompetenceView.complete}" />
+								value="#{templateCompetenceView.selectedDbCompetence}"
+								completeMethod="#{templateCompetenceView.complete}"/>
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="abzweigen" icon="ui-icon-check"
 								update="learningProjectEdit"
-								actionListener="#{templateCompetenceView.branchCompetenceAction}" />
+								actionListener="#{templateCompetenceView.branchCompetenceFromDbAction}" />
 							<p:commandButton value="abbrechen" onclick="PF('branchCompetenceDbDialog').hide()" style="margin-left:5px;" />
 						</div>
 					</div>
@@ -210,26 +217,45 @@
 					<legend>Geben sie eine Überschrift ein! :</legend>
 						<div class="ui-grid">
 							<div class="ui-grid-row">
-								<div class="ui-grid-col-2">
+								<div class="ui-grid-col-3">
 									Überschrift:
 								</div>
 								<div class="ui-grid-col-6">
-									<p:inputText
-										value="#{competencenTreeView.newCatchWord}" />
+									<p:inputText placeholder="neu Überschrift" 
+										value="#{catchwordCreater.newCatchWord}" />
 								</div>
 							</div>
 							<div class="ui-grid-row">
-								<div class="ui-grid-col-2">
+								<div class="ui-grid-col-3">
 									Operation:
 								</div>
 								<div class="ui-grid-col-6">
-									<p:inputText value="#{competencenTreeView.newOperation}"/>
+									<p:inputText placeholder="Operation" 
+										value="#{catchwordCreater.newOperation}"/>
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									erste Kompetenze:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="erste Kompetenze" 
+										value="#{catchwordCreater.firstCompetence}"/>
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									zweite Kompetenze:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="zweite Kompetenze" 
+										value="#{catchwordCreater.secondCompetence}"/>
 								</div>
 							</div>
 							<div class="ui-grid-row">
 								<p:commandButton value="erstellen" icon="ui-icon-check"
 									update="learningProjectEdit"
-									actionListener="#{competencenTreeView.addNewCatchWord}" />
+									actionListener="#{templateCompetenceView.addNewCatchWord}" />
 								<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
 									<p:effect type="fade" event="click" for="newHeadField">
 										<f:param name="mode" value="'hide'" />

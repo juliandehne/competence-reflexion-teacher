@@ -15,6 +15,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import uzuzjmd.competence.shared.StringList;
+
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
@@ -35,7 +37,9 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	@PostConstruct
 	public void init() {
-		learningTemplates = LearningTemplateDao.findAll().getData();
+		
+		StringList result = LearningTemplateDao.findAll();
+		learningTemplates = result == null ? new ArrayList<String>() : result.getData();
 	}
 	
 	public List<String> complete(String query) {
