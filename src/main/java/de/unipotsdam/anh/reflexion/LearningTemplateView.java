@@ -57,6 +57,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	public void selectLearningTemplate(ActionEvent e) {
 		templateCompetenceView.update(selectedLearningTemplate);
+		System.out.println(selectedLearningTemplate);
 	}
 
 	public String getNewLearningTemplate() {

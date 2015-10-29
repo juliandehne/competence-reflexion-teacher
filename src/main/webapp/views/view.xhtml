@@ -36,23 +36,24 @@
 							<div><h:outputText value="Learning-Template von DB auswählen: " /></div>
 							<div class="marginTop">
 								<p:autoComplete maxResults="10" id="autocompleteLearningTemplate"
-								dropdown="true" style="height:100%;" inputStyle="height:100%;"
-								value="#{learningTemplateView.selectedLearningTemplate}"
-								completeMethod="#{learningTemplateView.complete}"
-								validator="#{learningTemplateView.validate}"
-								validatorMessage="Dieses Lernziel ist nicht vorhanden!"/>
+									dropdown="true"
+									value="#{learningTemplateView.selectedLearningTemplate}"
+									completeMethod="#{learningTemplateView.complete}"
+									validator="#{learningTemplateView.validate}"
+									validatorMessage="Dieses Lernziel ist nicht vorhanden!">
+									 <p:ajax event="itemSelect" update="templateSelecteButton" />  
+								</p:autoComplete>
 							</div>
 							<div class="marginTop">
-								<p:commandButton value="auswählen" icon="ui-icon-check"
-									ajax="true" validateClient="true"
-									update="learningTemplatePorlet"
+								<p:commandButton id="templateSelecteButton" value="auswählen" icon="ui-icon-check"
+									update="learningProjectEdit"
 									actionListener="#{learningTemplateView.selectLearningTemplate}">
 									<f:ajax render="@form" />
 								</p:commandButton>
 							</div>
 						</div>
 						<div class="ui-grid-row-6" >
-							<p:commandButton icon="ui-icon-plus" value="neu erstellen"
+							<p:commandButton icon="ui-icon-plus" value="neu erstellen" ajax="true"
 								onclick="PF('newTemplateDialog').show()" style="margin-left:50%; margin-top:20px;"/>
 						</div>
 					</div>
@@ -98,13 +99,14 @@
 				<br />
 
 				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" >
-					<h5>
-						<h:outputText value="Überschrift : #{catchWord} " />
+					<h4>
+						<h:outputText value="#{catchWord} " />
 <!-- 					<p:inplace id="ajax" editor="true"> -->
 <!-- 			            <p:inputText value="#{catchWord} " required="true" label="text" /> -->
 <!-- 			        </p:inplace> -->
-					</h5>
+					</h4>
 
+<!-- oncomplete="if(true) { PF('branchCompetenceDialog').show(); }" -->
 					<!-- Tree view for competence -->
 					<div class="marginTop">
 					<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">
@@ -121,7 +123,7 @@
 						<br />
 					</ui:repeat>
 					</div>
-		        	<p:commandButton icon="ui-icon-plus" value="neu Lernpfad" onclick="PF('newCompetenceDialog').show()"
+		        	<p:commandButton icon="ui-icon-plus" value="neuer Lernpfad" onclick="PF('newCompetenceDialog').show()"
 		        		action="#{templateCompetenceView.selecteCatchWord(catchWord)}"/>
 			       
 			        <hr />
@@ -205,7 +207,7 @@
 
 
 
-				<p:button icon="ui-icon-plus" value="Überschrift hinzufügen" onclick="return false">
+				<p:button icon="ui-icon-plus" value="Thema hinzufügen" onclick="return false">
 					<p:effect type="fade" event="click" for="newHeadField">
 						<f:param name="mode" value="'show'" />
 					</p:effect>
@@ -214,14 +216,14 @@
 				<br />
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<fieldset>
-					<legend>Geben sie eine Überschrift ein! :</legend>
+					<legend>Geben sie eine Thema ein! :</legend>
 						<div class="ui-grid">
 							<div class="ui-grid-row">
 								<div class="ui-grid-col-3">
-									Überschrift:
+									Thema:
 								</div>
 								<div class="ui-grid-col-6">
-									<p:inputText placeholder="neu Überschrift" 
+									<p:inputText placeholder="neu Thema" 
 										value="#{catchwordCreater.newCatchWord}" />
 								</div>
 							</div>

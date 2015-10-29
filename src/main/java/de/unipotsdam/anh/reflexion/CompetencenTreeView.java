@@ -47,6 +47,10 @@ public class CompetencenTreeView implements Serializable{
         this.selectedCatchword = catchword;
         System.out.println("catchword: " + selectedCatchword);
         System.out.println("parent from node: " + selectedCompetenceFromNode);
+        
+//        Map<String,Object> options = new HashMap<String, Object>();
+//        options.put("resizable", false);
+//        RequestContext.getCurrentInstance().openDialog("treenodeDialog.xhtml", options, null);
     }
 	
 	//TODO LearningTemplateResultSet have only GraphRoot

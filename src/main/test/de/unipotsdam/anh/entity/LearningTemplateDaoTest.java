@@ -70,6 +70,13 @@ public class LearningTemplateDaoTest {
 	public void testCreateTemplate() {
 		System.out.println("##### Test CreateTemplate #####");
 		Assert.assertEquals(200, LearningTemplateDao.createTemplate(learningTemplateResultSet));
+		
+		Assert.assertEquals(200, LearningTemplateDao.createTemplate("testOnlyTemplateCreate"));
+		final LearningTemplateResultSet result = LearningTemplateDao
+				.getLearningProjectTemplate("testOnlyTemplateCreate");
+
+		Assert.assertNotNull(result);
+		
 	}
 
 	@Test
