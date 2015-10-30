@@ -2,8 +2,12 @@ package de.unipotsdam.anh.reflexion;
 
 import java.io.Serializable;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+import org.apache.commons.lang3.StringUtils;
 
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
@@ -24,16 +28,24 @@ public class CatchwordCreater implements Serializable{
 	private String secondCompetence;
 
 	public void addNewCatchWord(LearningTemplateResultSet learningTemplateResultSet) {
-		if(learningTemplateResultSet != null) {
-			final GraphTriple graphTriple = new GraphTriple(firstCompetence, secondCompetence, LABELNAME, true);
-			final Graph graph = learningTemplateResultSet.getResultGraph() == null ? new Graph() : learningTemplateResultSet.getResultGraph();
-			graph.addTriple(firstCompetence, secondCompetence, LABELNAME, true);
-			learningTemplateResultSet.getCatchwordMap().put(graphTriple, new String[]{newCatchWord});
-			
-			System.out.println(learningTemplateResultSet.getResultGraph().toString());
-			LearningTemplateDao.createTemplate(learningTemplateResultSet);
-			
-			resetValue();
+		if(StringUtils.isEmpty(newCatchWord) || StringUtils.isEmpty(newOperation) || StringUtils.isEmpty(firstCompetence) || StringUtils.isEmpty(secondCompetence)) {
+			FacesContext.getCurrentInstance().addMessage("NewCatchwordCreateMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Sie müssen alle Felder ausfühlen!"));
+		} else if(StringUtils.equals(firstCompetence, secondCompetence)){
+			FacesContext.getCurrentInstance().addMessage("NewCatchwordCreateMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Die beide Kompetenze müssen unterschiedlich sein!"));
+		} else {
+			if(learningTemplateResultSet != null) {
+				final GraphTriple graphTriple = new GraphTriple(firstCompetence, secondCompetence, LABELNAME, true);
+				final Graph graph = learningTemplateResultSet.getResultGraph() == null ? new Graph() : learningTemplateResultSet.getResultGraph();
+				graph.addTriple(firstCompetence, secondCompetence, LABELNAME, true);
+				learningTemplateResultSet.getCatchwordMap().put(graphTriple, new String[]{newCatchWord});
+				
+				System.out.println(learningTemplateResultSet.getResultGraph().toString());
+				LearningTemplateDao.createTemplate(learningTemplateResultSet);
+				
+				resetValue();
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry unknown error!", "Contact admin."));
+			}
 		}
 	}
 

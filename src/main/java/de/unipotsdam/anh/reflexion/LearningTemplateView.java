@@ -15,6 +15,9 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.context.RequestContext;
+
 import uzuzjmd.competence.shared.StringList;
 
 import com.google.common.base.Predicates;
@@ -56,8 +59,13 @@ public class LearningTemplateView implements Serializable, Validator{
 	}
 	
 	public void selectLearningTemplate(ActionEvent e) {
-		templateCompetenceView.update(selectedLearningTemplate);
-		System.out.println(selectedLearningTemplate);
+		if(StringUtils.isEmpty(selectedLearningTemplate)) {
+			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Sie müssen eine Template auswählen!"));
+		} else {
+			templateCompetenceView.update(selectedLearningTemplate);
+			System.out.println(selectedLearningTemplate);
+		}
+		
 	}
 
 	public String getNewLearningTemplate() {

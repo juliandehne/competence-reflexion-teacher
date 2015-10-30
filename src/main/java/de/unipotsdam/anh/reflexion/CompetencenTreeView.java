@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -33,6 +34,7 @@ public class CompetencenTreeView implements Serializable{
 	
 	private String selectedCompetenceToNode;
 	private String selectedCompetenceFromNode;
+	private String newLevelCompetence;
 	private TreeNode selectedNode;
 	private String selectedCatchword;
 	
@@ -47,10 +49,17 @@ public class CompetencenTreeView implements Serializable{
         this.selectedCatchword = catchword;
         System.out.println("catchword: " + selectedCatchword);
         System.out.println("parent from node: " + selectedCompetenceFromNode);
+
+        if("+".equals(selectedNode.getData())) {
+        	if(selectedNode.getParent().getChildCount() > 1) {
+        		RequestContext.getCurrentInstance().execute("PF('branchCompetenceDialog').show();");
+        	} else {
+        		RequestContext.getCurrentInstance().execute("PF('newLevelCompetenceDialog').show();");
+        	}
+        } else {
+        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
+        }
         
-//        Map<String,Object> options = new HashMap<String, Object>();
-//        options.put("resizable", false);
-//        RequestContext.getCurrentInstance().openDialog("treenodeDialog.xhtml", options, null);
     }
 	
 	//TODO LearningTemplateResultSet have only GraphRoot
@@ -98,6 +107,46 @@ public class CompetencenTreeView implements Serializable{
 		this.catchWords = catchWords;
 	}
 
+	public String getSelectedCompetenceToNode() {
+		return selectedCompetenceToNode;
+	}
+
+	public void setSelectedCompetenceToNode(String selectedCompetenceToNode) {
+		this.selectedCompetenceToNode = selectedCompetenceToNode;
+	}
+
+	public String getSelectedCompetenceFromNode() {
+		return selectedCompetenceFromNode;
+	}
+
+	public void setSelectedCompetenceFromNode(String selectedCompetenceFromNode) {
+		this.selectedCompetenceFromNode = selectedCompetenceFromNode;
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	public String getSelectedCatchword() {
+		return selectedCatchword;
+	}
+
+	public void setSelectedCatchword(String selectedCatchword) {
+		this.selectedCatchword = selectedCatchword;
+	}
+
+	public String getNewLevelCompetence() {
+		return newLevelCompetence;
+	}
+
+	public void setNewLevelCompetence(String newLevelCompetence) {
+		this.newLevelCompetence = newLevelCompetence;
+	}
+	
 	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
 		Graph graph = getGraphForCatchword(catchwordMap, catchword);
 		return getListTreeRootForGraph(graph);
@@ -145,37 +194,5 @@ public class CompetencenTreeView implements Serializable{
 		node.setExpanded(true);
 		node.getChildren().add( new DefaultTreeNode("+"));
 		return node;
-	}
-
-	public String getSelectedCompetenceToNode() {
-		return selectedCompetenceToNode;
-	}
-
-	public void setSelectedCompetenceToNode(String selectedCompetenceToNode) {
-		this.selectedCompetenceToNode = selectedCompetenceToNode;
-	}
-
-	public String getSelectedCompetenceFromNode() {
-		return selectedCompetenceFromNode;
-	}
-
-	public void setSelectedCompetenceFromNode(String selectedCompetenceFromNode) {
-		this.selectedCompetenceFromNode = selectedCompetenceFromNode;
-	}
-
-	public TreeNode getSelectedNode() {
-		return selectedNode;
-	}
-
-	public void setSelectedNode(TreeNode selectedNode) {
-		this.selectedNode = selectedNode;
-	}
-
-	public String getSelectedCatchword() {
-		return selectedCatchword;
-	}
-
-	public void setSelectedCatchword(String selectedCatchword) {
-		this.selectedCatchword = selectedCatchword;
 	}
 }

@@ -41,12 +41,11 @@
 									completeMethod="#{learningTemplateView.complete}"
 									validator="#{learningTemplateView.validate}"
 									validatorMessage="Dieses Lernziel ist nicht vorhanden!">
-									 <p:ajax event="itemSelect" update="templateSelecteButton" />  
 								</p:autoComplete>
 							</div>
 							<div class="marginTop">
 								<p:commandButton id="templateSelecteButton" value="auswählen" icon="ui-icon-check"
-									update="learningProjectEdit"
+									update="learningTemplatePorlet"
 									actionListener="#{learningTemplateView.selectLearningTemplate}">
 									<f:ajax render="@form" />
 								</p:commandButton>
@@ -60,6 +59,7 @@
 					<div class="ui-grid-row marginTop">
 						<div class="ui-grid-col-12 centered">
 							<p:message for="autocompleteLearningTemplate" />
+							<p:messages for="selecteCompetenceMessages"/>
 						</div>
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="erstellen" icon="ui-icon-check"
-								ajax="true" keypadOnly="true"
+								ajax="true" keypadOnly="true" resetValues="true"
 								update="learningTemplatePorlet"
 								oncomplete="PF('newTemplateDialog').hide()"
 								actionListener="#{learningTemplateView.createLearningTemplate}">
@@ -87,6 +87,7 @@
 
 			<br />
 			<br />
+			<p:messages for="templateHandleMessages" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
 
 
@@ -113,8 +114,7 @@
 						<p:tree value="#{tree}" var="node" selectionMode="single" 
 							selection="#{competencenTreeView.selectedNode}"
 							dynamic="true" orientation="horizontal" >
-							<p:ajax event="select"
-								oncomplete="if(true) { PF('branchCompetenceDialog').show(); }"
+							<p:ajax event="select" update="@form"
 								listener="#{competencenTreeView.onNodeSelect(catchWord)}" />
 							<p:treeNode >
 								<h:outputText value="#{node}" />
@@ -147,9 +147,39 @@
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="erstellen" icon="ui-icon-check"
-								update="learningProjectEdit"
+								update="learningProjectEdit" resetValues="true"
 								actionListener="#{templateCompetenceView.addNewCompetence}" />
 							<p:commandButton value="abbrechen" onclick="PF('newCompetenceDialog').hide()" style="margin-left:5px;"/>
+						</div>
+					</div>
+				</p:dialog>
+				
+				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog" 
+					modal="true" height="100%" closeOnEscape="true" >
+					<div class="centered marginTop">
+						<div class="marginTop">
+							<h:outputText value="untere Kompetenzen von ''#{competencenTreeView.selectedNode.data}'' erstellen " />
+						</div>
+						<div class="marginTop">
+							Kompetenzename:
+							<p:inputText  />
+						</div>
+						<div class="marginTop">
+							Kompetenzeniveau:
+							<p:inputText />
+						</div>
+						<div class="marginTop">
+							Evalution:
+							<p:inputText />
+						</div>
+						<div class="marginTop">
+							Kompetenzelink:
+							<p:inputText />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="erstellen" icon="ui-icon-check"
+								update="learningProjectEdit" resetValues="true" />
+							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/>
 						</div>
 					</div>
 				</p:dialog>
@@ -168,7 +198,7 @@
 						</div>
 						<div class="marginTop">
 							<p:commandButton value="abzweigen" icon="ui-icon-check"
-								update="learningProjectEdit"
+								update="learningProjectEdit" resetValues="true"
 								actionListener="#{templateCompetenceView.branchCompetenceAction}" />
 							<p:commandButton value="abbrechen" onclick="PF('branchCompetenceDialog').hide()" style="margin-left:5px;" />
 						</div>
@@ -180,6 +210,26 @@
 								onclick="PF('branchCompetenceDialog').hide();PF('branchCompetenceDbDialog').show();" />
 						</i>
 					</div>
+				</p:dialog>
+				
+				<p:dialog header="neues Kompetenceniveau" widgetVar="newLevelCompetenceDialog"
+					modal="true" height="140" closeOnEscape="true">
+					<div class="centered marginTop">
+						<div class="marginTop">
+					    	<h:outputText value="Geben Sie neue Kompetenz ein! " />
+						</div>
+						<div class="marginTop">
+							<p:inputText
+								value="#{competencenTreeView.newLevelCompetence}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="neues Niveau" icon="ui-icon-check"
+								update="learningProjectEdit" resetValues="true"
+								actionListener="#{templateCompetenceView.addNewCompetenceLevel}" />
+							<p:commandButton value="abbrechen" onclick="PF('newLevelCompetenceDialog').hide()" style="margin-left:5px;" />
+						</div>
+					</div>
+					<br />
 				</p:dialog>
 				
 				
@@ -214,6 +264,7 @@
 				</p:button>
 
 				<br />
+				<p:messages for="NewCatchwordCreateMessages" showDetail="true" autoUpdate="true" closable="true" />
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<fieldset>
 					<legend>Geben sie eine Thema ein! :</legend>
@@ -256,7 +307,7 @@
 							</div>
 							<div class="ui-grid-row">
 								<p:commandButton value="erstellen" icon="ui-icon-check"
-									update="learningProjectEdit"
+									update="learningProjectEdit" resetValues="true"
 									actionListener="#{templateCompetenceView.addNewCatchWord}" />
 								<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
 									<p:effect type="fade" event="click" for="newHeadField">
