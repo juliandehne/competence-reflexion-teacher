@@ -16,7 +16,6 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.RequestContext;
 
 import uzuzjmd.competence.shared.StringList;
 
