@@ -229,6 +229,22 @@
 				<liferay.app.server.portal.dir>C:\liferay\tomcat-7.0.42\webapps\ROOT</liferay.app.server.portal.dir>
 			</properties>
 		</profile>
+		
+		<profile>
+			<id>build-maven-profil</id>
+			<properties>
+				<liferay.version>6.2.3</liferay.version>
+				<liferay.maven.plugin.version>6.2.3</liferay.maven.plugin.version>
+		
+				<liferay.auto.deploy.dir>/opt/data/liferay-portal-6.2-ce-ga4/deploy</liferay.auto.deploy.dir>
+		
+				<liferay.app.server.deploy.dir>/opt/data/liferay-portal-6.2-ce-ga4/tomcat-7.0.42/webapps</liferay.app.server.deploy.dir>
+		
+				<liferay.app.server.lib.global.dir>/opt/data/liferay-portal-6.2-ce-ga4/tomcat-7.0.42/lib/ext</liferay.app.server.lib.global.dir>
+		
+				<liferay.app.server.portal.dir>/opt/data/liferay-portal-6.2-ce-ga4/tomcat-7.0.42/webapps/ROOT</liferay.app.server.portal.dir>
+			</properties>
+		</profile>
 
 	</profiles>
 
