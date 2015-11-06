@@ -7,11 +7,9 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +21,7 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
+import de.unipotsdam.anh.dao.AppUtil;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "templateCompetenceView")
@@ -56,7 +55,7 @@ public class TemplateCompetenceView implements Serializable{
 		learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learnProject);
 		
 		if(learningTemplateResultSet == null) {
-			learningTemplateResultSet = new LearningTemplateResultSet();
+			learningTemplateResultSet = new LearningTemplateResultSet(); 
 		}
 		
 		competencenTreeView.update(learningTemplateResultSet);
@@ -68,8 +67,6 @@ public class TemplateCompetenceView implements Serializable{
 	}
 	
 	public void addNewCompetence(ActionEvent e) {
-		System.out.println("add new Competence for Catchword: " + competencenTreeView.getSelectedCatchword() + ": " + firstNewCompetence + "--" + secondNewCompetence);	
-		
 		addBranchCompetenceAction(competencenTreeView.getSelectedCatchword(), firstNewCompetence, secondNewCompetence);
 	}
 	
@@ -98,7 +95,6 @@ public class TemplateCompetenceView implements Serializable{
 	
 	public void selecteCatchWord(String catchWord) {
 		competencenTreeView.setSelectedCatchword(catchWord);
-		System.out.println(competencenTreeView.getSelectedCatchword());
 	}
 	
 	public List<String> complete(String query) {
@@ -160,24 +156,22 @@ public class TemplateCompetenceView implements Serializable{
 		this.selectedDbCompetence = selectedDbCompetence;
 	}
 	
-	private void addBranchCompetenceAction(String selectedCatchword,
-			String selectedCompetenceFromNode, String selectedCompetenceToNode) {
-		if(StringUtils.isEmpty(selectedCompetenceFromNode) || StringUtils.isEmpty(selectedCompetenceToNode)) {
-			FacesContext.getCurrentInstance().addMessage("templateHandleMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage wird nicht ausgeführt", "Sie müssen alle Felder ausführen!"));
-			return;
-		}
+	private void addBranchCompetenceAction(String selectedCatchword, String selectedCompetenceFromNode, String selectedCompetenceToNode) {
+		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausführen!", selectedCompetenceFromNode, selectedCompetenceToNode, selectedCatchword) && 
+				AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlicht sein!", selectedCompetenceFromNode, selectedCompetenceToNode)) {
 		
-		if(StringUtils.equals(selectedCompetenceFromNode, selectedCompetenceToNode)) {
-			FacesContext.getCurrentInstance().addMessage("templateHandleMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage wird nicht ausgeführt", "Die beide Kompetenzen müssen unterschiedlicht sein!"));
-			return;
+			if(validExistTriple(selectedCompetenceFromNode, selectedCompetenceToNode)) {
+				AppUtil.showInfo("Competence hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
+				return;
+			}
+			learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
+			final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
+			learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
+	
+			LearningTemplateDao.createTemplate(learningTemplateResultSet);
+			competencenTreeView.update(learningTemplateResultSet);
+			AppUtil.showInfo("Competence hinzufügen:", "Competence wird erfolgreich hinzugefügt!!");
 		}
-		
-		learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
-		final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
-		learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
-
-		LearningTemplateDao.createTemplate(learningTemplateResultSet);
-		competencenTreeView.update(learningTemplateResultSet);
 	}
 	
 	private List<String> getDbCompetences() {
@@ -188,5 +182,14 @@ public class TemplateCompetenceView implements Serializable{
 			}
 		}
 		return competencen;
+	}
+	
+	private boolean validExistTriple(String competenceFromNode, String competenceToNode) {
+		for(GraphTriple triple : learningTemplateResultSet.getResultGraph().triples) {
+			if(StringUtils.equals(triple.fromNode, competenceFromNode) && StringUtils.equals(triple.toNode, competenceToNode)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

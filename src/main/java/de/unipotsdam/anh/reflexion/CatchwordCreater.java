@@ -7,11 +7,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.lang3.StringUtils;
-
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import de.unipotsdam.anh.dao.AppUtil;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "catchwordCreater")
@@ -28,21 +27,19 @@ public class CatchwordCreater implements Serializable{
 	private String secondCompetence;
 
 	public void addNewCatchWord(LearningTemplateResultSet learningTemplateResultSet) {
-		if(StringUtils.isEmpty(newCatchWord) || StringUtils.isEmpty(newOperation) || StringUtils.isEmpty(firstCompetence) || StringUtils.isEmpty(secondCompetence)) {
-			FacesContext.getCurrentInstance().addMessage("NewCatchwordCreateMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Sie müssen alle Felder ausfühlen!"));
-		} else if(StringUtils.equals(firstCompetence, secondCompetence)){
-			FacesContext.getCurrentInstance().addMessage("NewCatchwordCreateMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Die beide Kompetenze müssen unterschiedlich sein!"));
-		} else {
+		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausfühlen!", newCatchWord, newOperation,firstCompetence, secondCompetence)
+				&& AppUtil.validateNotEquals("Die beide Kompetenze müssen unterschiedlich sein!", firstCompetence, secondCompetence)) {
 			if(learningTemplateResultSet != null) {
 				final GraphTriple graphTriple = new GraphTriple(firstCompetence, secondCompetence, LABELNAME, true);
 				final Graph graph = learningTemplateResultSet.getResultGraph() == null ? new Graph() : learningTemplateResultSet.getResultGraph();
 				graph.addTriple(firstCompetence, secondCompetence, LABELNAME, true);
 				learningTemplateResultSet.getCatchwordMap().put(graphTriple, new String[]{newCatchWord});
 				
-				System.out.println(learningTemplateResultSet.getResultGraph().toString());
 				LearningTemplateDao.createTemplate(learningTemplateResultSet);
 				
+				AppUtil.showInfo("Thema hinzufügen: ", "Thema ''" + newCatchWord + "'' wird erfolgreich hinzugefügt!");
 				resetValue();
+				
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry unknown error!", "Contact admin."));
 			}

@@ -22,6 +22,7 @@ import uzuzjmd.competence.shared.StringList;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
+import de.unipotsdam.anh.dao.AppUtil;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "learningTemplateView")
@@ -53,13 +54,16 @@ public class LearningTemplateView implements Serializable, Validator{
     }
 	
 	public void createLearningTemplate(ActionEvent e) {
-		LearningTemplateDao.createTemplate(newLearningTemplate);
-		templateCompetenceView.update(newLearningTemplate);
+		if(AppUtil.validateNotEmptyString("Sie müssen einen Lernprojektname eingeben!!", newLearningTemplate)) {
+			LearningTemplateDao.createTemplate(newLearningTemplate);
+			templateCompetenceView.update(newLearningTemplate);
+			AppUtil.showInfo("Template erstellen", "Lernprojekt " + newLearningTemplate + " wird erfolgreich erstellt!");
+		}
 	}
 	
 	public void selectLearningTemplate(ActionEvent e) {
 		if(StringUtils.isEmpty(selectedLearningTemplate)) {
-			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Vorsicht!", "Sie müssen eine Template auswählen!"));
+			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Angrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
 		} else {
 			templateCompetenceView.update(selectedLearningTemplate);
 			System.out.println(selectedLearningTemplate);

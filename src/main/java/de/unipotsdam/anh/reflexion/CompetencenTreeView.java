@@ -48,8 +48,6 @@ public class CompetencenTreeView implements Serializable{
         if("+".equals(selectedNode.getData())) {
         	this.selectedCompetenceFromNode = (String) selectedNode.getParent().getData();
             this.selectedCatchword = catchword;
-            System.out.println("catchword: " + selectedCatchword);
-            System.out.println("parent from node: " + selectedCompetenceFromNode);
             
         	if(selectedNode.getParent().getChildCount() > 1) {
         		RequestContext.getCurrentInstance().execute("PF('branchCompetenceDialog').show();");
@@ -57,7 +55,7 @@ public class CompetencenTreeView implements Serializable{
         		RequestContext.getCurrentInstance().execute("PF('newLevelCompetenceDialog').show();");
         	}
         } else {
-        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
+//        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
         }
         
     }

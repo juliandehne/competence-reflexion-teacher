@@ -87,12 +87,11 @@
 
 			<br />
 			<br />
-			<p:messages for="templateHandleMessages" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
 
 
 			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
-
+				<p:growl id="growl" showDetail="true" sticky="true" />
 				<h2>
 					<h:outputText id="selectedLearningProject"
 						value="Lernprojekte : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
@@ -264,7 +263,6 @@
 				</p:button>
 
 				<br />
-				<p:messages for="NewCatchwordCreateMessages" showDetail="true" autoUpdate="true" closable="true" />
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<fieldset>
 					<legend>Geben sie eine Thema ein! :</legend>
