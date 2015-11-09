@@ -87,12 +87,11 @@
 
 			<br />
 			<br />
-			<p:messages for="templateHandleMessages" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
 
 
 			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
-
+				<p:growl id="growl" showDetail="true" sticky="true" />
 				<h2>
 					<h:outputText id="selectedLearningProject"
 						value="Lernprojekte : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
@@ -154,35 +153,35 @@
 					</div>
 				</p:dialog>
 				
-				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog" 
-					modal="true" height="100%" closeOnEscape="true" >
-					<div class="centered marginTop">
-						<div class="marginTop">
-							<h:outputText value="untere Kompetenzen von ''#{competencenTreeView.selectedNode.data}'' erstellen " />
-						</div>
-						<div class="marginTop">
-							Kompetenzename:
-							<p:inputText  />
-						</div>
-						<div class="marginTop">
-							Kompetenzeniveau:
-							<p:inputText />
-						</div>
-						<div class="marginTop">
-							Evalution:
-							<p:inputText />
-						</div>
-						<div class="marginTop">
-							Kompetenzelink:
-							<p:inputText />
-						</div>
-						<div class="marginTop">
-							<p:commandButton value="erstellen" icon="ui-icon-check"
-								update="learningProjectEdit" resetValues="true" />
-							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/>
-						</div>
-					</div>
-				</p:dialog>
+<!-- 				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog"  -->
+<!-- 					modal="true" height="100%" closeOnEscape="true" > -->
+<!-- 					<div class="centered marginTop"> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							<h:outputText value="untere Kompetenzen von ''#{competencenTreeView.selectedNode.data}'' erstellen " /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzename: -->
+<!-- 							<p:inputText  /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzeniveau: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Evalution: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzelink: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							<p:commandButton value="erstellen" icon="ui-icon-check" -->
+<!-- 								update="learningProjectEdit" resetValues="true" /> -->
+<!-- 							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</p:dialog> -->
 
 
 				
@@ -264,7 +263,6 @@
 				</p:button>
 
 				<br />
-				<p:messages for="NewCatchwordCreateMessages" showDetail="true" autoUpdate="true" closable="true" />
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<fieldset>
 					<legend>Geben sie eine Thema ein! :</legend>
