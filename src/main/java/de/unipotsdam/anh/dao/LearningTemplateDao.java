@@ -27,8 +27,8 @@ public class LearningTemplateDao {
 
 	private static final LoggingFilter logginFilter = new LoggingFilter(
 			Logger.getLogger(LearningTemplateDao.class.getName()), true);
-	private static final String BASE_HOST = "http://localhost:8084/";
-//	private static final String BASE_HOST = "http://fleckenroller.cs.uni-potsdam.de/app/competence-servlet/competence/";
+//	private static final String BASE_HOST = "http://localhost:8084/";
+	private static final String BASE_HOST = "http://fleckenroller.cs.uni-potsdam.de/app/competence-servlet/competence/";
 
 	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(
 			String learningTemplateName) {
