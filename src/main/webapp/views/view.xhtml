@@ -23,6 +23,9 @@
 	<h:body>
 
 	<h:form id="learningTemplateForm">
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+		     <img src="http://www.ajaxload.info/images/exemples/19.gif" > </img>
+		</p:dialog>
 		<p:outputPanel id="learningTemplatePorlet">
 			<p:panel>
 				<div class="ui-grid ui-grid-responsive">
@@ -32,7 +35,7 @@
 						</div>
 					</div>
 					<div class="ui-grid-row centered marginTop">
-						<div class="ui-grid-row-6">
+						<div class="ui-grid-col-6">
 							<div><h:outputText value="Learning-Template von DB auswählen: " /></div>
 							<div class="marginTop">
 								<p:autoComplete maxResults="10" id="autocompleteLearningTemplate"
@@ -51,9 +54,9 @@
 								</p:commandButton>
 							</div>
 						</div>
-						<div class="ui-grid-row-6" >
+						<div class="ui-grid-col-4" >
 							<p:commandButton icon="ui-icon-plus" value="neu erstellen" ajax="true"
-								onclick="PF('newTemplateDialog').show()" style="margin-left:50%; margin-top:20px;"/>
+								onclick="PF('newTemplateDialog').show()" style=" margin-top:20px;"/>
 						</div>
 					</div>
 					<div class="ui-grid-row marginTop">
@@ -91,22 +94,22 @@
 
 
 			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
-				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:growl id="growl" showDetail="true" autoUpdate="true" />
 				<h2>
 					<h:outputText id="selectedLearningProject"
 						value="Lernprojekte : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
 				</h2>
-				<br />
+				<hr />
 
-				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" >
+				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
 					<h4>
-						<h:outputText value="#{catchWord} " />
-<!-- 					<p:inplace id="ajax" editor="true"> -->
-<!-- 			            <p:inputText value="#{catchWord} " required="true" label="text" /> -->
+						<h:outputText value="Thema: #{catchWord} " />
+<!-- 					<p:inplace id="ajax" editor="true" label="#{catchWord}"> -->
+<!-- 			            <p:inputText value="#{catchWord} " required="true" /> -->
+<!-- 			            <p:ajax event="save" process="@this" /> -->
 <!-- 			        </p:inplace> -->
 					</h4>
 
-<!-- oncomplete="if(true) { PF('branchCompetenceDialog').show(); }" -->
 					<!-- Tree view for competence -->
 					<div class="marginTop">
 					<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">

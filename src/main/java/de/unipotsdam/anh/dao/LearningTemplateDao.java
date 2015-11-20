@@ -27,16 +27,14 @@ public class LearningTemplateDao {
 
 	private static final LoggingFilter logginFilter = new LoggingFilter(
 			Logger.getLogger(LearningTemplateDao.class.getName()), true);
-//	private static final String BASE_HOST = "http://localhost:8084/";
-	private static final String BASE_HOST = "http://fleckenroller.cs.uni-potsdam.de/app/competence-servlet/competence/";
 
 	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(
 			String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
 
 		try {
-			final WebTarget webResource = client.target(BASE_HOST
-					+ "competences/xml/learningtemplate/get/"
+			final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+					+ "/competences/xml/learningtemplate/get/"
 					+ learningTemplateName);
 			LearningTemplateResultSet result = webResource
 					.register(logginFilter).request(MediaType.APPLICATION_XML)
@@ -58,8 +56,8 @@ public class LearningTemplateDao {
 	 */
 	public static synchronized int createTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
-		final WebTarget webResource = client.target(BASE_HOST
-				+ "competences/xml/learningtemplate/add/"+learningTemplateName);
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+				+ "/competences/xml/learningtemplate/add/"+learningTemplateName);
 		try {
 			Response response = webResource.register(logginFilter)
 					.queryParam("learningTemplateName", learningTemplateName)				
@@ -79,7 +77,7 @@ public class LearningTemplateDao {
 
 		try {
 			final WebTarget webResource = client
-					.target(BASE_HOST + "competences/xml/learningtemplate/add/"
+					.target(AppUtil.getBaseUrl() + "/competences/xml/learningtemplate/add/"
 							+ learningTemplateResultSet.getNameOfTheLearningTemplate())
 					.register(logginFilter)
 					.queryParam("learningTemplateResultSet",
@@ -110,8 +108,8 @@ public class LearningTemplateDao {
 	 */
 	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, String catchWords) {
 		final Client client = ClientBuilder.newClient();
-		final WebTarget webResource = client.target(BASE_HOST
-				+ "competences/json/addOne/");
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+				+ "/competences/json/addOne/");
 		Response response = null;
 		try {
 			response = webResource.register(logginFilter)
@@ -136,9 +134,10 @@ public class LearningTemplateDao {
 	 * @return
 	 */
 	public static synchronized StringList findAll() {
+//		System.out.println(AppUtil.getBaseUrl());
 		final Client client = ClientBuilder.newClient();
-		final WebTarget webResource = client.target(BASE_HOST
-				+ "competences/xml/learningtemplates/");
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+				+ "/competences/xml/learningtemplates/");
 		try {
 			StringList response = webResource.register(logginFilter)
 					.request(MediaType.APPLICATION_XML).get(StringList.class);
@@ -156,7 +155,7 @@ public class LearningTemplateDao {
 	public static synchronized Graph getGraphFromCourse(String course) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(
-				BASE_HOST + "competences/json/prerequisite/graph/")
+				AppUtil.getBaseUrl() + "/competences/json/prerequisite/graph/")
 				.path(course);
 		final Gson gson = new GsonBuilder().create();
 		try {

@@ -154,9 +154,9 @@ public class CompetencenTreeView implements Serializable{
 		if(graph == null) {
 			return new ArrayList<TreeNode>();
 		}
-		
+		System.out.println(graph.toString());
 		final Map<String, TreeNode> nodes = new HashMap<String, TreeNode>();
-		for(Entry<Integer, String> e: graph.getNodeIdValues().entrySet()) {
+		for(Entry<Integer, String> e: graph.nodeIdValues.entrySet()) {
 			nodes.put(e.getValue(), createTreeNode(e.getValue()));
 		}
 		
@@ -164,7 +164,11 @@ public class CompetencenTreeView implements Serializable{
 		for(GraphTriple t : graph.triples) {
 			TreeNode fromNode = nodes.get(t.fromNode);
 			TreeNode toNode = nodes.get(t.toNode);
-			fromNode.getChildren().add((fromNode.getChildCount() - 1),toNode);
+			if(toNode.getParent() != null) {
+				fromNode.getChildren().add((fromNode.getChildCount() - 1),new DefaultTreeNode(t.toNode));
+			} else {
+				fromNode.getChildren().add((fromNode.getChildCount() - 1),toNode);
+			}
 		}
 		
 		for(Entry<String, TreeNode> n : nodes.entrySet()) {
