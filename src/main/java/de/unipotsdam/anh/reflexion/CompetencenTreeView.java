@@ -18,6 +18,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import de.unipotsdam.anh.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
@@ -59,8 +60,7 @@ public class CompetencenTreeView implements Serializable{
         }
         
     }
-	
-	//TODO LearningTemplateResultSet have only GraphRoot
+
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
 		if(learningTemplateResultSet == null || learningTemplateResultSet.getResultGraph() == null) {
 			return;
@@ -146,7 +146,7 @@ public class CompetencenTreeView implements Serializable{
 	}
 	
 	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
-		Graph graph = getGraphForCatchword(catchwordMap, catchword);
+		Graph graph = GraphUtil.getGraphForCatchword(catchwordMap, catchword);
 		return getListTreeRootForGraph(graph);
 	}
 
@@ -156,6 +156,7 @@ public class CompetencenTreeView implements Serializable{
 		}
 		System.out.println(graph.toString());
 		final Map<String, TreeNode> nodes = new HashMap<String, TreeNode>();
+		
 		for(Entry<Integer, String> e: graph.nodeIdValues.entrySet()) {
 			nodes.put(e.getValue(), createTreeNode(e.getValue()));
 		}
@@ -178,17 +179,6 @@ public class CompetencenTreeView implements Serializable{
 		}
 		
 		return roots;
-	}
-
-	private Graph getGraphForCatchword(Map<GraphTriple, String[]> catchwordMap, String catchword) {
-		final Graph graph = new Graph();
-		for(Entry<GraphTriple, String[]> entry : catchwordMap.entrySet()) {
-			if(Arrays.asList(entry.getValue()).contains(catchword)) {
-				GraphTriple triple = entry.getKey();
-				graph.addTriple(triple.fromNode, triple.toNode, triple.label, triple.directed);
-			}
-		}
-		return graph;
 	}
 	
 	private TreeNode createTreeNode(String label) {

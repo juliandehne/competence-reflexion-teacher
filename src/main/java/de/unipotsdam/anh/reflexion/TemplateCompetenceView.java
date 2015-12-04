@@ -21,8 +21,8 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 
-import de.unipotsdam.anh.dao.AppUtil;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
+import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "templateCompetenceView")
 @SessionScoped
@@ -164,9 +164,12 @@ public class TemplateCompetenceView implements Serializable{
 				AppUtil.showInfo("Competence hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
 				return;
 			}
-			learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
+//			learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
+			
 			final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
-			learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
+			learningTemplateResultSet.addTriple(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
+			
+//			learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
 	
 			LearningTemplateDao.createTemplate(learningTemplateResultSet);
 			competencenTreeView.update(learningTemplateResultSet);

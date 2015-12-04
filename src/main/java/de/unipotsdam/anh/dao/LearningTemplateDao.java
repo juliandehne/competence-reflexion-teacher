@@ -1,6 +1,5 @@
 package de.unipotsdam.anh.dao;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
@@ -9,19 +8,17 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 
 import org.glassfish.jersey.filter.LoggingFilter;
 
-import uzuzjmd.competence.shared.DESCRIPTORSETType;
 import uzuzjmd.competence.shared.StringList;
-import uzuzjmd.competence.shared.dto.EPOSTypeWrapper;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import de.unipotsdam.anh.util.AppUtil;
 
 public class LearningTemplateDao {
 
@@ -134,7 +131,6 @@ public class LearningTemplateDao {
 	 * @return
 	 */
 	public static synchronized StringList findAll() {
-//		System.out.println(AppUtil.getBaseUrl());
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
 				+ "/competences/xml/learningtemplates/");
@@ -168,63 +164,6 @@ public class LearningTemplateDao {
 		} finally {
 			client.close();
 		}
-
-		return null;
-	}
-
-	public static synchronized void createEpos(EPOSTypeWrapper typeWrapper) {
-
-		try {
-			JAXBContext context = JAXBContext
-					.newInstance(DESCRIPTORSETType.class);
-			Marshaller m = context.createMarshaller();
-			// for pretty-print XML in JAXB
-			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
-			// Write to System.out for debugging
-			for (DESCRIPTORSETType desSetType : typeWrapper
-					.getEposCompetences()) {
-				m.marshal(desSetType, System.out);
-
-				// Write to File
-				m.marshal(desSetType, new File("expos.xml"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// final Client client = ClientBuilder.newClient();
-		// final WebTarget webResource =
-		// client.target("http://localhost:8084/competences/xml/learningtemplates/addEpos");
-		// try {
-		// Response response = webResource
-		// .register(logginFilter)
-		// .request(MediaType.APPLICATION_XML)
-		// .post(Entity.entity(typeWrapper, MediaType.APPLICATION_XML));
-		//
-		// System.out.println(response.getStatus() + " " +
-		// response.getStatusInfo());
-		// System.out.println(response.readEntity(String.class));
-		//
-		// } catch(Exception e) {
-		// e.printStackTrace();
-		// }
-	}
-
-	public static synchronized DESCRIPTORSETType getEposFrom(
-			String learningTemplate) {
-//		try {
-//			JAXBContext jc = JAXBContext.newInstance(DESCRIPTORSETType.class);
-//
-//			Unmarshaller unmarshaller = jc.createUnmarshaller();
-//			DESCRIPTORSETType descriptorsetType = (DESCRIPTORSETType) unmarshaller
-//					.unmarshal(new File(
-//							"C:/Users/fides-WHK/Wissensmodellierung/competence-reflexion-2/epos-ex.xml"));
-//			
-//			return descriptorsetType;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 
 		return null;
 	}

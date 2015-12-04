@@ -10,8 +10,8 @@ import javax.faces.context.FacesContext;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import de.unipotsdam.anh.dao.AppUtil;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
+import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "catchwordCreater")
 @SessionScoped

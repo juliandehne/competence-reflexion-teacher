@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.dao;
+package de.unipotsdam.anh.util;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
