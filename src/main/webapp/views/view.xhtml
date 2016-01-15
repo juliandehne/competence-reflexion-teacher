@@ -55,6 +55,7 @@
 									completeMethod="#{learningTemplateView.complete}"
 									validator="#{learningTemplateView.validate}"
 									validatorMessage="Dieses Lernziel ist nicht vorhanden!">
+									<p:ajax event="itemSelect" update="learningTemplatePorlet" />
 								</p:autoComplete>
 							</div>
 							<div class="marginTop">
@@ -108,8 +109,20 @@
 				<p:growl id="growl" showDetail="true" autoUpdate="true" />
 				<h2>
 					<h:outputText id="selectedLearningProject"
-						value="Lernprojekte : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
+						value="Lernprojekt : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
+				
+				<span class="pull-right" style="font-size:15px;">
+					<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
+						ajax="true" update="learningTemplatePorlet"
+						actionListener="#{learningTemplateView.deleteLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}">
+						<p:confirm header="Löschen bestätigen" message="Möchten Sie diese Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</span>
 				</h2>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
 				<hr />
 
 				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
@@ -225,7 +238,7 @@
 					</div>
 				</p:dialog>
 				
-				<p:dialog header="neues Kompetenceniveau" widgetVar="newLevelCompetenceDialog"
+				<p:dialog header="neues Kompetenzniveau" widgetVar="newLevelCompetenceDialog"
 					modal="true" height="140" closeOnEscape="true">
 					<div class="centered marginTop">
 						<div class="marginTop">

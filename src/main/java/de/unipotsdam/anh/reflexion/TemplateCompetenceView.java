@@ -9,7 +9,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "templateCompetenceView")
-@SessionScoped
+@ViewScoped
 public class TemplateCompetenceView implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -67,14 +67,19 @@ public class TemplateCompetenceView implements Serializable{
 	}
 	
 	public void addNewCompetence(ActionEvent e) {
-		addBranchCompetenceAction(competencenTreeView.getSelectedCatchword(), firstNewCompetence, secondNewCompetence);
+		if(addBranchCompetenceAction(competencenTreeView.getSelectedCatchword(), firstNewCompetence, secondNewCompetence)) {
+			firstNewCompetence = "";
+			secondNewCompetence = "";
+		}
 	}
 	
 	public void addNewCompetenceLevel(ActionEvent e) {
 		final String selectedCatchword = competencenTreeView.getSelectedCatchword();
 		final String selectedCompetenceFromNode = competencenTreeView.getSelectedCompetenceFromNode();
 		final String selectedCompetenceToNode = competencenTreeView.getNewLevelCompetence();
-		addBranchCompetenceAction(selectedCatchword, selectedCompetenceFromNode, selectedCompetenceToNode);
+		if(addBranchCompetenceAction(selectedCatchword, selectedCompetenceFromNode, selectedCompetenceToNode)) {
+			competencenTreeView.setNewLevelCompetence("");
+		}
 	}
 	
 	//TODO follow list is changed
@@ -156,13 +161,13 @@ public class TemplateCompetenceView implements Serializable{
 		this.selectedDbCompetence = selectedDbCompetence;
 	}
 	
-	private void addBranchCompetenceAction(String selectedCatchword, String selectedCompetenceFromNode, String selectedCompetenceToNode) {
+	private boolean addBranchCompetenceAction(String selectedCatchword, String selectedCompetenceFromNode, String selectedCompetenceToNode) {
 		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausführen!", selectedCompetenceFromNode, selectedCompetenceToNode, selectedCatchword) && 
 				AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlicht sein!", selectedCompetenceFromNode, selectedCompetenceToNode)) {
 		
 			if(validExistTriple(selectedCompetenceFromNode, selectedCompetenceToNode)) {
 				AppUtil.showInfo("Competence hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
-				return;
+				return false;
 			}
 //			learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
 			
@@ -174,7 +179,10 @@ public class TemplateCompetenceView implements Serializable{
 			LearningTemplateDao.createTemplate(learningTemplateResultSet);
 			competencenTreeView.update(learningTemplateResultSet);
 			AppUtil.showInfo("Competence hinzufügen:", "Competence wird erfolgreich hinzugefügt!!");
+			return true;
 		}
+		
+		return false;
 	}
 	
 	private List<String> getDbCompetences() {

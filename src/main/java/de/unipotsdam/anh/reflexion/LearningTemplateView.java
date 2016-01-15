@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -27,6 +28,7 @@ import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "learningTemplateView")
+@ViewScoped
 public class LearningTemplateView implements Serializable, Validator{
 	
 	private static final long serialVersionUID = 1L;
@@ -41,9 +43,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	@PostConstruct
 	public void init() {
-		
-		StringList result = LearningTemplateDao.findAll();
-		learningTemplates = result == null ? new ArrayList<String>() : result.getData();
+		fetchAllLearningTemplate();
 	}
 	
 	public List<String> complete(String query) {
@@ -61,6 +61,8 @@ public class LearningTemplateView implements Serializable, Validator{
 			LearningTemplateDao.createTemplate(learningTemplateResultSet);
 			templateCompetenceView.update(newLearningTemplate);
 			AppUtil.showInfo("Template erstellen", "Lernprojekt " + newLearningTemplate + " wird erfolgreich erstellt!");
+			fetchAllLearningTemplate();
+			newLearningTemplate = "";
 		}
 	}
 	
@@ -69,9 +71,19 @@ public class LearningTemplateView implements Serializable, Validator{
 			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
 		} else {
 			templateCompetenceView.update(selectedLearningTemplate);
+			selectedLearningTemplate = "";
 			System.out.println(selectedLearningTemplate);
 		}
 		
+	}
+	
+	public void deleteLearningTemplate(String learningTemplate) {
+		if(!StringUtils.isEmpty(learningTemplate)) {
+			if(LearningTemplateDao.deleteTemplate(learningTemplate) == 200) {
+				templateCompetenceView.setLearningTemplateResultSet(null);
+				fetchAllLearningTemplate();
+			}
+		}
 	}
 
 	public String getNewLearningTemplate() {
@@ -114,5 +126,10 @@ public class LearningTemplateView implements Serializable, Validator{
 			throw new ValidatorException(new FacesMessage("EingabeFehler: Es gibt kein Lernziel mit diesem Namen"));
 		}	
 		
+	}
+	
+	private void fetchAllLearningTemplate() {
+		StringList result = LearningTemplateDao.findAll();
+		learningTemplates = result == null ? new ArrayList<String>() : result.getData();
 	}
 }

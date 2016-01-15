@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
@@ -23,7 +23,7 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "diagramView")
-@SessionScoped
+@ViewScoped
 public class DiagramView {
 
 	private static final String LABELNAME = "test";

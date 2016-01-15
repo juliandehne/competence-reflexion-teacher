@@ -12,19 +12,19 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import de.unipotsdam.anh.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "competencenTreeView")
-@SessionScoped
+@ViewScoped
 public class CompetencenTreeView implements Serializable{
 
 	private static final long serialVersionUID = 1L;

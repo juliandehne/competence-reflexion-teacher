@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import uzuzjmd.competence.shared.dto.Graph;
@@ -14,7 +14,7 @@ import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "catchwordCreater")
-@SessionScoped
+@ViewScoped
 public class CatchwordCreater implements Serializable{
 
 	private static final long serialVersionUID = 1L;

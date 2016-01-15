@@ -68,6 +68,23 @@ public class LearningTemplateDao {
 
 		return -1;
 	}
+	
+	public static synchronized int deleteTemplate(String learningTemplateName) {
+		final Client client = ClientBuilder.newClient();
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+				+ "/competences/xml/learningtemplate/delete/"+learningTemplateName);
+		try {
+			Response response = webResource.register(logginFilter)			
+					.request(MediaType.APPLICATION_XML).post(null);
+			return response.getStatus();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			client.close();
+		}
+
+		return -1;
+	}
 
 	public static synchronized int createTemplate(LearningTemplateResultSet learningTemplateResultSet) {
 		final Client client = ClientBuilder.newClient();
