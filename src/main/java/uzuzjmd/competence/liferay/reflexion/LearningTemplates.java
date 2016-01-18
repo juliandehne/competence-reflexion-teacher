@@ -1,21 +1,17 @@
 package uzuzjmd.competence.liferay.reflexion;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ComponentSystemEvent;
-
-import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean(name = "LearningTemplates")
 @ViewScoped
@@ -43,7 +39,7 @@ public class LearningTemplates implements Serializable {
 		learningTemplates = new ArrayList<String>();
 	}
 
-	public void updateGrid(ComponentSystemEvent event) throws UniformInterfaceException, ClientHandlerException, PortalException, SystemException {
+	public void updateGrid(ComponentSystemEvent event) throws PortalException, SystemException {
 		if (selectedLearningTemplate != null) {
 			SuggestedCompetenceGrid data = SuggestedCompetenceGridDAO
 					.getGrid(selectedLearningTemplate);			

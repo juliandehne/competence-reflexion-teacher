@@ -56,7 +56,7 @@ public class LearningTemplatesFullSet implements Serializable{
 
 		Client client = com.sun.jersey.api.client.Client.create();	
 		WebResource webResource = client
-				.resource(SOAUtil.getRestserverUrl() + "/competences/xml/learningtemplates/cache");	
+				.resource(SOAUtil.getRestserverUrl() + "/competences/learningtemplates");
 		StringList result = webResource.accept(MediaType.APPLICATION_XML)
 				.get(StringList.class);
 		for (String template : result.getData()) {

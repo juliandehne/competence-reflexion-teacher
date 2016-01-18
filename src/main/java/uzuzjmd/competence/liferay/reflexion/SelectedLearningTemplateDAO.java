@@ -26,32 +26,7 @@ public class SelectedLearningTemplateDAO {
 		Client client = com.sun.jersey.api.client.Client.create();
 		WebResource webResource = client.resource(SOAUtil.getRestserverUrl()
 				+ "/competences/xml/learningtemplates/add");
-		try {
-			try {
-				webResource
-						.queryParam("userId",
-								ContextUtil.getUserLoggedIn().getLogin() + "")
-						.queryParam("groupId",
-								ContextUtil.getGroup().getGroupId() + "")
-						.queryParam("selectedTemplate",
-								selectedLearningTemplate)
-						.accept(MediaType.APPLICATION_XML).post();
-			} catch (PortalException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SystemException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (UniformInterfaceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClientHandlerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			client.destroy();
-		}
+		doRestAccess(selectedLearningTemplate, client, webResource);
 	}
 
 	public static synchronized StringList findAll()
@@ -84,7 +59,12 @@ public class SelectedLearningTemplateDAO {
 	public static synchronized void delete(String selectedLearningTemplate) {
 		Client client = com.sun.jersey.api.client.Client.create();
 		WebResource webResource = client.resource(SOAUtil.getRestserverUrl()
-				+ "/competences/xml/learningtemplates/delete");
+				+ "/competences/learningtemplates/delete");
+		doRestAccess(selectedLearningTemplate, client, webResource);
+
+	}
+
+	private static void doRestAccess(String selectedLearningTemplate, Client client, WebResource webResource) {
 		try {
 			try {
 				webResource
@@ -111,6 +91,5 @@ public class SelectedLearningTemplateDAO {
 		} finally {
 			client.destroy();
 		}
-
 	}
 }

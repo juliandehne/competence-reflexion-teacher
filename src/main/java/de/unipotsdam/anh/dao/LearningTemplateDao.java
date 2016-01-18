@@ -13,6 +13,7 @@ import org.glassfish.jersey.filter.LoggingFilter;
 
 import uzuzjmd.competence.shared.StringList;
 import uzuzjmd.competence.shared.dto.Graph;
+import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.gson.Gson;
@@ -22,7 +23,7 @@ import de.unipotsdam.anh.util.AppUtil;
 
 public class LearningTemplateDao {
 
-	private static final LoggingFilter logginFilter = new LoggingFilter(
+	private static final LoggingFilter loggingFilter = new LoggingFilter(
 			Logger.getLogger(LearningTemplateDao.class.getName()), true);
 
 	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(
@@ -31,10 +32,10 @@ public class LearningTemplateDao {
 
 		try {
 			final WebTarget webResource = client.target(AppUtil.getBaseUrl()
-					+ "/competences/xml/learningtemplate/get/"
+					+ "/competences/learningtemplate/get/"
 					+ learningTemplateName);
 			LearningTemplateResultSet result = webResource
-					.register(logginFilter).request(MediaType.APPLICATION_XML)
+					.register(loggingFilter).request(MediaType.APPLICATION_XML)
 					.get(LearningTemplateResultSet.class);
 			return result;
 		} catch (Exception e) {
@@ -54,11 +55,14 @@ public class LearningTemplateDao {
 	public static synchronized int createTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
-				+ "/competences/xml/learningtemplate/add/"+learningTemplateName);
+				+ "/competences/learningtemplate/add");
 		try {
-			Response response = webResource.register(logginFilter)
-					.queryParam("learningTemplateName", learningTemplateName)				
-					.request(MediaType.APPLICATION_XML).post(null);
+			LearningTemplateResultSet learningTemplateResultSet = new LearningTemplateResultSet();
+			learningTemplateResultSet.setNameOfTheLearningTemplate(learningTemplateName);
+			Response response = webResource.register(loggingFilter)
+					.queryParam("learningTemplateName", learningTemplateResultSet)
+					.request(MediaType.APPLICATION_XML).post(Entity.entity(learningTemplateResultSet,
+							MediaType.APPLICATION_XML));
 			return response.getStatus();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,9 +76,9 @@ public class LearningTemplateDao {
 	public static synchronized int deleteTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
-				+ "/competences/xml/learningtemplate/delete/"+learningTemplateName);
+				+ "/competences/learningtemplate/delete/"+learningTemplateName);
 		try {
-			Response response = webResource.register(logginFilter)			
+			Response response = webResource.register(loggingFilter)
 					.request(MediaType.APPLICATION_XML).post(null);
 			return response.getStatus();
 		} catch (Exception e) {
@@ -91,9 +95,8 @@ public class LearningTemplateDao {
 
 		try {
 			final WebTarget webResource = client
-					.target(AppUtil.getBaseUrl() + "/competences/xml/learningtemplate/add/"
-							+ learningTemplateResultSet.getNameOfTheLearningTemplate())
-					.register(logginFilter)
+					.target(AppUtil.getBaseUrl() + "/competences/learningtemplate/add")
+					.register(loggingFilter)
 					.queryParam("learningTemplateResultSet",
 							learningTemplateResultSet);
 
@@ -123,10 +126,10 @@ public class LearningTemplateDao {
 	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, String catchWords) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
-				+ "/competences/json/addOne/");
+				+ "/competences/addOne/");
 		Response response = null;
 		try {
-			response = webResource.register(logginFilter)
+			response = webResource.register(loggingFilter)
 					.queryParam("competence", competence)
 					.queryParam("operator", operator)
 					.queryParam("catchwords", catchWords)
@@ -150,9 +153,9 @@ public class LearningTemplateDao {
 	public static synchronized StringList findAll() {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
-				+ "/competences/xml/learningtemplates/");
+				+ "/competences/learningtemplates");
 		try {
-			StringList response = webResource.register(logginFilter)
+			StringList response = webResource.register(loggingFilter)
 					.request(MediaType.APPLICATION_XML).get(StringList.class);
 
 			return response;
@@ -168,11 +171,11 @@ public class LearningTemplateDao {
 	public static synchronized Graph getGraphFromCourse(String course) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(
-				AppUtil.getBaseUrl() + "/competences/json/prerequisite/graph/")
+				AppUtil.getBaseUrl() + "/competences/prerequisite/graph/")
 				.path(course);
 		final Gson gson = new GsonBuilder().create();
 		try {
-			Response response = webResource.register(logginFilter)
+			Response response = webResource.register(loggingFilter)
 					.request(MediaType.APPLICATION_JSON).get();
 			return gson
 					.fromJson(response.readEntity(String.class), Graph.class);
