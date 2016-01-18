@@ -3,6 +3,6 @@
 
 <display>
 	<category name="category.sample">
-		<portlet id="Competence-Reflexion Portlet"></portlet>		
+		<portlet id="competence-reflexion-2" />
 	</category>
 </display>

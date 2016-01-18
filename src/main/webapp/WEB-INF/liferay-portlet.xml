@@ -3,20 +3,11 @@
 
 <liferay-portlet-app>
 	<portlet>
-		<portlet-name>Competence-Reflexion Portlet</portlet-name>
+		<portlet-name>competence-reflexion-2</portlet-name>
 		<icon>/icon.png</icon>
-		<requires-namespaced-parameters>
-			false
-		</requires-namespaced-parameters>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>
-			competence-reflexion-portlet
-		</css-class-wrapper>
-
-	</portlet>	
+		<requires-namespaced-parameters>false</requires-namespaced-parameters>
+		<header-portlet-css>/resource/css/main.css</header-portlet-css>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

@@ -1,178 +1,350 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
-<f:view xmlns="http://www.w3.org/1999/xhtml"
+<f:view
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
-	<h:head />
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<h:head>
+		<style type="text/css">
+			.centered {
+			    text-align: center;
+			    margin 0 auto;
+			}
+
+			.marginTop {
+				margin-top: 8px;
+			}
+			.ui-diagram-element {
+		        width:5em; 
+		        height:5em;
+		        line-height:5em;
+		        text-align: center;
+		        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+		        border-radius: 5em;
+		        border: 1px solid #404a4e;
+		        background-color: #404a4e;
+		        color: #cccccc;
+			}
+		</style>
+	</h:head>
 	<h:body>
-		<!-- 		<h:outputText value="#{i18n['Competence-Reflexion-hello-world']}" /> -->
 
-		<p:tabView id="tabViewWidget">
-			<p:tab id="lernprojects" title="Lernprojekte">
-				<H1>Meine Lernprojekte</H1>
-
-
-				<h:form id="learningProjectForm">
-					<p:dataList var="learningProject"
-						value="#{LearningTemplates.learningTemplates}" paginator="true"
-						rows="10" type="definition">
-						<div class="flexiflex">
-							<p:outputLabel value="#{learningProject}"></p:outputLabel>
-							<p:commandButton icon="ui-icon-extlink" value="bearbeiten"
-								id="bearbeiten_button" disabled="true">
-								<f:attribute name="learningProject" value="#{learningProject}" />
-							</p:commandButton>
-							<p:commandButton icon="ui-icon-minusthick" value="löschen"
-								action="#{LearningTemplates.deleteTemplate1(learningProject)}">
-							</p:commandButton>
+	<h:form id="learningTemplateForm">
+		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+		     <img src="http://www.ajaxload.info/images/exemples/19.gif" > </img>
+		</p:dialog>
+		<p:outputPanel id="learningTemplatePorlet">
+			<p:panel>
+				<div class="ui-grid ui-grid-responsive">
+					<div class="ui-grid-row centered">
+						<div class="ui-grid-col-12">
+							<h4><h:outputText value="Geben Sie einen Namen für das Template an oder wählen sie ein bestehendes aus!" /></h4>
 						</div>
-					</p:dataList>
-					<p:commandButton icon="ui-icon-plus" value="hinzufügen"
-						id="addLearningGoalButton">
-					</p:commandButton>
-					<div class="flexiflex" id="test:createLearningGoalPanel">
-						<p:outputLabel for="autocomplete"
-							value="Wählen Sie neue Lernprojekte!"></p:outputLabel>
-						<p:autoComplete maxResults="10" id="autocomplete"
-							value="#{LearningTemplates.selectedCompetence}"
-							completeMethod="#{LearningTemplatesFullSet.complete}"
-							dropdown="true" validator="#{learningTemplateValidator.validate}"
-							validatorMessage="Dieses Lernziel ist nicht vorhanden!" />
-						<p:commandButton value="speichern" id="saveLearningGoal"
-							actionListener="#{LearningTemplates.addTemplate}">
-							<f:ajax render="@form" />
-						</p:commandButton>
-						<p:commandButton value="abbrechen" id="cancelCreatingLearningGoal">
-						</p:commandButton>
 					</div>
-				</h:form>
-			</p:tab>
-
-
-
-
-			<!-- 			new Tab           -->
-
-
-
-			<p:tab title="Selbsteinschätzung">
-				<H1>Selbsteinschätzung</H1>
-
-				<!-- 		Hier wird das Dropdown für die Lernprojekte konfiguriert -->
-				<H4>Lernprojekte</H4>
-
-				<h:form id="learningProjectGridForm">
-					<div id="learningTemplateSelection">
-						<p:selectOneMenu header="Lernprojekte"
-							value="#{LearningTemplates.selectedLearningTemplate}"
-							id="selectLearningTemplateMenu">
-							<f:selectItems value="#{LearningTemplates.learningTemplates}" />
-							<f:selectItem itemLabel="test" itemValue="test"></f:selectItem>
-							<f:ajax render="@form" />
-						</p:selectOneMenu>
-					</div>
-
-					<!-- 		Hier wird das Kompetenzraster angezeigt -->
-					<p:scrollPanel mode="native" style="width:100%;height:100%" id="competencenGridView">
-						<div class="table-responsive" id="suggestedCompetenceGrid">
-
-							<table class="table table-bordered table-hover table-condensed">
-
-								<thead>
-									<tr>
-										<th>#</th>
-										<th>Kompetenze:</th>
-										<ui:repeat var="suggestedCompetenceColumn"
-											value="#{LearningTemplates.suggestedCompetenceGrid.suggestedCompetenceRows[0].suggestedCompetenceColumns}"
-											varStatus="varStatus">
-											<th>Niveau #{varStatus.index +1}</th>
-										</ui:repeat>
-									</tr>
-								</thead>
-
-								<ui:repeat var="suggestedCompetenceRow"
-									value="#{LearningTemplates.suggestedCompetenceGrid.suggestedCompetenceRows}"
-									id="gridView" varStatus="varStatus">
-									<f:event type="preRenderView"
-										listener="#{LearningTemplates.updateGrid}" />
-									<tr>
-										<td>#{varStatus.index +1}</td>
-										<td><h:outputText class="suggestedCompetenceRowHeader}"
-												value="#{suggestedCompetenceRow.suggestedCompetenceRowHeader}"></h:outputText>
-										</td>
-
-										<ui:repeat var="suggestedCompetenceColumn"
-											value="#{suggestedCompetenceRow.suggestedCompetenceColumns}">
-											<!-- 										<span class="icon-arrow-right"></span> -->
-											<td><p:commandLink
-													action="#{GridViewController.update(suggestedCompetenceColumn)}"
-													update="@(.reflexionSelection)">
-													<div class="suggestedCompetenceCluster">
-														<h:outputText class="competenceGridEntry"
-															value="#{suggestedCompetenceColumn.testOutput}" />
-														<p:progressBar
-															value="#{suggestedCompetenceColumn.progressInPercent}"
-															labelTemplate="#{suggestedCompetenceColumn.progressInPercent}%"
-															displayOnly="true" style="width:80px"></p:progressBar>
-													</div>
-												</p:commandLink></td>
-										</ui:repeat>
-									</tr>
-								</ui:repeat>
-
-							</table>
-						</div>
-					</p:scrollPanel>
-
-					<p:remoteCommand name="updateCompetenceView" update="competencenGridView" />
-					
-					<!-- Hier werden bei Button-Click dynamisch Assessment-Fragen angezeigt process="@(.reflexionSelection)" -->
-						<p:panel id="reflexionSelection" styleClass="reflexionSelection">
-							<div id="assessmentsForSelected" class="ui-grid ui-grid-responsive">
-								<H2>#{GridViewController.holder.suggestedMetaCompetence}</H2>
-								<br />
-								<ui:repeat var="reflectiveAssessment"
-									value="#{GridViewController.holder.reflectiveAssessmentList}">
-									<div class="flexiflex ui-grid-row" style="margin: auto;">
-										<div class="ui-grid-col-7">
-											<p:outputLabel for="assessmentRadio"
-												value="#{reflectiveAssessment.competenceDescription}"></p:outputLabel>
-										</div>
-										<div class="ui-grid-col-5" style="padding-left: 5px;">
-										<p:selectOneRadio id="assessmentRadio"
-											value="#{reflectiveAssessment.assessment}">
-											<p:ajax event="change" oncomplete="updateCompetenceView()"
-												listener="#{GridViewController.handleChange}"/>
-											<f:selectItem
-												itemLabel="#{GridViewController.holder.assessment.items[0]}"
-												itemValue="#{GridViewController.holder.assessment.items[0]}" />
-											<f:selectItem
-												itemLabel="#{GridViewController.holder.assessment.items[1]}"
-												itemValue="#{GridViewController.holder.assessment.items[1]}" />
-											<f:selectItem
-												itemLabel="#{GridViewController.holder.assessment.items[2]}"
-												itemValue="#{GridViewController.holder.assessment.items[2]}" />
-											<f:selectItem
-												itemLabel="#{GridViewController.holder.assessment.items[3]}"
-												itemValue="#{GridViewController.holder.assessment.items[3]}" />
-										</p:selectOneRadio>
-										<p:selectBooleanCheckbox
-											value="#{reflectiveAssessment.isLearningGoal}">
-											<p:ajax event="change"
-												listener="#{GridViewController.handleChange}" />
-										</p:selectBooleanCheckbox>
-										<h:outputText value="Lernziel?" />
-										</div>
-									</div>
-									<br />
-								</ui:repeat>
+					<div class="ui-grid-row centered marginTop">
+						<div class="ui-grid-col-6">
+							<div><h:outputText value="Learning-Template von DB auswählen: " /></div>
+							<div class="marginTop">
+								<p:autoComplete maxResults="10" id="autocompleteLearningTemplate"
+									dropdown="true"
+									value="#{learningTemplateView.selectedLearningTemplate}"
+									completeMethod="#{learningTemplateView.complete}"
+									validator="#{learningTemplateView.validate}"
+									validatorMessage="Dieses Lernziel ist nicht vorhanden!">
+									<p:ajax event="itemSelect" update="learningTemplatePorlet" />
+								</p:autoComplete>
 							</div>
-						</p:panel>
-				</h:form>
-			</p:tab>
-		</p:tabView>
+							<div class="marginTop">
+								<p:commandButton id="templateSelecteButton" value="auswählen" icon="ui-icon-check"
+									update="learningTemplatePorlet"
+									actionListener="#{learningTemplateView.selectLearningTemplate}">
+									<f:ajax render="@form" />
+								</p:commandButton>
+							</div>
+						</div>
+						<div class="ui-grid-col-4" >
+							<p:commandButton icon="ui-icon-plus" value="neu erstellen" ajax="true"
+								onclick="PF('newTemplateDialog').show()" style=" margin-top:20px;"/>
+						</div>
+					</div>
+					<div class="ui-grid-row marginTop">
+						<div class="ui-grid-col-12 centered">
+							<p:message for="autocompleteLearningTemplate" />
+							<p:messages for="selecteCompetenceMessages"/>
+						</div>
+					</div>
+				</div>
+
+				<p:dialog header="neu Lernprojekt erstellen"  closeOnEscape="true"
+					widgetVar="newTemplateDialog" modal="true" height="120">
+					<div class="centered marginTop">
+						<h4><h:outputText value="Geben Sie einen neuen Lernprojekt ein: " /></h4>
+						<div class="marginTop">
+							<p:inputText id="name" value="#{learningTemplateView.newLearningTemplate}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="erstellen" icon="ui-icon-check"
+								ajax="true" keypadOnly="true" resetValues="true"
+								update="learningTemplatePorlet"
+								oncomplete="PF('newTemplateDialog').hide()"
+								actionListener="#{learningTemplateView.createLearningTemplate}">
+							</p:commandButton>
+							<p:commandButton value="abbrechen" onclick="PF('newTemplateDialog').hide()" style="margin-left:5px;"/>
+						</div>
+					</div>
+				</p:dialog>
+			</p:panel>
+
+
+			<br />
+			<br />
+			<br />
+
+
+			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
+				<p:growl id="growl" showDetail="true" autoUpdate="true" />
+				<h2>
+					<h:outputText id="selectedLearningProject"
+						value="Lernprojekt : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
+				
+				<span class="pull-right" style="font-size:15px;">
+					<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
+						ajax="true" update="learningTemplatePorlet"
+						actionListener="#{learningTemplateView.deleteLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}">
+						<p:confirm header="Löschen bestätigen" message="Möchten Sie diese Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
+					</p:commandButton>
+				</span>
+				</h2>
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+				</p:confirmDialog>
+				<hr />
+
+				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
+					<h4>
+						<h:outputText value="Thema: #{catchWord} " />
+<!-- 					<p:inplace id="ajax" editor="true" label="#{catchWord}"> -->
+<!-- 			            <p:inputText value="#{catchWord} " required="true" /> -->
+<!-- 			            <p:ajax event="save" process="@this" /> -->
+<!-- 			        </p:inplace> -->
+					</h4>
+
+					<!-- Tree view for competence -->
+					<div class="marginTop">
+					<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">
+						<p:tree value="#{tree}" var="node" selectionMode="single" 
+							selection="#{competencenTreeView.selectedNode}"
+							dynamic="true" orientation="horizontal" >
+							<p:ajax event="select" update="@form"
+								listener="#{competencenTreeView.onNodeSelect(catchWord)}" />
+							<p:treeNode >
+								<h:outputText value="#{node}" />
+							</p:treeNode>
+						</p:tree>
+						<br />
+					</ui:repeat>
+					</div>
+		        	<p:commandButton icon="ui-icon-plus" value="neuer Lernpfad" onclick="PF('newCompetenceDialog').show()"
+		        		action="#{templateCompetenceView.selecteCatchWord(catchWord)}"/>
+			       
+			        <hr />
+				</ui:repeat>
+				
+
+
+				<p:dialog header="Kompetence hinzufügen" widgetVar="newCompetenceDialog" 
+					modal="true" height="100%" closeOnEscape="true" >
+					<div class="centered marginTop">
+						<div class="marginTop">
+							<h:outputText value="Geben Sie zwei Kompetenzen ein! " />
+						</div>
+						<div class="marginTop">
+							erste Kompetenze: 
+							<p:inputText value="#{templateCompetenceView.firstNewCompetence}" />
+						</div>
+						<div class="marginTop">
+							zweite Kompetenze: 
+							<p:inputText value="#{templateCompetenceView.secondNewCompetence}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="erstellen" icon="ui-icon-check"
+								update="learningProjectEdit" resetValues="true"
+								actionListener="#{templateCompetenceView.addNewCompetence}" />
+							<p:commandButton value="abbrechen" onclick="PF('newCompetenceDialog').hide()" style="margin-left:5px;"/>
+						</div>
+					</div>
+				</p:dialog>
+				
+<!-- 				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog"  -->
+<!-- 					modal="true" height="100%" closeOnEscape="true" > -->
+<!-- 					<div class="centered marginTop"> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							<h:outputText value="untere Kompetenzen von ''#{competencenTreeView.selectedNode.data}'' erstellen " /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzename: -->
+<!-- 							<p:inputText  /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzeniveau: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Evalution: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							Kompetenzelink: -->
+<!-- 							<p:inputText /> -->
+<!-- 						</div> -->
+<!-- 						<div class="marginTop"> -->
+<!-- 							<p:commandButton value="erstellen" icon="ui-icon-check" -->
+<!-- 								update="learningProjectEdit" resetValues="true" /> -->
+<!-- 							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 				</p:dialog> -->
+
+
+				
+				<p:dialog header="Kompetence abzweigen" widgetVar="branchCompetenceDialog"
+					modal="true" height="170" closeOnEscape="true">
+					<div class="centered marginTop">
+						<div class="marginTop">
+					    	<h:outputText value="Geben Sie neue Kompetenz ein! " />
+						</div>
+						<div class="marginTop">
+							<p:inputText
+								value="#{competencenTreeView.selectedCompetenceToNode}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="abzweigen" icon="ui-icon-check"
+								update="learningProjectEdit" resetValues="true"
+								actionListener="#{templateCompetenceView.branchCompetenceAction}" />
+							<p:commandButton value="abbrechen" onclick="PF('branchCompetenceDialog').hide()" style="margin-left:5px;" />
+						</div>
+					</div>
+					<br />
+					<div class="marginTop">
+						<i>
+							<p:commandLink value=">>> Oder aus Datenbank auswählen !" 
+								onclick="PF('branchCompetenceDialog').hide();PF('branchCompetenceDbDialog').show();" />
+						</i>
+					</div>
+				</p:dialog>
+				
+				<p:dialog header="neues Kompetenzniveau" widgetVar="newLevelCompetenceDialog"
+					modal="true" height="140" closeOnEscape="true">
+					<div class="centered marginTop">
+						<div class="marginTop">
+					    	<h:outputText value="Geben Sie neue Kompetenz ein! " />
+						</div>
+						<div class="marginTop">
+							<p:inputText
+								value="#{competencenTreeView.newLevelCompetence}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="neues Niveau" icon="ui-icon-check"
+								update="learningProjectEdit" resetValues="true"
+								actionListener="#{templateCompetenceView.addNewCompetenceLevel}" />
+							<p:commandButton value="abbrechen" onclick="PF('newLevelCompetenceDialog').hide()" style="margin-left:5px;" />
+						</div>
+					</div>
+					<br />
+				</p:dialog>
+				
+				
+				<p:dialog header="Kompetence von Datenbank abzweigen" widgetVar="branchCompetenceDbDialog"
+					modal="true" height="120" closeOnEscape="true">
+					<div class="centered marginTop">
+						<div class="marginTop">
+					    	<h:outputText value="Wählen Sie eine Kompetenz aus! " />
+						</div>
+						<div class="marginTop">
+
+							<p:autoComplete maxResults="10"
+								dropdown="true"
+								value="#{templateCompetenceView.selectedDbCompetence}"
+								completeMethod="#{templateCompetenceView.complete}"/>
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="abzweigen" icon="ui-icon-check"
+								update="learningProjectEdit"
+								actionListener="#{templateCompetenceView.branchCompetenceFromDbAction}" />
+							<p:commandButton value="abbrechen" onclick="PF('branchCompetenceDbDialog').hide()" style="margin-left:5px;" />
+						</div>
+					</div>
+				</p:dialog>
+
+
+
+				<p:button icon="ui-icon-plus" value="Thema hinzufügen" onclick="return false">
+					<p:effect type="fade" event="click" for="newHeadField">
+						<f:param name="mode" value="'show'" />
+					</p:effect>
+				</p:button>
+
+				<br />
+				<h:panelGroup layout="block" id="newHeadField" style="display:none">
+					<fieldset>
+					<legend>Geben sie eine Thema ein! :</legend>
+						<div class="ui-grid">
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									Thema:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="neu Thema" 
+										value="#{catchwordCreater.newCatchWord}" />
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									Operation:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="Operation" 
+										value="#{catchwordCreater.newOperation}"/>
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									erste Kompetenze:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="erste Kompetenze" 
+										value="#{catchwordCreater.firstCompetence}"/>
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<div class="ui-grid-col-3">
+									zweite Kompetenze:
+								</div>
+								<div class="ui-grid-col-6">
+									<p:inputText placeholder="zweite Kompetenze" 
+										value="#{catchwordCreater.secondCompetence}"/>
+								</div>
+							</div>
+							<div class="ui-grid-row">
+								<p:commandButton value="erstellen" icon="ui-icon-check"
+									update="learningProjectEdit" resetValues="true"
+									actionListener="#{templateCompetenceView.addNewCatchWord}" />
+								<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
+									<p:effect type="fade" event="click" for="newHeadField">
+										<f:param name="mode" value="'hide'" />
+									</p:effect>
+								</p:button>
+							</div>
+						</div>
+					</fieldset>
+				</h:panelGroup>
+			</p:panel>
+		</p:outputPanel>
+		</h:form>
 	</h:body>
 </f:view>
