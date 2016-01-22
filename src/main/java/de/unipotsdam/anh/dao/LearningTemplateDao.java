@@ -13,7 +13,6 @@ import org.glassfish.jersey.filter.LoggingFilter;
 
 import uzuzjmd.competence.shared.StringList;
 import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.gson.Gson;

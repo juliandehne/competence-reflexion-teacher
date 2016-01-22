@@ -16,6 +16,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import uzuzjmd.competence.shared.StringList;
@@ -23,6 +24,7 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
@@ -49,8 +51,11 @@ public class LearningTemplateView implements Serializable, Validator{
 	public List<String> complete(String query) {
         final List<String> results = new ArrayList<String>();
         final Collection<String> tmp = Collections2.filter(learningTemplates, Predicates.containsPattern(query));	
-		results.addAll(tmp);
+		results.addAll(tmp == null ? new ArrayList<String>() : tmp);
 		
+		if(results.size() == 0) {
+			FacesContext.getCurrentInstance().addMessage( "autocompleteMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Es gibt kein Lernprojekt,den Sie auswählen können!"));
+		}
         return results;
     }
 	
@@ -71,8 +76,8 @@ public class LearningTemplateView implements Serializable, Validator{
 			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
 		} else {
 			templateCompetenceView.update(selectedLearningTemplate);
-			selectedLearningTemplate = "";
 			System.out.println(selectedLearningTemplate);
+			selectedLearningTemplate = "";
 		}
 		
 	}
@@ -130,6 +135,8 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	private void fetchAllLearningTemplate() {
 		StringList result = LearningTemplateDao.findAll();
-		learningTemplates = result == null ? new ArrayList<String>() : result.getData();
+		final List<String> tmp = result == null ? new ArrayList<String>() : result.getData();
+		learningTemplates = CollectionUtils.isEmpty(tmp) ? new ArrayList<String>() : tmp;
+		Iterables.removeIf(learningTemplates, Predicates.isNull());
 	}
 }

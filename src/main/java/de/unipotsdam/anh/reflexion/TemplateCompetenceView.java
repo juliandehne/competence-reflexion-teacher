@@ -57,7 +57,7 @@ public class TemplateCompetenceView implements Serializable{
 		if(learningTemplateResultSet == null) {
 			learningTemplateResultSet = new LearningTemplateResultSet(); 
 		}
-		
+		System.out.println(learningTemplateResultSet.getRoot());
 		competencenTreeView.update(learningTemplateResultSet);
 	}
 
@@ -71,6 +71,7 @@ public class TemplateCompetenceView implements Serializable{
 			firstNewCompetence = "";
 			secondNewCompetence = "";
 		}
+		System.out.println(firstNewCompetence + " #### " + secondNewCompetence);
 	}
 	
 	public void addNewCompetenceLevel(ActionEvent e) {
@@ -169,17 +170,21 @@ public class TemplateCompetenceView implements Serializable{
 				AppUtil.showInfo("Competence hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
 				return false;
 			}
-//			learningTemplateResultSet.getResultGraph().addTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
 			
 			final GraphTriple triple = new GraphTriple(selectedCompetenceFromNode, selectedCompetenceToNode, LABELNAME, true);
-			learningTemplateResultSet.addTriple(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
 			
-//			learningTemplateResultSet.getCatchwordMap().put(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
+			learningTemplateResultSet.addTriple(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
 	
-			LearningTemplateDao.createTemplate(learningTemplateResultSet);
-			competencenTreeView.update(learningTemplateResultSet);
-			AppUtil.showInfo("Competence hinzufügen:", "Competence wird erfolgreich hinzugefügt!!");
-			return true;
+			int status = LearningTemplateDao.createTemplate(learningTemplateResultSet);
+			System.out.println("add learning template return status: " + status);
+			if( status == 200) {
+				competencenTreeView.update(learningTemplateResultSet);
+				AppUtil.showInfo("Competence hinzufügen:", "Competence wird erfolgreich hinzugefügt!!");
+				return true;
+			} else {
+				learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learningTemplateResultSet.getNameOfTheLearningTemplate());
+				AppUtil.showError("Competence hinzufügen:", "Competence wird nicht erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
+			}
 		}
 		
 		return false;

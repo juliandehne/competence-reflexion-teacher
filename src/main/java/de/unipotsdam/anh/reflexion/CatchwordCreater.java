@@ -35,10 +35,12 @@ public class CatchwordCreater implements Serializable{
 				graph.addTriple(firstCompetence, secondCompetence, LABELNAME, true);
 				learningTemplateResultSet.getCatchwordMap().put(graphTriple, new String[]{newCatchWord});
 				
-				LearningTemplateDao.createTemplate(learningTemplateResultSet);
-				
-				AppUtil.showInfo("Thema hinzufügen: ", "Thema ''" + newCatchWord + "'' wird erfolgreich hinzugefügt!");
-				resetValue();
+				if(LearningTemplateDao.createTemplate(learningTemplateResultSet) == 200) {
+					AppUtil.showInfo("Thema hinzufügen: ", "Thema ''" + newCatchWord + "'' wird erfolgreich hinzugefügt!");
+					resetValue();
+				} else {
+					AppUtil.showError("Thema hinzufügen:", "Thema ''" + newCatchWord + "'' wird erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
+				}
 				
 			} else {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Sorry unknown error!", "Contact admin."));

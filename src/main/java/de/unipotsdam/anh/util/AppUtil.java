@@ -45,4 +45,8 @@ public class AppUtil {
 	public static void showInfo(String title, String message) {
 		FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_INFO, title, message));
 	}
+	
+	public static void showError(String title, String message) {
+		FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_ERROR, title, message));
+	}
 }
