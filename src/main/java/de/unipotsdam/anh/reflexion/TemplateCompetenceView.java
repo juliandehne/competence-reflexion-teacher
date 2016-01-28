@@ -164,10 +164,10 @@ public class TemplateCompetenceView implements Serializable{
 	
 	private boolean addBranchCompetenceAction(String selectedCatchword, String selectedCompetenceFromNode, String selectedCompetenceToNode) {
 		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausführen!", selectedCompetenceFromNode, selectedCompetenceToNode, selectedCatchword) && 
-				AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlicht sein!", selectedCompetenceFromNode, selectedCompetenceToNode)) {
+				AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlich sein!", selectedCompetenceFromNode, selectedCompetenceToNode)) {
 		
 			if(validExistTriple(selectedCompetenceFromNode, selectedCompetenceToNode)) {
-				AppUtil.showInfo("Competence hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
+				AppUtil.showInfo("Kompetenzen hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
 				return false;
 			}
 			
@@ -179,11 +179,11 @@ public class TemplateCompetenceView implements Serializable{
 			System.out.println("add learning template return status: " + status);
 			if( status == 200) {
 				competencenTreeView.update(learningTemplateResultSet);
-				AppUtil.showInfo("Competence hinzufügen:", "Competence wird erfolgreich hinzugefügt!!");
+				AppUtil.showInfo("Kompetenzen hinzufügen:", "Kompetenzen wird erfolgreich hinzugefügt!!");
 				return true;
 			} else {
 				learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learningTemplateResultSet.getNameOfTheLearningTemplate());
-				AppUtil.showError("Competence hinzufügen:", "Competence wird nicht erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
+				AppUtil.showError("Kompetenzen hinzufügen:", "Kompetenzen wird nicht erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
 			}
 		}
 		

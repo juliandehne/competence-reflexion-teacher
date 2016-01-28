@@ -28,7 +28,7 @@ public class CatchwordCreater implements Serializable{
 
 	public void addNewCatchWord(LearningTemplateResultSet learningTemplateResultSet) {
 		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausfühlen!", newCatchWord, newOperation,firstCompetence, secondCompetence)
-				&& AppUtil.validateNotEquals("Die beide Kompetenze müssen unterschiedlich sein!", firstCompetence, secondCompetence)) {
+				&& AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlich sein!", firstCompetence, secondCompetence)) {
 			if(learningTemplateResultSet != null) {
 				final GraphTriple graphTriple = new GraphTriple(firstCompetence, secondCompetence, LABELNAME, true);
 				final Graph graph = learningTemplateResultSet.getResultGraph() == null ? new Graph() : learningTemplateResultSet.getResultGraph();

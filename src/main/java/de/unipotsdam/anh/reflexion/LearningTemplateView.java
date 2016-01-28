@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -48,13 +49,26 @@ public class LearningTemplateView implements Serializable, Validator{
 		fetchAllLearningTemplate();
 	}
 	
+	public void editCatchword(String rowId, String catchword) {
+		javax.faces.context.FacesContext jsf = javax.faces.context.FacesContext.getCurrentInstance();
+	    Map<String, String> requestParameterMap = jsf.getExternalContext().getRequestParameterMap();
+	    String paramValue = requestParameterMap.get("repeat:" + rowId + ":x");
+	    if (paramValue != null) {
+	        paramValue = paramValue.trim();
+	        if (paramValue.length() == 0) {
+	            paramValue = null;
+	        }
+	    }
+	    System.out.println("paramValue from repeat : " + paramValue + " in: " + "repeat:" + rowId + ":x" + " with catchword: " + catchword);
+	}
+	
 	public List<String> complete(String query) {
         final List<String> results = new ArrayList<String>();
         final Collection<String> tmp = Collections2.filter(learningTemplates, Predicates.containsPattern(query));	
 		results.addAll(tmp == null ? new ArrayList<String>() : tmp);
 		
 		if(results.size() == 0) {
-			FacesContext.getCurrentInstance().addMessage( "autocompleteMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Es gibt kein Lernprojekt,den Sie auswählen können!"));
+			FacesContext.getCurrentInstance().addMessage( "autocompleteMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Es gibt kein Lernprojekt, das Sie auswählen können!"));
 		}
         return results;
     }
@@ -73,7 +87,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	public void selectLearningTemplate(ActionEvent e) {
 		if(StringUtils.isEmpty(selectedLearningTemplate)) {
-			FacesContext.getCurrentInstance().addMessage("selecteCompetenceMessages", new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
 		} else {
 			templateCompetenceView.update(selectedLearningTemplate);
 			System.out.println(selectedLearningTemplate);
@@ -128,7 +142,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	public void validate(FacesContext arg0, UIComponent arg1, Object arg2)
 			throws ValidatorException {
 		if (!learningTemplates.contains(arg2)) {			
-			throw new ValidatorException(new FacesMessage("EingabeFehler: Es gibt kein Lernziel mit diesem Namen"));
+			throw new ValidatorException(new FacesMessage("EingabeFehler: Es gibt kein Lernziel mit diesem Name"));
 		}	
 		
 	}

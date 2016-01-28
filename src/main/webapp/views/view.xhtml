@@ -36,20 +36,22 @@
 	<h:form id="learningTemplateForm">
 		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
 		     <img src="http://www.ajaxload.info/images/exemples/35.gif" width="45px"> </img>
-		     Loading, Please wait ...
+		     Laden, Bitte warten Sie ...
 		</p:dialog>
 		<p:outputPanel id="learningTemplatePorlet">
 			<p:panel>
 				<div class="ui-grid ui-grid-responsive">
 					<div class="ui-grid-row centered">
 						<div class="ui-grid-col-12">
-							<h4><h:outputText value="Geben Sie einen Namen für das Template an oder wählen sie ein bestehendes aus!" /></h4>
+							<h2>Lernprojekt Manager</h2>
+							<h4><h:outputText value="Erstellen Sie ein neues Lernprojekt oder wählen Sie ein aus!" /></h4>
 						</div>
 					</div>
+					<hr />
 					<div class="ui-grid-row centered marginTop">
 						<div class="ui-grid-col-6">
 							<div>
-								<h:outputText value="Learning-Template von DB auswählen: " />
+								<h:outputText value="Wählen Sie ein Lernprojekt aus! " />
 							</div>
 							<div class="marginTop">
 								<p:autoComplete maxResults="10" id="autocompleteLearningTemplate"
@@ -77,15 +79,14 @@
 					<div class="ui-grid-row marginTop">
 						<div class="ui-grid-col-12 centered">
 							<p:message for="autocompleteLearningTemplate" />
-							<p:messages for="selecteCompetenceMessages"/>
 						</div>
 					</div>
 				</div>
 
-				<p:dialog header="neu Lernprojekt erstellen"  closeOnEscape="true"
+				<p:dialog header="neues Lernprojekt erstellen"  closeOnEscape="true"
 					widgetVar="newTemplateDialog" modal="true" height="120">
 					<div class="centered marginTop">
-						<h4><h:outputText value="Geben Sie einen neuen Lernprojekt ein: " /></h4>
+						<h4><h:outputText value="Geben Sie einen Name ein: " /></h4>
 						<div class="marginTop">
 							<p:inputText id="name" value="#{learningTemplateView.newLearningTemplate}" />
 						</div>
@@ -116,7 +117,7 @@
 					<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
 						ajax="true" update="learningTemplatePorlet"
 						actionListener="#{learningTemplateView.deleteLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}">
-						<p:confirm header="Löschen bestätigen" message="Möchten Sie diese Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
+						<p:confirm header="Löschen bestätigen" message="Möchten Sie dieses Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
 					</p:commandButton>
 				</span>
 				</h2>
@@ -126,13 +127,14 @@
 				</p:confirmDialog>
 				<hr />
 
-				<ui:repeat var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
+				<ui:repeat id="repeat" var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
 					<h4>
 						<h:outputText value="Thema: #{catchWord} " />
-<!-- 					<p:inplace id="ajax" editor="true" label="#{catchWord}"> -->
-<!-- 			            <p:inputText value="#{catchWord} " required="true" /> -->
-<!-- 			            <p:ajax event="save" process="@this" /> -->
-<!-- 			        </p:inplace> -->
+						
+<!-- 						<p:inplace editor="true" label="#{catchWord}"> -->
+<!-- 							<p:inputText id="x" value="#{catchWord}"/> -->
+<!-- 				            <p:ajax event="save" process="@this" listener="#{learningTemplateView.editCatchword(status.index, catchWord)}" /> -->
+<!-- 				        </p:inplace> -->
 					</h4>
 
 					<!-- Tree view for competence -->
@@ -158,18 +160,18 @@
 				
 
 
-				<p:dialog header="Kompetence hinzufügen" widgetVar="newCompetenceDialog" 
+				<p:dialog header="neuer Lernpfad hinzufügen" widgetVar="newCompetenceDialog" 
 					modal="true" height="100%" closeOnEscape="true" >
 					<div class="centered marginTop">
 						<div class="marginTop">
 							<h:outputText value="Geben Sie zwei Kompetenzen ein! " />
 						</div>
 						<div class="marginTop">
-							erste Kompetenze: 
+							erste Kompetenz: 
 							<p:inputText value="#{templateCompetenceView.firstNewCompetence}" />
 						</div>
 						<div class="marginTop">
-							zweite Kompetenze: 
+							zweite Kompetenz: 
 							<p:inputText value="#{templateCompetenceView.secondNewCompetence}" />
 						</div>
 						<div class="marginTop">
@@ -214,7 +216,7 @@
 
 
 				
-				<p:dialog header="Kompetence abzweigen" widgetVar="branchCompetenceDialog"
+				<p:dialog header="Kompetenz abzweigen" widgetVar="branchCompetenceDialog"
 					modal="true" height="170" closeOnEscape="true">
 					<div class="centered marginTop">
 						<div class="marginTop">
@@ -235,7 +237,7 @@
 					<br />
 					<div class="marginTop">
 						<i>
-							<p:commandLink value=">>> Oder aus Datenbank auswählen !" 
+							<p:commandLink value=">>> vorhandene Kompetenz auswählen !" 
 								onclick="PF('branchCompetenceDialog').hide();PF('branchCompetenceDbDialog').show();" />
 						</i>
 					</div>
@@ -245,14 +247,14 @@
 					modal="true" height="140" closeOnEscape="true">
 					<div class="centered marginTop">
 						<div class="marginTop">
-					    	<h:outputText value="Geben Sie neue Kompetenz ein! " />
+					    	<h:outputText value="Geben Sie neues Kompetenzniveau ein: " />
 						</div>
 						<div class="marginTop">
 							<p:inputText
 								value="#{competencenTreeView.newLevelCompetence}" />
 						</div>
 						<div class="marginTop">
-							<p:commandButton value="neues Niveau" icon="ui-icon-check"
+							<p:commandButton value="erstellen" icon="ui-icon-check"
 								update="learningProjectEdit" resetValues="true"
 								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
 								actionListener="#{templateCompetenceView.addNewCompetenceLevel}" />
@@ -263,7 +265,7 @@
 				</p:dialog>
 				
 				
-				<p:dialog header="Kompetence von Datenbank abzweigen" widgetVar="branchCompetenceDbDialog"
+				<p:dialog header="Vorhandene Kompetenz auswälen" widgetVar="branchCompetenceDbDialog"
 					modal="true" height="120" closeOnEscape="true">
 					<div class="centered marginTop">
 						<div class="marginTop">
@@ -296,7 +298,7 @@
 				<br />
 				<h:panelGroup layout="block" id="newHeadField" style="display:none">
 					<fieldset>
-					<legend>Geben sie eine Thema ein! :</legend>
+					<legend>Geben sie ein Thema ein! :</legend>
 						<div class="ui-grid">
 							<div class="ui-grid-row">
 								<div class="ui-grid-col-3">
@@ -318,19 +320,19 @@
 							</div>
 							<div class="ui-grid-row">
 								<div class="ui-grid-col-3">
-									erste Kompetenze:
+									erste Kompetenz:
 								</div>
 								<div class="ui-grid-col-6">
-									<p:inputText placeholder="erste Kompetenze" 
+									<p:inputText placeholder="erste Kompetenz" 
 										value="#{catchwordCreater.firstCompetence}"/>
 								</div>
 							</div>
 							<div class="ui-grid-row">
 								<div class="ui-grid-col-3">
-									zweite Kompetenze:
+									zweite Kompetenz:
 								</div>
 								<div class="ui-grid-col-6">
-									<p:inputText placeholder="zweite Kompetenze" 
+									<p:inputText placeholder="zweite Kompetenz" 
 										value="#{catchwordCreater.secondCompetence}"/>
 								</div>
 							</div>
