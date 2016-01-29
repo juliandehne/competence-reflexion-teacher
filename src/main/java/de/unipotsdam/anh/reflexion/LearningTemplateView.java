@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -29,6 +28,7 @@ import com.google.common.collect.Iterables;
 
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
+import de.unipotsdam.anh.util.Label;
 
 @ManagedBean(name = "learningTemplateView")
 @ViewScoped
@@ -41,6 +41,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	
 	private String newLearningTemplate;
 	private String selectedLearningTemplate;
+	private String tmpName;
 	
 	private List<String> learningTemplates;
 	
@@ -49,17 +50,17 @@ public class LearningTemplateView implements Serializable, Validator{
 		fetchAllLearningTemplate();
 	}
 	
-	public void editCatchword(String rowId, String catchword) {
-		javax.faces.context.FacesContext jsf = javax.faces.context.FacesContext.getCurrentInstance();
-	    Map<String, String> requestParameterMap = jsf.getExternalContext().getRequestParameterMap();
-	    String paramValue = requestParameterMap.get("repeat:" + rowId + ":x");
-	    if (paramValue != null) {
-	        paramValue = paramValue.trim();
-	        if (paramValue.length() == 0) {
-	            paramValue = null;
-	        }
+	public void renameLearningTemplate(String oldName) {
+		if(!AppUtil.validateNotEmptyString("Sie müssen einen Name eingeben!",tmpName)) {
+			return;
+		}
+	    int respone = LearningTemplateDao.rename(oldName, tmpName, Label.LEARNING_PROJECT_TEMPLATE);
+	    if(respone == 200) {
+	    	templateCompetenceView.getLearningTemplateResultSet().setNameOfTheLearningTemplate(tmpName);
+	    	tmpName = null;
+	    	fetchAllLearningTemplate();
 	    }
-	    System.out.println("paramValue from repeat : " + paramValue + " in: " + "repeat:" + rowId + ":x" + " with catchword: " + catchword);
+	    System.out.println("rename with status: " + respone);
 	}
 	
 	public List<String> complete(String query) {
@@ -68,7 +69,7 @@ public class LearningTemplateView implements Serializable, Validator{
 		results.addAll(tmp == null ? new ArrayList<String>() : tmp);
 		
 		if(results.size() == 0) {
-			FacesContext.getCurrentInstance().addMessage( "autocompleteMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Es gibt kein Lernprojekt, das Sie auswählen können!"));
+			FacesContext.getCurrentInstance().addMessage( "autocompleteMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Es stellt kein Lernprojekt zur Verfügung"));
 		}
         return results;
     }
@@ -79,7 +80,7 @@ public class LearningTemplateView implements Serializable, Validator{
 			learningTemplateResultSet.setNameOfTheLearningTemplate(newLearningTemplate);
 			LearningTemplateDao.createTemplate(learningTemplateResultSet);
 			templateCompetenceView.update(newLearningTemplate);
-			AppUtil.showInfo("Template erstellen", "Lernprojekt " + newLearningTemplate + " wird erfolgreich erstellt!");
+			AppUtil.showInfo("Template erstellen", "Lernprojekt " + newLearningTemplate + " wurde erfolgreich erstellt!");
 			fetchAllLearningTemplate();
 			newLearningTemplate = "";
 		}
@@ -152,5 +153,13 @@ public class LearningTemplateView implements Serializable, Validator{
 		final List<String> tmp = result == null ? new ArrayList<String>() : result.getData();
 		learningTemplates = CollectionUtils.isEmpty(tmp) ? new ArrayList<String>() : tmp;
 		Iterables.removeIf(learningTemplates, Predicates.isNull());
+	}
+
+	public String getTmpName() {
+		return tmpName;
+	}
+
+	public void setTmpName(String tmpName) {
+		this.tmpName = tmpName;
 	}
 }

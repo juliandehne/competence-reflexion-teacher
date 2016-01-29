@@ -28,7 +28,7 @@ import de.unipotsdam.anh.util.GraphUtil;
 public class CompetencenTreeView implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	public static final String LABELNAME = "SuggestedCompetencePrerequisite";
+	private static final String ADD_LABEL = "+";
 	
 	private Map<String, List<TreeNode>> treeNodeMap;
 	private List<String> catchWords;
@@ -46,7 +46,7 @@ public class CompetencenTreeView implements Serializable{
 	}
 	
 	public void onNodeSelect(String catchword) {
-        if("+".equals(selectedNode.getData())) {
+        if(ADD_LABEL.equals(selectedNode.getData())) {
         	this.selectedCompetenceFromNode = (String) selectedNode.getParent().getData();
             this.selectedCatchword = catchword;
             
@@ -56,7 +56,7 @@ public class CompetencenTreeView implements Serializable{
         		RequestContext.getCurrentInstance().execute("PF('newLevelCompetenceDialog').show();");
         	}
         } else {
-//        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
+        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
         }
         
     }
@@ -184,7 +184,7 @@ public class CompetencenTreeView implements Serializable{
 	private TreeNode createTreeNode(String label) {
 		final TreeNode node = new DefaultTreeNode(label);
 		node.setExpanded(true);
-		node.getChildren().add( new DefaultTreeNode("+"));
+		node.getChildren().add( new DefaultTreeNode(ADD_LABEL));
 		return node;
 	}
 }

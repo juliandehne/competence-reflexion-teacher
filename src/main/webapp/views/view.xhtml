@@ -39,7 +39,7 @@
 		     Laden, Bitte warten Sie ...
 		</p:dialog>
 		<p:outputPanel id="learningTemplatePorlet">
-			<p:panel>
+			<p:panel id="learningTemplatePanel">
 				<div class="ui-grid ui-grid-responsive">
 					<div class="ui-grid-row centered">
 						<div class="ui-grid-col-12">
@@ -60,12 +60,13 @@
 									completeMethod="#{learningTemplateView.complete}"
 									validator="#{learningTemplateView.validate}"
 									validatorMessage="Dieses Lernziel ist nicht vorhanden!">
-									<p:ajax event="itemSelect" update="learningTemplatePorlet" />
+									<p:ajax event="itemSelect" update="learningTemplatePanel" />
 								</p:autoComplete>
 							</div>
 							<div class="marginTop">
 								<p:commandButton id="templateSelecteButton" value="auswählen" icon="ui-icon-check"
 									update="learningTemplatePorlet"
+									disabled="#{ empty learningTemplateView.selectedLearningTemplate}"
 									actionListener="#{learningTemplateView.selectLearningTemplate}">
 									<f:ajax render="@form" />
 								</p:commandButton>
@@ -103,15 +104,18 @@
 				</p:dialog>
 			</p:panel>
 
-			<p:messages id="autocompleteMessage" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
+			<p:messages id="autocompleteMessage" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
 
 			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
 				<p:growl id="growl" showDetail="true" autoUpdate="true" />
 				<h2>
-					<h:outputText id="selectedLearningProject"
-						value="Lernprojekt : #{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}" />
+					Lernprojekt : 
+					<p:inplace editor="true" label="#{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}">
+						<p:inputText value="#{learningTemplateView.tmpName}" placeholder="#{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}"/>
+			            <p:ajax event="save" update="learningTemplatePorlet" process="@this" listener="#{learningTemplateView.renameLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}" />
+			        </p:inplace>
 				
 				<span class="pull-right" style="font-size:15px;">
 					<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
@@ -133,7 +137,7 @@
 						
 <!-- 						<p:inplace editor="true" label="#{catchWord}"> -->
 <!-- 							<p:inputText id="x" value="#{catchWord}"/> -->
-<!-- 				            <p:ajax event="save" process="@this" listener="#{learningTemplateView.editCatchword(status.index, catchWord)}" /> -->
+<!-- 				            <p:ajax event="save" process="@this" listener="" /> -->
 <!-- 				        </p:inplace> -->
 					</h4>
 
@@ -184,35 +188,26 @@
 					</div>
 				</p:dialog>
 				
-<!-- 				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog"  -->
-<!-- 					modal="true" height="100%" closeOnEscape="true" > -->
-<!-- 					<div class="centered marginTop"> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							<h:outputText value="untere Kompetenzen von ''#{competencenTreeView.selectedNode.data}'' erstellen " /> -->
-<!-- 						</div> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							Kompetenzename: -->
-<!-- 							<p:inputText  /> -->
-<!-- 						</div> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							Kompetenzeniveau: -->
-<!-- 							<p:inputText /> -->
-<!-- 						</div> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							Evalution: -->
-<!-- 							<p:inputText /> -->
-<!-- 						</div> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							Kompetenzelink: -->
-<!-- 							<p:inputText /> -->
-<!-- 						</div> -->
-<!-- 						<div class="marginTop"> -->
-<!-- 							<p:commandButton value="erstellen" icon="ui-icon-check" -->
-<!-- 								update="learningProjectEdit" resetValues="true" /> -->
-<!-- 							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</p:dialog> -->
+				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog" 
+					modal="true" height="100%" closeOnEscape="true" >
+					<div class="centered marginTop">
+						<div class="marginTop">
+							<h:outputText value="''#{competencenTreeView.selectedNode.data}'' umbenennen: " />
+						</div>
+						<div class="marginTop">
+							neu Name:
+							<p:inputText value="#{templateCompetenceView.tmpName}" 
+									placeholder="#{competencenTreeView.selectedNode.data}" />
+						</div>
+						<div class="marginTop">
+							<p:commandButton value="update" icon="ui-icon-check"
+								update="learningProjectEdit"
+								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+								actionListener="#{templateCompetenceView.renameCompetence}" />
+							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/>
+						</div>
+					</div>
+				</p:dialog>
 
 
 				
@@ -304,17 +299,17 @@
 								<div class="ui-grid-col-3">
 									Thema:
 								</div>
-								<div class="ui-grid-col-6">
-									<p:inputText placeholder="neu Thema" 
+								<div class="ui-grid-col-9">
+									<p:inputText placeholder="z.B. Naturwissenschaft" 
 										value="#{catchwordCreater.newCatchWord}" />
 								</div>
 							</div>
 							<div class="ui-grid-row">
 								<div class="ui-grid-col-3">
-									Operation:
+									Operator:
 								</div>
-								<div class="ui-grid-col-6">
-									<p:inputText placeholder="Operation" 
+								<div class="ui-grid-col-9">
+									<p:inputText placeholder="z.B. Analysieren" 
 										value="#{catchwordCreater.newOperation}"/>
 								</div>
 							</div>
@@ -322,8 +317,8 @@
 								<div class="ui-grid-col-3">
 									erste Kompetenz:
 								</div>
-								<div class="ui-grid-col-6">
-									<p:inputText placeholder="erste Kompetenz" 
+								<div class="ui-grid-col-9">
+									<p:inputText placeholder="z.B. ein Wertesystem strukturierten" 
 										value="#{catchwordCreater.firstCompetence}"/>
 								</div>
 							</div>
@@ -331,8 +326,8 @@
 								<div class="ui-grid-col-3">
 									zweite Kompetenz:
 								</div>
-								<div class="ui-grid-col-6">
-									<p:inputText placeholder="zweite Kompetenz" 
+								<div class="ui-grid-col-9">
+									<p:inputText placeholder="z.B. erfüllt sein durch einen Wert " 
 										value="#{catchwordCreater.secondCompetence}"/>
 								</div>
 							</div>

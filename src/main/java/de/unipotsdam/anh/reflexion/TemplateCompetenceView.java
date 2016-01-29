@@ -23,6 +23,7 @@ import com.google.common.collect.Collections2;
 
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 import de.unipotsdam.anh.util.AppUtil;
+import de.unipotsdam.anh.util.Label;
 
 @ManagedBean(name = "templateCompetenceView")
 @ViewScoped
@@ -42,6 +43,8 @@ public class TemplateCompetenceView implements Serializable{
 	
 	private String selectedDbCompetence;
 	
+	private String tmpName;
+	
 	private LearningTemplateResultSet learningTemplateResultSet;
 
 	@PostConstruct
@@ -59,6 +62,19 @@ public class TemplateCompetenceView implements Serializable{
 		}
 		System.out.println(learningTemplateResultSet.getRoot());
 		competencenTreeView.update(learningTemplateResultSet);
+	}
+	
+	public void renameCompetence(ActionEvent e) {
+		if(!AppUtil.validateNotEmptyString("Sie müssen einen Name eingeben!",tmpName)) {
+			return;
+		}
+	    int respone = LearningTemplateDao.rename((String) competencenTreeView.getSelectedNode().getData(), tmpName, Label.COMPETENCE);
+	    if(respone == 200) {
+	    	learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learningTemplateResultSet.getNameOfTheLearningTemplate());
+	    	tmpName = null;
+	    	competencenTreeView.update(learningTemplateResultSet);
+	    }
+	    System.out.println("rename with status: " + respone);
 	}
 
 	public void addNewCatchWord(ActionEvent e) {
@@ -161,13 +177,21 @@ public class TemplateCompetenceView implements Serializable{
 	public void setSelectedDbCompetence(String selectedDbCompetence) {
 		this.selectedDbCompetence = selectedDbCompetence;
 	}
+
+	public String getTmpName() {
+		return tmpName;
+	}
+
+	public void setTmpName(String tmpName) {
+		this.tmpName = tmpName;
+	}
 	
 	private boolean addBranchCompetenceAction(String selectedCatchword, String selectedCompetenceFromNode, String selectedCompetenceToNode) {
 		if(AppUtil.validateNotEmptyString("Sie müssen alle Felder ausführen!", selectedCompetenceFromNode, selectedCompetenceToNode, selectedCatchword) && 
 				AppUtil.validateNotEquals("Die beide Kompetenzen müssen unterschiedlich sein!", selectedCompetenceFromNode, selectedCompetenceToNode)) {
 		
 			if(validExistTriple(selectedCompetenceFromNode, selectedCompetenceToNode)) {
-				AppUtil.showInfo("Kompetenzen hinzufügen:", "Dieses Lernpfad ist existiert!! Versuchen Sie mit anderem Lernpfad!");
+				AppUtil.showInfo("Kompetenzen hinzufügen:", "Dieses Lernpfad ist existiert!! Bitte versuchen Sie mit anderem Lernpfad!");
 				return false;
 			}
 			
@@ -179,11 +203,11 @@ public class TemplateCompetenceView implements Serializable{
 			System.out.println("add learning template return status: " + status);
 			if( status == 200) {
 				competencenTreeView.update(learningTemplateResultSet);
-				AppUtil.showInfo("Kompetenzen hinzufügen:", "Kompetenzen wird erfolgreich hinzugefügt!!");
+				AppUtil.showInfo("Kompetenzen hinzufügen:", "Die Kompetenzen wurden erfolgreich hinzugefügt!!");
 				return true;
 			} else {
 				learningTemplateResultSet = LearningTemplateDao.getLearningProjectTemplate(learningTemplateResultSet.getNameOfTheLearningTemplate());
-				AppUtil.showError("Kompetenzen hinzufügen:", "Kompetenzen wird nicht erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
+				AppUtil.showError("Kompetenzen hinzufügen:", "Die Kompetenzen wurden nicht erfolgreich hinzugefügt! Bitte prüfen Sie noch mal die Eingabe!");
 			}
 		}
 		

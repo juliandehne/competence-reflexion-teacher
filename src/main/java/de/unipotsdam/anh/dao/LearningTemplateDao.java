@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.unipotsdam.anh.util.AppUtil;
+import de.unipotsdam.anh.util.Label;
 
 public class LearningTemplateDao {
 
@@ -165,6 +166,28 @@ public class LearningTemplateDao {
 		}
 
 		return null;
+	}
+	
+	public static synchronized int rename(String oldName, String newName, Label label) {
+		final StringBuilder pathUrl = new StringBuilder("/competences/update/");
+		pathUrl.append(label.getLabelString()).append("/")
+				.append(oldName).append("/")
+				.append(newName).append("/");
+		final Client client = ClientBuilder.newClient();
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl()
+				+ pathUrl.toString());
+		try {
+			Response response = webResource.register(loggingFilter)
+					.request(MediaType.APPLICATION_JSON).post(null);
+
+			return response.getStatus();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			client.close();
+		}
+
+		return -1;
 	}
 
 	public static synchronized Graph getGraphFromCourse(String course) {
