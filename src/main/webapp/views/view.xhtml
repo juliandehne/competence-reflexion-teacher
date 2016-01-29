@@ -131,13 +131,14 @@
 				</p:confirmDialog>
 				<hr />
 
-				<ui:repeat id="repeat" var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
+				<ui:repeat id="repeatCatchword" var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
 					<h4>
 						<h:outputText value="Thema: #{catchWord} " />
 						
 <!-- 						<p:inplace editor="true" label="#{catchWord}"> -->
-<!-- 							<p:inputText id="x" value="#{catchWord}"/> -->
-<!-- 				            <p:ajax event="save" process="@this" listener="" /> -->
+<!-- 							<p:inputText id="cEdit" value="#{catchWord}"/> -->
+<!-- 				            <p:ajax event="save" process="@this"  -->
+<!-- 				            	listener="#{templateCompetenceView.renameCatchword(catchWord)}" /> -->
 <!-- 				        </p:inplace> -->
 					</h4>
 

@@ -64,6 +64,10 @@ public class TemplateCompetenceView implements Serializable{
 		competencenTreeView.update(learningTemplateResultSet);
 	}
 	
+	public void renameCatchword(String oldName) {
+		System.out.println("rename: " + oldName);
+	}
+	
 	public void renameCompetence(ActionEvent e) {
 		if(!AppUtil.validateNotEmptyString("Sie müssen einen Name eingeben!",tmpName)) {
 			return;

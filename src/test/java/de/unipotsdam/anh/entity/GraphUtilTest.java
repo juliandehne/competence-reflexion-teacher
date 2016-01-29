@@ -63,8 +63,7 @@ public class GraphUtilTest {
 
 		try {
 			final WebTarget webResource = client
-					.target("http://localhost:8084" + "/competences/xml/learningtemplate/add/"
-							+ learningTemplateResultSet.getNameOfTheLearningTemplate())
+					.target("http://localhost:8084" + "/competences/learningtemplate/add")
 					.register(logginFilter)
 					.queryParam("learningTemplateResultSet",
 							learningTemplateResultSet);
@@ -87,7 +86,7 @@ public class GraphUtilTest {
 		final Client client = ClientBuilder.newClient();
 
 		final WebTarget webResource = client.target("http://localhost:8084"
-				+ "/competences/xml/learningtemplate/get/" + learningTemplateName).register(logginFilter);
+				+ "/competences/learningtemplate/get/" + learningTemplateName).register(logginFilter);
 		LearningTemplateResultSet result = webResource.request(
 				MediaType.APPLICATION_XML).get(LearningTemplateResultSet.class);
 
