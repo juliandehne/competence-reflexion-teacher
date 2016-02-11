@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.filter.LoggingFilter;
 
 import uzuzjmd.competence.shared.StringList;
+import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
@@ -190,7 +191,28 @@ public class LearningTemplateDao {
 		return -1;
 	}
 
-	public static synchronized Graph getGraphFromCourse(String course) {
+	public static synchronized SuggestedCompetenceGrid getGridviewFromLearningTemplate(String selectedTemplate) {
+		final Client client = ClientBuilder.newClient();
+		final WebTarget webResource = client.target(AppUtil.getBaseUrl() +
+								"/competences/learningtemplates/gridview/");
+		try {
+			final SuggestedCompetenceGrid response = webResource.register(loggingFilter)
+					.queryParam("userId", AppUtil.getUserLoggedIn().getLogin() + "")
+					.queryParam("groupId", AppUtil.getUserLoggedIn().getGroupId() + "")
+					.queryParam("selectedTemplate", selectedTemplate)
+					.request(MediaType.APPLICATION_XML).get(SuggestedCompetenceGrid.class);
+
+			return response;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			client.close();
+		}
+		
+		return null;
+	}
+
+	public static Object getGraphFromCourse(String course) {
 		final Client client = ClientBuilder.newClient();
 		final WebTarget webResource = client.target(
 				AppUtil.getBaseUrl() + "/competences/prerequisite/graph/")

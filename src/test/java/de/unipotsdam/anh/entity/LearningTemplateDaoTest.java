@@ -19,10 +19,10 @@ import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 
+@Ignore
 public class LearningTemplateDaoTest {
 
 	public static final String LABELNAME = "SuggestedCompetencePrerequisite";
-	private static final String course = "university";
 	private static String learningTemplateName = "TestLernprojekt";
 	private static LearningTemplateResultSet learningTemplateResultSet;
 //	private static Graph graph;
@@ -194,12 +194,6 @@ public class LearningTemplateDaoTest {
 		for (String s : result.getData()) {
 			System.out.println("\t" + s);
 		}
-	}
-
-	@Test
-	public void testGetGraphFromCourse() {
-		System.out.println("##### Test GetGraphFromCourse #####");
-		Assert.assertNotNull(LearningTemplateDao.getGraphFromCourse(course));
 	}
 
 	private GraphTriple getGraphTriple(Graph resultGraph, String fromNode,

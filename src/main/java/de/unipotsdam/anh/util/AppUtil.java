@@ -1,11 +1,18 @@
 package de.unipotsdam.anh.util;
 
+import java.io.IOException;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 
 public class AppUtil {
@@ -16,8 +23,24 @@ public class AppUtil {
 			return competenceRestServerUrl;
 		} catch (Exception ex) {
 			System.err.println(ex);
-			return "http://fleckenroller.cs.uni-potsdam.de/app/competence-servlet/competence";
+			return "http://fleckenroller.cs.uni-potsdam.de/app/competence-database/competence";
 		}
+	}
+	
+	public static User getUserLoggedIn() throws PortalException, SystemException {
+
+		User user = UserLocalServiceUtil.getUser(PrincipalThreadLocal.getUserId());
+		
+		if (user == null) {			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			try {
+				fc.getExternalContext().redirect("/");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}		
+		return user;
 	}
 	
 	public static boolean validateNotEmptyString(String message, String ... validStrings) {

@@ -60,7 +60,6 @@ public class TemplateCompetenceView implements Serializable{
 		if(learningTemplateResultSet == null) {
 			learningTemplateResultSet = new LearningTemplateResultSet(); 
 		}
-		System.out.println(learningTemplateResultSet.getRoot());
 		competencenTreeView.update(learningTemplateResultSet);
 	}
 	
@@ -78,7 +77,6 @@ public class TemplateCompetenceView implements Serializable{
 	    	tmpName = null;
 	    	competencenTreeView.update(learningTemplateResultSet);
 	    }
-	    System.out.println("rename with status: " + respone);
 	}
 
 	public void addNewCatchWord(ActionEvent e) {
@@ -91,7 +89,6 @@ public class TemplateCompetenceView implements Serializable{
 			firstNewCompetence = "";
 			secondNewCompetence = "";
 		}
-		System.out.println(firstNewCompetence + " #### " + secondNewCompetence);
 	}
 	
 	public void addNewCompetenceLevel(ActionEvent e) {
@@ -103,7 +100,6 @@ public class TemplateCompetenceView implements Serializable{
 		}
 	}
 	
-	//TODO follow list is changed
 	public void branchCompetenceAction(ActionEvent e) {
 		final String selectedCatchword = competencenTreeView.getSelectedCatchword();
 		final String selectedCompetenceFromNode = competencenTreeView.getSelectedCompetenceFromNode();
@@ -204,7 +200,6 @@ public class TemplateCompetenceView implements Serializable{
 			learningTemplateResultSet.addTriple(triple, (String[]) Arrays.asList(selectedCatchword).toArray());
 	
 			int status = LearningTemplateDao.createTemplate(learningTemplateResultSet);
-			System.out.println("add learning template return status: " + status);
 			if( status == 200) {
 				competencenTreeView.update(learningTemplateResultSet);
 				AppUtil.showInfo("Kompetenzen hinzufügen:", "Die Kompetenzen wurden erfolgreich hinzugefügt!!");
