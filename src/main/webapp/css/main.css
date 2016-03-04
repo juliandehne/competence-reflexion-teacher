@@ -13,3 +13,37 @@
 	-moz-border-radius: 20px;
 	-webkit-border-radius: 20px;
 }
+
+.centered {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.marginTop {
+	margin-top: 8px;
+}
+
+.border-left-right {
+	border-right:1px solid #000;
+	border-left: 1px solid #000;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+.ui-diagram-element {
+       width:5em; 
+       height:5em;
+       line-height:5em;
+       text-align: center;
+       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+       border-radius: 5em;
+       border: 1px solid #404a4e;
+       background-color: #404a4e;
+       color: #cccccc;
+}
+
+.ui-autocomplete-input {
+	margin-bottom: 0px !important;
+}

@@ -2,9 +2,11 @@ package de.unipotsdam.anh.util;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +69,15 @@ public class GraphUtil {
 			}
 		}
 		return graph;
+	}
+	
+	public static Set<String> getAllCatchword(LearningTemplateResultSet learningTemplateResultSet) {
+		final Set<String> catchWords = new HashSet<String>();
+		for(Entry<GraphTriple, String[]> entry : learningTemplateResultSet.getCatchwordMap().entrySet()) {
+			catchWords.addAll(Arrays.asList(entry.getValue()));
+		}
+		
+		return catchWords;
 	}
 
 	public static void showLearningTemplateResultSet(

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.primefaces.context.RequestContext;
@@ -38,6 +39,15 @@ public class CompetencenTreeView implements Serializable{
 	private String newLevelCompetence;
 	private TreeNode selectedNode;
 	private String selectedCatchword;
+	
+	@ManagedProperty(value = "#{competencenTableView}")
+	private CompetencenTableView competencenTableView;
+	
+	@ManagedProperty(value = "#{courseCompetenceView}")
+	private CourseCompetenceView courseCompetenceView;
+	
+	@ManagedProperty(value = "#{activityCompetenceView}")
+	private ActivityCompetenceView activityCompetenceView;
 	
 	@PostConstruct
 	public void init() {
@@ -77,6 +87,10 @@ public class CompetencenTreeView implements Serializable{
 		for(String catchword : catchWords) {
 			treeNodeMap.put(catchword, getTreeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
 		}
+		
+		competencenTableView.update(learningTemplateResultSet.getNameOfTheLearningTemplate());
+		courseCompetenceView.update(learningTemplateResultSet);
+		activityCompetenceView.update(learningTemplateResultSet);
 	}
 
 	public void addNewRootTreeNode(String catchword, String newCompetence) {
@@ -143,6 +157,31 @@ public class CompetencenTreeView implements Serializable{
 
 	public void setNewLevelCompetence(String newLevelCompetence) {
 		this.newLevelCompetence = newLevelCompetence;
+	}
+	
+	public CompetencenTableView getCompetencenTableView() {
+		return competencenTableView;
+	}
+
+	public void setCompetencenTableView(CompetencenTableView competencenTableView) {
+		this.competencenTableView = competencenTableView;
+	}
+	
+	public CourseCompetenceView getCourseCompetenceView() {
+		return courseCompetenceView;
+	}
+
+	public void setCourseCompetenceView(CourseCompetenceView courseCompetenceView) {
+		this.courseCompetenceView = courseCompetenceView;
+	}
+	
+	public ActivityCompetenceView getActivityCompetenceView() {
+		return activityCompetenceView;
+	}
+
+	public void setActivityCompetenceView(
+			ActivityCompetenceView activityCompetenceView) {
+		this.activityCompetenceView = activityCompetenceView;
 	}
 	
 	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {

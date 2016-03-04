@@ -9,27 +9,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 	<h:head>
-		<style type="text/css">
-			.centered {
-			    text-align: center;
-			    margin 0 auto;
-			}
-
-			.marginTop {
-				margin-top: 8px;
-			}
-			.ui-diagram-element {
-		        width:5em; 
-		        height:5em;
-		        line-height:5em;
-		        text-align: center;
-		        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
-		        border-radius: 5em;
-		        border: 1px solid #404a4e;
-		        background-color: #404a4e;
-		        color: #cccccc;
-			}
-		</style>
 	</h:head>
 	<h:body>
 
@@ -102,8 +81,9 @@
 						</div>
 					</div>
 				</p:dialog>
-			</p:panel>
-
+			</p:panel>	
+	    
+	    
 			<br />
 			<p:messages id="autocompleteMessage" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
@@ -117,13 +97,13 @@
 			            <p:ajax event="save" update="learningTemplatePorlet" process="@this" listener="#{learningTemplateView.renameLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}" />
 			        </p:inplace>
 				
-				<span class="pull-right" style="font-size:15px;">
-					<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
-						ajax="true" update="learningTemplatePorlet"
-						actionListener="#{learningTemplateView.deleteLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}">
-						<p:confirm header="Löschen bestätigen" message="Möchten Sie dieses Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
-					</p:commandButton>
-				</span>
+					<span class="pull-right" style="font-size:15px;">
+						<p:commandButton value="Lernprojekt löschen" icon="ui-icon-closethick"
+							ajax="true" update="learningTemplatePorlet"
+							actionListener="#{learningTemplateView.deleteLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}">
+							<p:confirm header="Löschen bestätigen" message="Möchten Sie dieses Lernprojekt wirklich löschen?" icon="ui-icon-alert" />
+						</p:commandButton>
+					</span>
 				</h2>
 				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 				    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
@@ -131,38 +111,21 @@
 				</p:confirmDialog>
 				<hr />
 
-				<ui:repeat id="repeatCatchword" var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
-					<h4>
-						<h:outputText value="Thema: #{catchWord} " />
-						
-<!-- 						<p:inplace editor="true" label="#{catchWord}"> -->
-<!-- 							<p:inputText id="cEdit" value="#{catchWord}"/> -->
-<!-- 				            <p:ajax event="save" process="@this"  -->
-<!-- 				            	listener="#{templateCompetenceView.renameCatchword(catchWord)}" /> -->
-<!-- 				        </p:inplace> -->
-					</h4>
-
-					<!-- Tree view for competence -->
-					<div class="marginTop">
-					<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">
-						<p:tree value="#{tree}" var="node" selectionMode="single" 
-							selection="#{competencenTreeView.selectedNode}"
-							dynamic="true" orientation="horizontal" >
-							<p:ajax event="select" update="@form"
-								listener="#{competencenTreeView.onNodeSelect(catchWord)}" />
-							<p:treeNode >
-								<h:outputText value="#{node}" />
-							</p:treeNode>
-						</p:tree>
-						<br />
-					</ui:repeat>
-					</div>
-		        	<p:commandButton icon="ui-icon-plus" value="neuer Lernpfad" onclick="PF('newCompetenceDialog').show()"
-		        		action="#{templateCompetenceView.selecteCatchWord(catchWord)}"/>
-			       
-			        <hr />
-				</ui:repeat>
-				
+				<p:tabView id="learningProjectEditTabView" >
+					<p:ajax event="tabChange" update="learningProjectEditTabView" />
+					<p:tab title="Kompetenzen verwalten" id="competenceTabView">
+						<ui:include src="competence-view.xhtml" />
+					</p:tab>
+					<p:tab title="Tabelle-Ansicht">
+						<ui:include src="table-view.xhtml" />
+					</p:tab>
+					<p:tab title="Kurs-Ansicht">
+						<ui:include src="course-view.xhtml" />
+					</p:tab>
+					<p:tab title="Aktivität-Ansicht">
+						<ui:include src="activity-view.xhtml" />
+					</p:tab>
+				</p:tabView>
 
 
 				<p:dialog header="neuer Lernpfad hinzufügen" widgetVar="newCompetenceDialog" 
@@ -282,69 +245,7 @@
 						</div>
 					</div>
 				</p:dialog>
-
-
-
-				<p:button icon="ui-icon-plus" value="Thema hinzufügen" onclick="return false">
-					<p:effect type="fade" event="click" for="newHeadField">
-						<f:param name="mode" value="'show'" />
-					</p:effect>
-				</p:button>
-
-				<br />
-				<h:panelGroup layout="block" id="newHeadField" style="display:none">
-					<fieldset>
-					<legend>Geben sie ein Thema ein! :</legend>
-						<div class="ui-grid">
-							<div class="ui-grid-row">
-								<div class="ui-grid-col-3">
-									Thema:
-								</div>
-								<div class="ui-grid-col-9">
-									<p:inputText placeholder="z.B. Naturwissenschaft" 
-										value="#{catchwordCreater.newCatchWord}" />
-								</div>
-							</div>
-							<div class="ui-grid-row">
-								<div class="ui-grid-col-3">
-									Operator:
-								</div>
-								<div class="ui-grid-col-9">
-									<p:inputText placeholder="z.B. Analysieren" 
-										value="#{catchwordCreater.newOperation}"/>
-								</div>
-							</div>
-							<div class="ui-grid-row">
-								<div class="ui-grid-col-3">
-									erste Kompetenz:
-								</div>
-								<div class="ui-grid-col-9">
-									<p:inputText placeholder="z.B. ein Wertesystem strukturierten" 
-										value="#{catchwordCreater.firstCompetence}"/>
-								</div>
-							</div>
-							<div class="ui-grid-row">
-								<div class="ui-grid-col-3">
-									zweite Kompetenz:
-								</div>
-								<div class="ui-grid-col-9">
-									<p:inputText placeholder="z.B. erfüllt sein durch einen Wert " 
-										value="#{catchwordCreater.secondCompetence}"/>
-								</div>
-							</div>
-							<div class="ui-grid-row">
-								<p:commandButton value="erstellen" icon="ui-icon-check"
-									update="learningProjectEdit" resetValues="true"
-									actionListener="#{templateCompetenceView.addNewCatchWord}" />
-								<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
-									<p:effect type="fade" event="click" for="newHeadField">
-										<f:param name="mode" value="'hide'" />
-									</p:effect>
-								</p:button>
-							</div>
-						</div>
-					</fieldset>
-				</h:panelGroup>
+				
 			</p:panel>
 		</p:outputPanel>
 		</h:form>

@@ -27,8 +27,7 @@ public class LearningTemplateDao {
 	private static final LoggingFilter loggingFilter = new LoggingFilter(
 			Logger.getLogger(LearningTemplateDao.class.getName()), true);
 
-	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(
-			String learningTemplateName) {
+	public static synchronized LearningTemplateResultSet getLearningProjectTemplate(String learningTemplateName) {
 		final Client client = ClientBuilder.newClient();
 
 		try {

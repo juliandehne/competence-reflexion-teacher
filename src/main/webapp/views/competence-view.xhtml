@@ -1,0 +1,105 @@
+<ui:composition
+			xmlns="http://www.w3.org/1999/xhtml"
+			xmlns:c="http://java.sun.com/jsp/jstl/core"
+			xmlns:f="http://java.sun.com/jsf/core"
+			xmlns:h="http://java.sun.com/jsf/html"
+			xmlns:p="http://primefaces.org/ui"
+			xmlns:ui="http://java.sun.com/jsf/facelets"
+			xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<p:outputPanel id="competencePanelView">		
+		<ui:repeat id="repeatCatchword" var="catchWord" value="#{competencenTreeView.catchWords}" varStatus="status" >
+			<h4>
+				<h:outputText value="Thema: #{catchWord} " />
+				
+	<!-- 						<p:inplace editor="true" label="#{catchWord}"> -->
+	<!-- 							<p:inputText id="cEdit" value="#{catchWord}"/> -->
+	<!-- 				            <p:ajax event="save" process="@this"  -->
+	<!-- 				            	listener="#{templateCompetenceView.renameCatchword(catchWord)}" /> -->
+	<!-- 				        </p:inplace> -->
+			</h4>
+	
+			<!-- Tree view for competence -->
+			<div class="marginTop">
+			<ui:repeat var="tree" value="#{competencenTreeView.treeNodeMap.get(catchWord)}">
+				<p:tree value="#{tree}" var="node" selectionMode="single" 
+					selection="#{competencenTreeView.selectedNode}"
+					dynamic="true" orientation="horizontal" >
+					<p:ajax event="select" update="@form"
+						listener="#{competencenTreeView.onNodeSelect(catchWord)}" />
+					<p:treeNode >
+						<h:outputText value="#{node}" />
+					</p:treeNode>
+				</p:tree>
+				<br />
+			</ui:repeat>
+			</div>
+	       	<p:commandButton icon="ui-icon-plus" value="neuer Lernpfad" onclick="PF('newCompetenceDialog').show()"
+	       		action="#{templateCompetenceView.selecteCatchWord(catchWord)}"/>
+	       
+	        <hr />
+		</ui:repeat>
+		
+		<p:button icon="ui-icon-plus" value="Thema hinzufügen" onclick="return false">
+			<p:effect type="fade" event="click" for="newHeadField">
+				<f:param name="mode" value="'show'" />
+			</p:effect>
+		</p:button>
+	
+		<br />
+		<h:panelGroup layout="block" id="newHeadField" style="display:none">
+			<fieldset>
+			<legend>Geben sie ein Thema ein! :</legend>
+				<div class="ui-grid">
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-3">
+							Thema:
+						</div>
+						<div class="ui-grid-col-9">
+							<p:inputText placeholder="z.B. Naturwissenschaft" 
+								value="#{catchwordCreater.newCatchWord}" />
+						</div>
+					</div>
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-3">
+							Operator:
+						</div>
+						<div class="ui-grid-col-9">
+							<p:inputText placeholder="z.B. Analysieren" 
+								value="#{catchwordCreater.newOperation}"/>
+						</div>
+					</div>
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-3">
+							erste Kompetenz:
+						</div>
+						<div class="ui-grid-col-9">
+							<p:inputText placeholder="z.B. ein Wertesystem strukturierten" 
+								value="#{catchwordCreater.firstCompetence}"/>
+						</div>
+					</div>
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-3">
+							zweite Kompetenz:
+						</div>
+						<div class="ui-grid-col-9">
+							<p:inputText placeholder="z.B. erfüllt sein durch einen Wert " 
+								value="#{catchwordCreater.secondCompetence}"/>
+						</div>
+					</div>
+					<div class="ui-grid-row">
+						<p:commandButton value="erstellen" icon="ui-icon-check"
+							update="competencePanelView" resetValues="true"
+							actionListener="#{templateCompetenceView.addNewCatchWord}" />
+						<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
+							<p:effect type="fade" event="click" for="newHeadField">
+								<f:param name="mode" value="'hide'" />
+							</p:effect>
+						</p:button>
+					</div>
+				</div>
+			</fieldset>
+		</h:panelGroup>
+	</p:outputPanel>
+
+</ui:composition>

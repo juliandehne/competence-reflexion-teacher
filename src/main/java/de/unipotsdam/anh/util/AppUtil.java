@@ -17,14 +17,21 @@ import com.liferay.util.portlet.PortletProps;
 
 public class AppUtil {
 	
+	public static String[] getTestUser() {
+		final String[] user = {"xunguyen@uni-potsdam.de", "xa8641933"};
+		return user;
+	}
+	
 	public static String getBaseUrl() {
-		try {
-			String competenceRestServerUrl = GetterUtil.getString(PortletProps.get("competenceRestServerUrl"));
-			return competenceRestServerUrl;
-		} catch (Exception ex) {
-			System.err.println(ex);
-			return "http://fleckenroller.cs.uni-potsdam.de/app/competence-database/competence";
-		}
+//		try {
+//			String competenceRestServerUrl = GetterUtil.getString(PortletProps.get("competenceRestServerUrl"));
+//			return competenceRestServerUrl;
+//		} catch (Exception ex) {
+//			System.err.println(ex);
+//			return "http://fleckenroller.cs.uni-potsdam.de/app/competence-database/competence";
+//		}
+		
+		return "http://localhost:8084";
 	}
 	
 	public static User getUserLoggedIn() throws PortalException, SystemException {

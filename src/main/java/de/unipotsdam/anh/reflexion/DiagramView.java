@@ -20,6 +20,7 @@ import org.primefaces.model.diagram.overlay.LabelOverlay;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import de.unipotsdam.anh.dto.TreeNode;
 import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "diagramView")
@@ -87,7 +88,7 @@ public class DiagramView {
 		return conn;
 	}
 	
-	private Graph testGraph() {
+	private static Graph testGraph() {
 		LearningTemplateResultSet learningTemplateResultSet = new LearningTemplateResultSet();
 		learningTemplateResultSet.setNameOfTheLearningTemplate("test");
 
@@ -107,5 +108,21 @@ public class DiagramView {
 		learningTemplateResultSet.addTriple(triple6, new String[] {catchword});
 		
 		return learningTemplateResultSet.getResultGraph();
+	}
+	
+	public static void main(String[] args) {
+		Graph g = testGraph();
+		TreeNode tree = new TreeNode("root");
+		for(GraphTriple triple : g.triples) {
+			if(tree.getChildrend(triple.fromNode) != null) {
+				tree.getChildrend(triple.fromNode).addChildrend(new TreeNode(triple.toNode));
+			} else {
+				final TreeNode newNode = new TreeNode(triple.fromNode);
+				newNode.addChildrend(new TreeNode(triple.toNode));
+				tree.addChildrend(newNode);
+			}
+		}
+		
+		System.out.println(tree);
 	}
 }
