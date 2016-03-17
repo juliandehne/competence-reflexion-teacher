@@ -54,14 +54,14 @@ public class ActivityDao {
 	public static synchronized int addSuggestedActivityForCompetence(String competence, String aktivityUrl) {
 		final StringBuilder url = new StringBuilder();
 		url.append(AppUtil.getBaseUrl())
-			.append("/competences/SuggestedActivityForCompetence/create/");
+			.append("/competences/SuggestedActivityForCompetence/create");
 		
 		final RequestBuilder requestBuilder = new RequestBuilder();
 		
 		return requestBuilder.withUrl(url.toString())
 							.withMedienType(MediaType.APPLICATION_JSON_TYPE)
 							.addQueryParam("competence", competence)
-							.addQueryParam("activityURL", aktivityUrl)
+							.addQueryParam("activityUrl", aktivityUrl)
 							.postWithStatus(null);
 	}
 	
