@@ -30,15 +30,28 @@ public class CourseDao {
 		return course == null ? new ArrayList<UserCourseListItem>() : Arrays.asList(course);
 	}
 
-	public static synchronized List<String> getCompetenceFromCourse(String course) {
+	public static synchronized List<String> getCompetenceFormSuggestedCourse(String course) {
 		final StringBuilder url = new StringBuilder();
 		url.append(AppUtil.getBaseUrl())
-			.append("/competences/coursecontext/selected/")
+			.append("/competences/SuggestedCompetencesForCourse/")
 			.append(course + "/");
 		
 		final RequestBuilder requestBuilder = new RequestBuilder();
 		String[] list = requestBuilder.withUrl(url.toString())
 							.withMedienType(MediaType.APPLICATION_JSON_TYPE)
+							.get(String[].class);
+		return list == null ? new ArrayList<String>() : Arrays.asList(list);
+	}
+	
+	public static synchronized List<String> getSuggestedCourseForCompetence(String competence) {
+		final StringBuilder url = new StringBuilder();
+		url.append(AppUtil.getBaseUrl())
+			.append("/competences/SuggestedCompetencesForCourse/");
+		
+		final RequestBuilder requestBuilder = new RequestBuilder();
+		String[] list = requestBuilder.withUrl(url.toString())
+							.withMedienType(MediaType.APPLICATION_JSON_TYPE)
+							.addQueryParam("competence", competence)
 							.get(String[].class);
 		return list == null ? new ArrayList<String>() : Arrays.asList(list);
 	}
@@ -55,6 +68,7 @@ public class CourseDao {
 							.get(String.class);
 	}
 	
+	@Deprecated
 	public static synchronized int deleteCourse(String course) {
 		final StringBuilder url = new StringBuilder();
 		url.append(AppUtil.getBaseUrl())
@@ -68,6 +82,7 @@ public class CourseDao {
 							.postWithStatus(null);
 	}
 	
+	@Deprecated
 	public static synchronized int createCourse(String course, String compulsory, List<String> competences, String requirements) {
 		final StringBuilder url = new StringBuilder();
 		url.append(AppUtil.getBaseUrl())

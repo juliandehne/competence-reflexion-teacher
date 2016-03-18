@@ -9,7 +9,6 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import uzuzjmd.competence.shared.dto.ActivityEntry;
@@ -27,7 +26,6 @@ public class CourseDaoTest {
 			Logger.getLogger(CourseDaoTest.class.getName()), true);
 	
 	private static final String course = "15";
-	private static final String compulsory = "false";
 	private static final String requirements = "requirements from course";
 
 	private static final String MODDLE_SYSTEM = "moodle";
@@ -71,21 +69,6 @@ public class CourseDaoTest {
 			}
 		}
 	}
-	
-//	@Ignore
-	@Test // not run
-	public void testGetCompetenceFromCourse() {
-		
-		int status = CourseDao.createCourse(course, compulsory, competences, requirements);
-		System.out.println(status);
-		
-		Assert.assertEquals(200, status);
-		
-		final List<String> response = CourseDao.getCompetenceFromCourse(course);
-		for(String s : response) {
-			System.out.println(s);
-		}
-	}
 
 	@Test
 	public void testGetRequirementFromCourse() {
@@ -93,23 +76,6 @@ public class CourseDaoTest {
 		System.out.println(response);
 		
 		Assert.assertEquals(requirements, response);
-	}
-
-	@Test
-	public void testCreateCourse() {
-		int status = CourseDao.createCourse(course, compulsory, competences, requirements);
-		System.out.println(status);
-		
-		Assert.assertEquals(200, status);
-	}
-	
-	@Ignore
-	@Test
-	public void testDeleteCourse() {
-		int status = CourseDao.deleteCourse(course);
-		System.out.println(status);
-		
-		Assert.assertEquals(200, status);
 	}
 	
 	@Test

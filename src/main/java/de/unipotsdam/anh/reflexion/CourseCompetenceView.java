@@ -73,19 +73,19 @@ public class CourseCompetenceView implements Serializable {
 	public void courseCompetenceCollate(ActionEvent e) {
 		final List<String> competences = new ArrayList<String>();
 		for(TreeNode node : selectedNodes) {
-			competences.add(node.getData().toString());
-		}
-		final int deleteResult = CourseDao.deleteCourse(String.valueOf(selectedCourse.getCourseid()));
-		
-		if(deleteResult == 200) {
-			final int result = CourseDao.createCourse(String.valueOf(selectedCourse.getCourseid()), MOODLE, competences, requirement);
-			if(result == 200) {
-				courseKeyMap.put(selectedCourse, competences);
-				selectedCourse = null;
-				requirement = null;
-				selectedNodes = new TreeNode[0];
+			final String competence = node.getData().toString();
+			if(CourseDao.addSuggestedCourseForCompetence(competence, String.valueOf(selectedCourse.getCourseid())) == 200) {
+				competences.add(competence);
 			}
 		}
+		
+		if(courseKeyMap.get(selectedCourse) != null) {
+			competences.addAll(courseKeyMap.get(selectedCourse));
+		}
+		courseKeyMap.put(selectedCourse, competences);
+		selectedCourse = null;
+		requirement = null;
+		selectedNodes = new TreeNode[0];
 	}
 
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
@@ -172,7 +172,7 @@ public class CourseCompetenceView implements Serializable {
 	
 	private void getCourseCompetenceMap() {
 		for(UserCourseListItem course : courses) {
-			final List<String> competences = CourseDao.getCompetenceFromCourse(String.valueOf((course.getCourseid())));
+			final List<String> competences = CourseDao.getCompetenceFormSuggestedCourse(String.valueOf((course.getCourseid())));
 			courseKeyMap.put(course, competences);
 		}
 	}
