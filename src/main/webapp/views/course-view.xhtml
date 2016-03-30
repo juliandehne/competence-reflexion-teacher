@@ -58,10 +58,14 @@
 		
 		<ui:repeat var="entry" value="#{courseCompetenceView.courseKeyMap.entrySet().toArray()}">
 			<h5><h:outputText value="Kompetenzenliste von #{entry.key.name} : " /></h5>
+			<p:commandButton value="kurs löschen" />
 			<p>Anforderungen: #{courseCompetenceView.requirementFromCourse(entry.key.courseid)}</p>
 			<ul>
 				<ui:repeat var="competence" value="#{entry.value}">
-					<li><h:outputText value="#{competence}" /></li>
+					<li>
+						<h:outputText value="#{competence}" />
+						<p:commandButton value="Kompetenze löschen" />
+					</li>
 				</ui:repeat>
 			</ul>
 		</ui:repeat>
