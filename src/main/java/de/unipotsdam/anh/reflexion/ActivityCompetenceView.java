@@ -65,8 +65,13 @@ public class ActivityCompetenceView  implements Serializable{
 		final List<String> competences = new ArrayList<String>();
 		for(TreeNode node : selectedKompetenceNodes) {
 			competences.add(node.getData().toString());
+			
+			node.setSelected(false);
 		}
 		activityMap.put((AbstractTreeEntry) selectedActivityNode.getData(), competences);
+		
+		selectedActivityNode.setSelected(false);
+		selectedActivityNode = null;
 	}
 
 	public List<UserTree> getActivities() {

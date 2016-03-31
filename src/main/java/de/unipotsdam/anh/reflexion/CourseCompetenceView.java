@@ -64,6 +64,20 @@ public class CourseCompetenceView implements Serializable {
 		this.courseKeyMap = courseKeyMap;
 	}
 	
+	public void deleteCompetenceFromCourse(String competence, String course) {
+		int status = CourseDao.deleteSuggestedCourseForCompetence(competence, course);
+		System.out.println("delete competence " + competence + "with status " + status);
+//		if(status == 200) {
+//			for(Entry<UserCourseListItem, List<String>> e : courseKeyMap.entrySet()) {
+//				if(StringUtils.equals(String.valueOf(e.getKey().getCourseid()), course)) {
+//					e.getValue().remove(competence);
+//				}
+//			}
+//		}
+		courseKeyMap.clear();
+		getCourseCompetenceMap();
+	}
+	
 	public String requirementFromCourse(String course) {
 		final String requirement = CourseDao.getRequirementFromCourse(course);
 		System.out.println("requirement from Course with id " + course + " " + requirement);
@@ -77,15 +91,24 @@ public class CourseCompetenceView implements Serializable {
 			if(CourseDao.addSuggestedCourseForCompetence(competence, String.valueOf(selectedCourse.getCourseid())) == 200) {
 				competences.add(competence);
 			}
+			node.setSelected(false);
 		}
 		
-		if(courseKeyMap.get(selectedCourse) != null) {
-			competences.addAll(courseKeyMap.get(selectedCourse));
-		}
-		courseKeyMap.put(selectedCourse, competences);
+		addCompetencenIntoCourseMap(selectedCourse, competences);
 		selectedCourse = null;
 		requirement = null;
 		selectedNodes = new TreeNode[0];
+	}
+
+	private void addCompetencenIntoCourseMap(UserCourseListItem course, List<String> competences) {
+		if(courseKeyMap.get(course) != null) {
+			for(String c : courseKeyMap.get(course)) {
+				if(!competences.contains(c)) {
+					competences.add(c);
+				}
+			}
+		}
+		courseKeyMap.put(selectedCourse, competences);
 	}
 
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {

@@ -44,8 +44,9 @@
 					</div>
 				</div>
 				<div class="ui-grid-col-3 centered">
-					<h5>Anforderung für Kurs #{courseCompetenceView.selectedCourse.name}:</h5>
-					<p:inputTextarea value="#{courseCompetenceView.requirement}" />
+<!-- 					<h5>Anforderung für Kurs #{courseCompetenceView.selectedCourse.name}:</h5> -->
+<!-- 					<p:inputTextarea value="#{courseCompetenceView.requirement}" /> -->
+					
 					<br /><br /><br />
 					<p:commandButton value="Kurs zuordnen"
 							update="competencePanelViewForCourse" 
@@ -55,19 +56,32 @@
 		</div>
 		
 		<hr />
-		
+		<p:outputPanel id="competencenListFromCourse" autoUpdate="true">
 		<ui:repeat var="entry" value="#{courseCompetenceView.courseKeyMap.entrySet().toArray()}">
 			<h5><h:outputText value="Kompetenzenliste von #{entry.key.name} : " /></h5>
-			<p:commandButton value="kurs löschen" />
-			<p>Anforderungen: #{courseCompetenceView.requirementFromCourse(entry.key.courseid)}</p>
-			<ul>
+<!-- 			<p:commandButton value="kurs löschen" /> -->
+<!-- 			<p>Anforderungen: #{courseCompetenceView.requirementFromCourse(entry.key.courseid)}</p> -->
+<!-- 			<ul> -->
+			<div class="ui-grid ui-grid-fixed">
 				<ui:repeat var="competence" value="#{entry.value}">
-					<li>
-						<h:outputText value="#{competence}" />
-						<p:commandButton value="Kompetenze löschen" />
-					</li>
+<!-- 					<li> -->
+<!-- 						<div></div> -->
+					<div class="ui-grid-row" style="margin-left:20px; margin-bottom:10px">
+						<div class="ui-grid-col-4">
+							<h:outputText value="#{competence}" />
+						</div>
+						<div class="ui-grid-col-3">
+							<p:commandButton value="löschen" >
+								<p:ajax event="click"
+									listener="#{courseCompetenceView.deleteCompetenceFromCourse(competence,entry.key.courseid)}"></p:ajax>
+							</p:commandButton>
+	<!-- 					</li> -->
+						</div>
+					</div>
 				</ui:repeat>
-			</ul>
+			</div>
+<!-- 			</ul> -->
 		</ui:repeat>
+		</p:outputPanel>
 	</p:outputPanel>
 </ui:composition>
