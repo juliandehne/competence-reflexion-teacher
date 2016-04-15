@@ -9,11 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.util.portlet.PortletProps;
 
 public class AppUtil {
 	
@@ -43,7 +41,6 @@ public class AppUtil {
 			try {
 				fc.getExternalContext().redirect("/");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}		

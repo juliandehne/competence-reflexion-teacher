@@ -88,8 +88,8 @@ public class CompetencenTreeView implements Serializable{
 			treeNodeMap.put(catchword, getTreeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
 		}
 		
-		competencenTableView.update(learningTemplateResultSet.getNameOfTheLearningTemplate());
 		courseCompetenceView.update(learningTemplateResultSet);
+		competencenTableView.update(learningTemplateResultSet, courseCompetenceView.getCourses());
 		activityCompetenceView.update(learningTemplateResultSet);
 	}
 

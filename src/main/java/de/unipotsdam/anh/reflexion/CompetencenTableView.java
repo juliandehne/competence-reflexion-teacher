@@ -15,7 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
 import uzuzjmd.competence.shared.dto.AbstractTreeEntry;
 import uzuzjmd.competence.shared.dto.ActivityTyp;
+import uzuzjmd.competence.shared.dto.GraphNode;
+import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import uzuzjmd.competence.shared.dto.UserCourseListItem;
+import de.unipotsdam.anh.dao.CourseDao;
 import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "competencenTableView")
@@ -40,11 +43,26 @@ public class CompetencenTableView implements Serializable{
 		setGridData();
 	}
 
-	public void update(String selectedLearningTemplate) {
-		setSelectedLearningTemplate(selectedLearningTemplate);
+	public void update(LearningTemplateResultSet selectedLearningTemplate, List<UserCourseListItem> courses) {
+		setSelectedLearningTemplate(selectedLearningTemplate.getNameOfTheLearningTemplate());
 		setGridData();
+		
+		for(GraphNode node : selectedLearningTemplate.getResultGraph().nodes) {
+			final List<String> courseString = CourseDao.getSuggestedCourseForCompetence(node.getLabel());
+			courseCompetenceMap.put(node.getLabel(), getCourseItem(courseString, courses));
+		}
 	}
 	
+	private List<UserCourseListItem> getCourseItem(List<String> courseString, List<UserCourseListItem> courses) {
+		final List<UserCourseListItem> result = new ArrayList<UserCourseListItem>();
+		for(UserCourseListItem c : courses) {
+			if(courseString.contains(c.getName())) {
+				result.add(c);
+			}
+		}
+		return result;
+	}
+
 	public List<UserCourseListItem> getCourseFromCompetence(String competence) {
 		List<UserCourseListItem> course = courseCompetenceMap.get(competence);
 		return course;
