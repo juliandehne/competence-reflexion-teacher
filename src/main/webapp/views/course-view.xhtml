@@ -8,6 +8,21 @@
 			xmlns:ui="http://java.sun.com/jsf/facelets"
 			xmlns:pe="http://primefaces.org/ui/extensions">
 	<p:outputPanel id="competencePanelViewForCourse">
+	
+		<p:button icon="ui-icon-plus" value="Kurse zuordnen" onclick="return false">
+			<p:effect type="fade" event="click" for="courseManagerPanel">
+				<f:param name="mode" value="'show'" />
+			</p:effect>
+		</p:button>
+		
+		<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
+			<p:effect type="fade" event="click" for="courseManagerPanel">
+				<f:param name="mode" value="'hide'" />
+			</p:effect>
+		</p:button>
+	
+		<p:outputPanel id="courseManagerPanel" layout="block" style="display:none">
+		<p:outputPanel id="courseManager">
 		<div class="ui-grid-row">
 			<div class="ui-grid-col-4 centered">
 				<h5>Wählen Sie bitte einen Kurs aus: </h5>
@@ -18,7 +33,7 @@
 						converter="userCourseListItemConverter"
 						dropdown="true" var="userCourseListItem"
 						itemLabel="#{userCourseListItem.name}" itemValue="#{userCourseListItem}" >
-						<p:ajax event="itemSelect" update="competencePanelViewForCourse" />
+						<p:ajax event="itemSelect" update="courseManager" />
 					</p:autoComplete>
 				</div>
 				<br />
@@ -54,6 +69,9 @@
 				</div>
 			</p:outputPanel>
 		</div>
+		</p:outputPanel>
+		</p:outputPanel>
+		
 		
 		<hr />
 		<p:outputPanel id="competencenListFromCourse" autoUpdate="true">

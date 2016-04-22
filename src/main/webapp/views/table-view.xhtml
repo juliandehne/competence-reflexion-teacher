@@ -40,30 +40,96 @@
 								<p:commandButton value="Aktivitäten"
 									onclick="PF('activityCompetenceDialog').show()"
 									action="#{competencenTableView.selecteCompetence(suggestedCompetenceColumn.testOutput)}"
-									style="font-size: 12px; font-style: italic;"/>
+									style="font-size: 12px; font-style: italic;">
+									<p:ajax onsuccess="updateActivityFromCompetenceDialog()" />
+								</p:commandButton>
 <!-- 								<p:commandButton value="Kurs" type="button" -->
 <!-- 									style="font-size: 12px; font-style: italic;"/> -->
 							</span>
 						</div>
 						<p:outputPanel rendered="#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput) != null}">
-							<i>(kurse: </i>
-							<ui:repeat var="course" value="#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}">
-								<p:commandLink onclick="PF('activityCourseDialog').show()" 
-										actionListener="#{competencenTableView.selecteCourse(course.courseid)}">
-									#{course.name}
-								</p:commandLink>,
-							</ui:repeat>
-							<i>)</i>
+								<i>(Kurse: </i>#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}
+								<ui:repeat var="course" value="#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}">
+									<p:commandLink onclick="PF('activityCourseDialog').show()" 
+											actionListener="#{competencenTableView.selecteCourse(course.courseid)}">
+										#{course.name}
+									</p:commandLink>,
+								</ui:repeat>
+								<i>)</i>
 						</p:outputPanel>
 					</td>
 				</ui:repeat>
 			</tr>
 		</ui:repeat>
-	</table>		
+	</table>
 	
+	<p:button icon="ui-icon-plus" value="Aktivität zuordnen" onclick="return false">
+		<p:effect type="fade" event="click" for="activityManagerPanel">
+			<f:param name="mode" value="'show'" />
+		</p:effect>
+	</p:button>
+	
+	<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
+		<p:effect type="fade" event="click" for="activityManagerPanel">
+			<f:param name="mode" value="'hide'" />
+		</p:effect>
+	</p:button>
+	
+	<p:outputPanel id="activityManagerPanel" layout="block" style="display:none">
+	<!-- Activity manager panel: -->
+	<p:outputPanel id="competencePanelViewForActivity">
+	
+		<div class="ui-grid-row">
+			<div class="ui-grid-col-4">
+				<h5>Wählen Sie bitte einen Aktivität aus: </h5>
+				<p:tree value="#{activityCompetenceView.activityTreeRoot}" var="node" 
+					selectionMode="single" selection="#{activityCompetenceView.selectedActivityNode}"
+					dynamic="true" style="width:100%">
+					<p:treeNode >
+						<h:outputText value="#{node.name}" />
+					</p:treeNode>
+				</p:tree>
+				<div class="pull-right marginTop">
+					<p:commandButton value="Aktivität auswählen" update="competencePanelViewForActivity" />
+				</div>
+			</div>
+			
+			<p:outputPanel id="competenceActivitySelecteTree" rendered="#{activityCompetenceView.selectedActivityNode != null}">
+				<div class="ui-grid-col-4 border-left-right">
+					<h5>Wählen Sie bitte die Kompetenzen aus: </h5>
+					<div class="marginTop">
+						<p:scrollPanel mode="native" style="width:auto;height:300px">
+						<p:tree value="#{activityCompetenceView.competenceTreeRoot}" var="node" 
+							selectionMode="checkbox" selection="#{activityCompetenceView.selectedKompetenceNodes}"
+							dynamic="true" style="width:100%">
+							<p:treeNode >
+								<h:outputText value="#{node}" />
+							</p:treeNode>
+						</p:tree>
+						</p:scrollPanel>
+					</div>
+				</div>
+				
+				<div class="ui-grid-col-3 centered">
+					<div>
+						<h:outputText value="ausgewählte Aktivität: #{activityCompetenceView.selectedActivityNode.data.name}" />
+					</div>
+					<ul>
+						<ui:repeat var="selectedCompetence" value="#{activityCompetenceView.selectedKompetenceNodes}">
+							<li><h:outputText value="#{selectedCompetence}" /></li>
+						</ui:repeat>
+					</ul>
+					<p:commandButton value="Aktivität zuordnen" update="competencePanelViewForActivity" 
+						actionListener="#{activityCompetenceView.activityCompetenceCollate}"/>
+				</div>
+			</p:outputPanel>
+		</div>
+	</p:outputPanel>
+	<!-- End Activity manager panel -->
+	</p:outputPanel>
+	
+	<p:remoteCommand name="updateActivityFromCompetenceDialog" update="activityFromCompetenceDialog"/>
 	<p:outputPanel id="panelCompetenceDialog">
-	
-<!-- onShow="updateActivityFromCompetenceDialog()"		<p:remoteCommand name="updateActivityFromCompetenceDialog" update="activityFromCompetenceDialog"/> -->
 		
 		<p:dialog header="Aktivitäten" widgetVar="activityCompetenceDialog" 
 			 id="activityFromCompetenceDialog"
@@ -73,7 +139,7 @@
 					<h:outputText value="Hier ist Liste von Aktivitäten der Kompetenzen: #{competencenTableView.selectedCompetence}" />
 				</div>
 				<div class="marginTop">
-					<ui:repeat var="activity" value="#{competencenTableView.getActivityFromCompetence()}">
+					<ui:repeat var="activity" value="#{competencenTableView.activitiesFromSelectedCompetence}">
 						<img src="#{activity.icon}" />
 						<h:outputText value="#{activity.name} " />
 						<br />

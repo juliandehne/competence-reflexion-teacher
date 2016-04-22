@@ -35,6 +35,7 @@ public class CompetencenTableView implements Serializable{
 	private String selectedCompetence;
 	
 	private String selectedCourse;
+	private List<AbstractTreeEntry> activitiesFromSelectedCompetence;
 	
 	@PostConstruct
 	public void init() {
@@ -77,17 +78,34 @@ public class CompetencenTableView implements Serializable{
 		return new ArrayList<AbstractTreeEntry>();
 	}
 	
-	public List<AbstractTreeEntry> getActivityFromCompetence() {
-		if (!StringUtils.isEmpty(selectedLearningTemplate)) {
-			final String competence = suggestedCompetenceGrid.getSuggestedCompetenceRows().get(0).
-					getSuggestedCompetenceColumns().get(0).getTestOutput();
-			return activityCompetenceMap.get(competence);
-		}
-		return activityCompetenceMap.get(selectedCompetence);
-	}
+//	public List<AbstractTreeEntry> getActivityFromCompetence() {
+//		if (!StringUtils.isEmpty(selectedLearningTemplate)) {
+//			final String competence = suggestedCompetenceGrid.getSuggestedCompetenceRows().get(0).
+//					getSuggestedCompetenceColumns().get(0).getTestOutput();
+//			return activityCompetenceMap.get(competence);
+//		}
+//		return activityCompetenceMap.get(selectedCompetence);
+//	}
 	
 	public void selecteCompetence(String competence) {
 		selectedCompetence = competence;
+		System.out.println("get activity from competence: " + selectedCompetence);
+		
+		final List<AbstractTreeEntry> activities = new ArrayList<AbstractTreeEntry>();
+		final ActivityTyp activityTyp1 = new ActivityTyp();
+		final ActivityTyp activityTyp2 = new ActivityTyp();
+		activityTyp1.setName("aktivity 1");
+		activityTyp2.setName("aktivity 2");
+		
+		activityTyp1.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
+		activityTyp2.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
+		
+		activities.add(activityTyp1);
+		activities.add(activityTyp2);
+		
+		activityCompetenceMap.put(competence, activities);
+		
+		activitiesFromSelectedCompetence = activities;
 	}
 	
 	public void selecteCourse(String course) {
@@ -151,36 +169,45 @@ public class CompetencenTableView implements Serializable{
 		if (!StringUtils.isEmpty(selectedLearningTemplate)) {	
 			final SuggestedCompetenceGrid data = LearningTemplateDao.getGridviewFromLearningTemplate(selectedLearningTemplate);	
 			setSuggestedCompetenceGrid(data);
-			getTestData();
+//			getTestData();
 		}
 	}
-	
-	private void getTestData() {
-		final String competence = suggestedCompetenceGrid.getSuggestedCompetenceRows().get(0).
-										getSuggestedCompetenceColumns().get(0).getTestOutput();
-		final List<UserCourseListItem> courses = new ArrayList<UserCourseListItem>();
-		final UserCourseListItem course1 = new UserCourseListItem();
-		course1.setName("course 1");
-		course1.setCourseid(15l);
-		courses.add(course1);
-		final UserCourseListItem course2 = new UserCourseListItem();
-		course2.setName("course 2");
-		course2.setCourseid(15l);
-		courses.add(course2);
-		courseCompetenceMap.put(competence, courses);
-		
-		final List<AbstractTreeEntry> activities = new ArrayList<AbstractTreeEntry>();
-		final ActivityTyp activityTyp1 = new ActivityTyp();
-		final ActivityTyp activityTyp2 = new ActivityTyp();
-		activityTyp1.setName("aktivity 1");
-		activityTyp2.setName("aktivity 2");
-		
-		activityTyp1.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
-		activityTyp2.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
-		
-		activities.add(activityTyp1);
-		activities.add(activityTyp2);
-		
-		activityCompetenceMap.put(competence, activities);
+
+	public List<AbstractTreeEntry> getActivitiesFromSelectedCompetence() {
+		return activitiesFromSelectedCompetence;
 	}
+
+	public void setActivitiesFromSelectedCompetence(
+			List<AbstractTreeEntry> activitiesFromSelectedCompetence) {
+		this.activitiesFromSelectedCompetence = activitiesFromSelectedCompetence;
+	}
+	
+//	private void getTestData() {
+//		final String competence = suggestedCompetenceGrid.getSuggestedCompetenceRows().get(0).
+//										getSuggestedCompetenceColumns().get(0).getTestOutput();
+//		final List<UserCourseListItem> courses = new ArrayList<UserCourseListItem>();
+//		final UserCourseListItem course1 = new UserCourseListItem();
+//		course1.setName("course 1");
+//		course1.setCourseid(15l);
+//		courses.add(course1);
+//		final UserCourseListItem course2 = new UserCourseListItem();
+//		course2.setName("course 2"); 
+//		course2.setCourseid(15l);
+//		courses.add(course2);
+//		courseCompetenceMap.put(competence, courses);
+//		
+//		final List<AbstractTreeEntry> activities = new ArrayList<AbstractTreeEntry>();
+//		final ActivityTyp activityTyp1 = new ActivityTyp();
+//		final ActivityTyp activityTyp2 = new ActivityTyp();
+//		activityTyp1.setName("aktivity 1");
+//		activityTyp2.setName("aktivity 2");
+//		
+//		activityTyp1.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
+//		activityTyp2.setIcon("https://eportfolio.uni-potsdam.de/moodle/theme/image.php/standard/chat/1448549337/icon");
+//		
+//		activities.add(activityTyp1);
+//		activities.add(activityTyp2);
+//		
+//		activityCompetenceMap.put(competence, activities);
+//	}
 }
