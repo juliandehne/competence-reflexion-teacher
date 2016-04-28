@@ -14,14 +14,15 @@
 				<f:param name="mode" value="'show'" />
 			</p:effect>
 		</p:button>
+	
+		<p:outputPanel id="courseManagerPanel" layout="block" style="display:none">
 		
 		<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
 			<p:effect type="fade" event="click" for="courseManagerPanel">
 				<f:param name="mode" value="'hide'" />
 			</p:effect>
 		</p:button>
-	
-		<p:outputPanel id="courseManagerPanel" layout="block" style="display:none">
+		
 		<p:outputPanel id="courseManager">
 		<div class="ui-grid-row">
 			<div class="ui-grid-col-4 centered">
