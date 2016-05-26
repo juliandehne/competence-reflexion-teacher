@@ -1,5 +1,6 @@
 package de.unipotsdam.anh.dao;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ws.rs.client.Client;
@@ -11,16 +12,16 @@ import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.filter.LoggingFilter;
 
-import uzuzjmd.competence.shared.StringList;
-import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.unipotsdam.anh.util.AppUtil;
 import de.unipotsdam.anh.util.Label;
+import de.unipotsdam.anh.util.RequestBuilder;
+import uzuzjmd.competence.shared.StringList;
+import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
+import uzuzjmd.competence.shared.dto.Graph;
+import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 
 public class LearningTemplateDao {
 
@@ -143,6 +144,40 @@ public class LearningTemplateDao {
 		}
 		return response.getStatus();
 
+	}
+	
+	public static synchronized int createOneCompetence(String competence, String operator, String learningTemplate, List<String> catchWords, List<String> superCompetences, List<String> subCompetences) {
+		final StringBuilder url = new StringBuilder();
+		url.append(AppUtil.getBaseUrl())
+			.append("/competences/addOne/");
+		
+		final RequestBuilder requestBuilder = new RequestBuilder();
+		return requestBuilder.withUrl(url.toString())
+										.withMedienType(MediaType.APPLICATION_JSON_TYPE)
+										.addQueryParam("competence", competence)
+										.addQueryParam("operator", operator)
+										.addQueryParam("catchwords", catchWords)
+										.addQueryParam("superCompetences", superCompetences)
+										.addQueryParam("subCompetences", subCompetences)
+										.addQueryParam("learningTemplateName", learningTemplate)
+										.postWithStatus(null);
+	}
+	
+	public static synchronized String getSubCompetence(String rootCompetence) {
+		final String context = "university";
+		
+		final StringBuilder url = new StringBuilder();
+		url.append(AppUtil.getBaseUrl())
+			.append("/competences/competencetree/")
+			.append(context)
+			.append("/");
+		
+		final RequestBuilder requestBuilder = new RequestBuilder();
+		
+		return requestBuilder.withUrl(url.toString())
+				.withMedienType(MediaType.APPLICATION_XML_TYPE)
+				.addQueryParam("rootCompetence", rootCompetence)
+				.get(String.class);
 	}
 
 	/**

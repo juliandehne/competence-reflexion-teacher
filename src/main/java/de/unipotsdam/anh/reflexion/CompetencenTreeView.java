@@ -19,10 +19,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import de.unipotsdam.anh.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "competencenTreeView")
 @ViewScoped

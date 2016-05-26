@@ -54,7 +54,7 @@ public class ActivityCompetenceView  implements Serializable{
 		activities = ActivityDao.getActivityFromCourse("15", MOODLE, 
 				AppUtil.getTestUser()[0], null, AppUtil.getTestUser()[1], false);
 		
-		createActivityTree();
+//		createActivityTree();
 	}
 	
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
@@ -127,7 +127,7 @@ public class ActivityCompetenceView  implements Serializable{
 			final TreeNode userNode = new DefaultTreeNode(userTree);
 			userNode.setExpanded(true);
 			activityTreeRoot.getChildren().add(userNode);
-			for(ActivityTyp activityTyp : userTree.getActivityTypes()) {
+			for(ActivityTyp activityTyp : userTree == null ? new ArrayList<ActivityTyp>() : userTree.getActivityTypes()) {
 				final TreeNode activityTypNode = new DefaultTreeNode(activityTyp);
 				activityTypNode.setExpanded(true);
 				userNode.getChildren().add(activityTypNode);

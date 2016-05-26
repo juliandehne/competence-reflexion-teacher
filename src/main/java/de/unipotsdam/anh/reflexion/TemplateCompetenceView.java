@@ -46,6 +46,8 @@ public class TemplateCompetenceView implements Serializable{
 	private String tmpName;
 	
 	private LearningTemplateResultSet learningTemplateResultSet;
+	
+	private String newSubCompetence;
 
 	@PostConstruct
 	public void init() {
@@ -65,6 +67,10 @@ public class TemplateCompetenceView implements Serializable{
 	
 	public void renameCatchword(String oldName) {
 		System.out.println("rename: " + oldName);
+	}
+	
+	public void addSubCompetence(String selectedComptence) {
+		System.out.println("add new subCompetence : " + newSubCompetence + " for Competence " + selectedComptence);
 	}
 	
 	public void renameCompetence(ActionEvent e) {
@@ -230,5 +236,13 @@ public class TemplateCompetenceView implements Serializable{
 			}
 		}
 		return false;
+	}
+
+	public String getNewSubCompetence() {
+		return newSubCompetence;
+	}
+
+	public void setNewSubCompetence(String newSubCompetence) {
+		this.newSubCompetence = newSubCompetence;
 	}
 }

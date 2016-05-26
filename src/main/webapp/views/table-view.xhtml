@@ -48,14 +48,14 @@
 							</span>
 						</div>
 						<p:outputPanel rendered="#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput) != null}">
-								<i>(Kurse: </i>#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}
+								<!-- <i>(Kurse: </i>#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}
 								<ui:repeat var="course" value="#{competencenTableView.getCourseFromCompetence(suggestedCompetenceColumn.testOutput)}">
 									<p:commandLink onclick="PF('activityCourseDialog').show()" 
 											actionListener="#{competencenTableView.selecteCourse(course.courseid)}">
 										#{course.name}
 									</p:commandLink>,
 								</ui:repeat>
-								<i>)</i>
+								<i>)</i> -->
 						</p:outputPanel>
 					</td>
 				</ui:repeat>
@@ -63,19 +63,26 @@
 		</ui:repeat>
 	</table>
 	
-	<p:button icon="ui-icon-plus" value="Aktivität zuordnen" onclick="return false">
+	<p:button id="activityOrderButton" icon="ui-icon-plus" value="Aktivität zuordnen" onclick="return false">
 		<p:effect type="fade" event="click" for="activityManagerPanel">
 			<f:param name="mode" value="'show'" />
 		</p:effect>
-	</p:button>
-	
-	<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
-		<p:effect type="fade" event="click" for="activityManagerPanel">
+		<p:effect type="fade" event="click" for="activityOrderButton">
 			<f:param name="mode" value="'hide'" />
 		</p:effect>
 	</p:button>
 	
 	<p:outputPanel id="activityManagerPanel" layout="block" style="display:none">
+
+	<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
+		<p:effect type="fade" event="click" for="activityManagerPanel">
+			<f:param name="mode" value="'hide'" />
+		</p:effect>
+		<p:effect type="fade" event="click" for="activityOrderButton">
+			<f:param name="mode" value="'show'" />
+		</p:effect>
+	</p:button>
+
 	<!-- Activity manager panel: -->
 	<p:outputPanel id="competencePanelViewForActivity">
 	
@@ -123,6 +130,26 @@
 						actionListener="#{activityCompetenceView.activityCompetenceCollate}"/>
 				</div>
 			</p:outputPanel>
+			
+			<!-- Hier werden bei Button-Click dynamisch Assessment-Fragen angezeigt process="@(.reflexionSelection)" -->
+			<p:panel id="reflexionSelection" styleClass="reflexionSelection">
+				<div id="assessmentsForSelected" class="ui-grid ui-grid-responsive">
+					<H2></H2>
+					<br />
+					<ui:repeat var="reflectiveAssessment"
+						value="#{GridViewController.holder.reflectiveAssessmentList}">
+						<div class="flexiflex ui-grid-row" style="margin: auto;">
+							<div class="ui-grid-col-7">
+								<p:outputLabel for="assessmentRadio"
+									value="#{reflectiveAssessment.competenceDescription}"></p:outputLabel>
+							</div>
+							<div class="ui-grid-col-5" style="padding-left: 5px;">
+							</div>
+						</div>
+						<br />
+					</ui:repeat>
+				</div>
+			</p:panel>
 		</div>
 	</p:outputPanel>
 	<!-- End Activity manager panel -->
@@ -139,11 +166,7 @@
 					<h:outputText value="Hier ist Liste von Aktivitäten der Kompetenzen: #{competencenTableView.selectedCompetence}" />
 				</div>
 				<div class="marginTop">
-					<ui:repeat var="activity" value="#{competencenTableView.activitiesFromSelectedCompetence}">
-						<img src="#{activity.icon}" />
-						<h:outputText value="#{activity.name} " />
-						<br />
-					</ui:repeat>
+
 				</div>
 				
 				<div class="marginTop">

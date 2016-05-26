@@ -155,21 +155,90 @@
 				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog" 
 					modal="true" height="100%" closeOnEscape="true" >
 					<div class="centered marginTop">
-						<div class="marginTop">
-							<h:outputText value="''#{competencenTreeView.selectedNode.data}'' umbenennen: " />
-						</div>
-						<div class="marginTop">
-							neu Name:
-							<p:inputText value="#{templateCompetenceView.tmpName}" 
-									placeholder="#{competencenTreeView.selectedNode.data}" />
-						</div>
-						<div class="marginTop">
-							<p:commandButton value="update" icon="ui-icon-check"
-								update="learningProjectEdit"
-								onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
-								actionListener="#{templateCompetenceView.renameCompetence}" />
-							<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:5px;"/>
-						</div>
+
+						<p:outputPanel id="editCompetencePanel" layout="block">
+							<div class="marginTop">
+								<h4><h:outputText value="''#{competencenTreeView.selectedNode.data}'' umbenennen: " /></h4>
+							</div>
+							<div class="marginTop">
+								neu Name:
+								<p:inputText value="#{templateCompetenceView.tmpName}" 
+										placeholder="#{competencenTreeView.selectedNode.data}" />
+							</div>
+
+							<hr />
+
+							<div class="marginTop">
+								<span class="pull-left">
+								<p:button icon="ui-icon-plus" value="Unter Kompetenzen" onclick="return false">
+									<p:effect type="blind" event="click" for="subCompetencePanel">
+										<f:param name="mode" value="'show'" />
+									</p:effect>
+
+									<p:effect event="click" for="editCompetencePanel">
+										<f:param name="mode" value="'hide'" />
+									</p:effect>
+								</p:button>
+								</span>
+
+								<span class="pull-right">
+									<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-right:5px;"/>
+
+									<p:commandButton value="update" icon="ui-icon-check"
+										update="learningProjectEdit"
+										onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
+										actionListener="#{templateCompetenceView.renameCompetence}" />
+								</span>
+							</div>
+						</p:outputPanel>
+
+						<p:outputPanel id="subCompetencePanel" layout="block" style="display:none">
+							<div class="marginTop">
+								<h4><h:outputText value="Unter Kompetenze für Kompetenze ''#{competencenTreeView.selectedNode.data}'': " /></h4>
+
+
+								<p:inputText value="#{templateCompetenceView.newSubCompetence}"  placeholder="neue untere Kompetenze" />
+								<p:commandButton actionListener="#{templateCompetenceView.addSubCompetence(competencenTreeView.selectedNode.data)}" value="hinzufügen" style="margin-left:5px; margin-bottom: 7px;" />
+
+								<hr />
+								<ul>
+									<li>
+										unter Kompetenze from #{competencenTreeView.selectedNode.data}
+<!-- 										<p:button icon="ui-icon-plus" value="" onclick="return false">
+											<p:effect type="fade" event="click" for="underCompetence-1">
+												<f:param name="mode" value="'show'" />
+											</p:effect>
+										</p:button>
+										
+										<p:outputPanel id="underCompetence-1" layout="block" style="display:none">
+											<p:inputText placeholder="unter Kompetenze" />
+											<p:commandButton value="hinzufügen" style="margin-left:5px;"/>
+										</p:outputPanel> -->
+									</li>
+									<li>
+										unter Kompetenze from #{competencenTreeView.selectedNode.data}
+									</li>
+									<li>
+										unter Kompetenze from #{competencenTreeView.selectedNode.data}
+									</li>
+								</ul>
+
+								<hr />
+
+								<span class="pull-left">
+								<p:button icon="ui-icon-arrowreturnthick-1-w" value="zurück" onclick="return false">
+									<p:effect type="blind" event="click" for="editCompetencePanel">
+										<f:param name="mode" value="'show'" />
+									</p:effect>
+
+									<p:effect event="click" for="subCompetencePanel">
+										<f:param name="mode" value="'hide'" />
+									</p:effect>
+								</p:button>
+								</span>
+								<span class="pull-right"><p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-left:10px;"/></span>
+							</div>
+						</p:outputPanel>
 					</div>
 				</p:dialog>
 
