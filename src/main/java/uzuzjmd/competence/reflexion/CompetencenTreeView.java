@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-import de.unipotsdam.anh.util.GraphUtil;
+import uzuzjmd.competence.reflexion.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;

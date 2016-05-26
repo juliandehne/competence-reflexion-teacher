@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.dto;
+package uzuzjmd.competence.reflexion.dto;
 
 import java.util.ArrayList;
 import java.util.List;

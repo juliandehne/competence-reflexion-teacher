@@ -1,14 +1,14 @@
-package de.unipotsdam.anh.dao;
+package uzuzjmd.competence.reflexion.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import uzuzjmd.competence.reflexion.util.AppUtil;
+import uzuzjmd.competence.reflexion.util.RequestBuilder;
+import uzuzjmd.competence.reflexion.util.UserTrees;
 import uzuzjmd.competence.shared.dto.UserTree;
-import de.unipotsdam.anh.util.AppUtil;
-import de.unipotsdam.anh.util.RequestBuilder;
-import de.unipotsdam.anh.util.UserTrees;
 
 public class ActivityDao {
 

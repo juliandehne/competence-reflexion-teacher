@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +16,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import uzuzjmd.competence.reflexion.dao.ActivityDao;
+import uzuzjmd.competence.reflexion.util.AppUtil;
+import uzuzjmd.competence.reflexion.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.AbstractTreeEntry;
 import uzuzjmd.competence.shared.dto.ActivityEntry;
 import uzuzjmd.competence.shared.dto.ActivityTyp;
@@ -24,9 +27,6 @@ import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import uzuzjmd.competence.shared.dto.UserTree;
-import de.unipotsdam.anh.dao.ActivityDao;
-import de.unipotsdam.anh.util.AppUtil;
-import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "activityCompetenceView")
 @ViewScoped

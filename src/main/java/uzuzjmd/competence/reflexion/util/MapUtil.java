@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.util;
+package uzuzjmd.competence.reflexion.util;
 
 import java.util.ArrayList;
 import java.util.Collections;

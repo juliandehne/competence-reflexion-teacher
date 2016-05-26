@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.dao;
+package uzuzjmd.competence.reflexion.dao;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -15,9 +15,9 @@ import org.glassfish.jersey.filter.LoggingFilter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.unipotsdam.anh.util.AppUtil;
-import de.unipotsdam.anh.util.Label;
-import de.unipotsdam.anh.util.RequestBuilder;
+import uzuzjmd.competence.reflexion.util.AppUtil;
+import uzuzjmd.competence.reflexion.util.Label;
+import uzuzjmd.competence.reflexion.util.RequestBuilder;
 import uzuzjmd.competence.shared.StringList;
 import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
 import uzuzjmd.competence.shared.dto.Graph;

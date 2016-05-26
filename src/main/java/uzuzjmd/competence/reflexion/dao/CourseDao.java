@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.dao;
+package uzuzjmd.competence.reflexion.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import uzuzjmd.competence.reflexion.util.AppUtil;
+import uzuzjmd.competence.reflexion.util.RequestBuilder;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.UserCourseListItem;
-import de.unipotsdam.anh.util.AppUtil;
-import de.unipotsdam.anh.util.RequestBuilder;
 
 public class CourseDao {
 	

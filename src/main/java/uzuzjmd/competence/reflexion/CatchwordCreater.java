@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 
@@ -7,11 +7,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
+import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import de.unipotsdam.anh.dao.LearningTemplateDao;
-import de.unipotsdam.anh.util.AppUtil;
 
 @ManagedBean(name = "catchwordCreater")
 @ViewScoped

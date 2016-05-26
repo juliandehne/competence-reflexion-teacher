@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;

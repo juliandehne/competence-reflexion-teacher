@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,14 +12,14 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang3.StringUtils;
 
+import uzuzjmd.competence.reflexion.dao.CourseDao;
+import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
 import uzuzjmd.competence.shared.dto.AbstractTreeEntry;
 import uzuzjmd.competence.shared.dto.ActivityTyp;
 import uzuzjmd.competence.shared.dto.GraphNode;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
 import uzuzjmd.competence.shared.dto.UserCourseListItem;
-import de.unipotsdam.anh.dao.CourseDao;
-import de.unipotsdam.anh.dao.LearningTemplateDao;
 
 @ManagedBean(name = "competencenTableView")
 @ViewScoped

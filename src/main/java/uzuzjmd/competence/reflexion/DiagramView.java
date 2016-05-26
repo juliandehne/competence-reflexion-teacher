@@ -1,4 +1,4 @@
-package de.unipotsdam.anh.reflexion;
+package uzuzjmd.competence.reflexion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +17,11 @@ import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
 
+import uzuzjmd.competence.reflexion.dto.TreeNode;
+import uzuzjmd.competence.reflexion.util.GraphUtil;
 import uzuzjmd.competence.shared.dto.Graph;
 import uzuzjmd.competence.shared.dto.GraphTriple;
 import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import de.unipotsdam.anh.dto.TreeNode;
-import de.unipotsdam.anh.util.GraphUtil;
 
 @ManagedBean(name = "diagramView")
 @ViewScoped

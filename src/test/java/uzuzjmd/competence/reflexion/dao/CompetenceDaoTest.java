@@ -1,12 +1,12 @@
-package de.unipotsdam.reflection.dao;
+package uzuzjmd.competence.reflexion.dao;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 
-import de.unipotsdam.anh.dao.LearningTemplateDao;
+import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 
-public class LearningTemplateDaoTest {
+public class CompetenceDaoTest {
 
 	@Test
 	public void createOneCompetenceTest() {
