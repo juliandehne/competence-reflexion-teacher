@@ -22,6 +22,7 @@ import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
  * This needs running RestServer in order to work
  */
 public class LearningTemplateDaoTest {
+	/**
 
 	public static final String LABELNAME = "SuggestedCompetencePrerequisite";
 	private static final String course = "university";
@@ -284,4 +285,5 @@ public class LearningTemplateDaoTest {
 		 Assert.assertNotNull(result1);
 		 Assert.assertNotNull(result2);
 	}
+	*/
 }
