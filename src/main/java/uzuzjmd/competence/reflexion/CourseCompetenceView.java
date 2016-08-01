@@ -20,11 +20,11 @@ import org.primefaces.model.TreeNode;
 import uzuzjmd.competence.reflexion.dao.CourseDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import uzuzjmd.competence.shared.dto.UserCourseListItem;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphNode;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
+import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -65,7 +65,7 @@ public class CourseCompetenceView implements Serializable {
 	
 	public void deleteCompetenceFromCourse(String competence, String course) {
 		int status = CourseDao.deleteSuggestedCourseForCompetence(competence, course);
-		System.out.println("delete competence " + competence + "with status " + status);
+		//System.out.println("delete competence " + competence + "with status " + status);
 //		if(status == 200) {
 //			for(Entry<UserCourseListItem, List<String>> e : courseKeyMap.entrySet()) {
 //				if(StringUtils.equals(String.valueOf(e.getKey().getCourseid()), course)) {
@@ -79,7 +79,7 @@ public class CourseCompetenceView implements Serializable {
 	
 	public String requirementFromCourse(String course) {
 		final String requirement = CourseDao.getRequirementFromCourse(course);
-		System.out.println("requirement from Course with id " + course + " " + requirement);
+		//System.out.println("requirement from Course with id " + course + " " + requirement);
 		return requirement;
 	}
 	

@@ -14,12 +14,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import uzuzjmd.competence.reflexion.dao.CourseDao;
 import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
-import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
-import uzuzjmd.competence.shared.dto.AbstractTreeEntry;
-import uzuzjmd.competence.shared.dto.ActivityTyp;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import uzuzjmd.competence.shared.dto.UserCourseListItem;
+import uzuzjmd.competence.shared.learningtemplate.SuggestedCompetenceGrid;
+import datastructures.trees.AbstractTreeEntry;
+import uzuzjmd.competence.shared.activity.ActivityTyp;
+import datastructures.graph.GraphNode;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
+import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 @ManagedBean(name = "competencenTableView")
 @ViewScoped
@@ -89,7 +89,7 @@ public class CompetencenTableView implements Serializable{
 	
 	public void selecteCompetence(String competence) {
 		selectedCompetence = competence;
-		System.out.println("get activity from competence: " + selectedCompetence);
+		//System.out.println("get activity from competence: " + selectedCompetence);
 		
 		final List<AbstractTreeEntry> activities = new ArrayList<AbstractTreeEntry>();
 		final ActivityTyp activityTyp1 = new ActivityTyp();
@@ -111,7 +111,7 @@ public class CompetencenTableView implements Serializable{
 	public void selecteCourse(String course) {
 		selectedCourse = course;
 		
-		System.out.println("selected Course from Table-View: " + selectedCourse);
+		//System.out.println("selected Course from Table-View: " + selectedCourse);
 	}
 
 	public SuggestedCompetenceGrid getSuggestedCompetenceGrid() {

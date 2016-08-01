@@ -20,9 +20,9 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import uzuzjmd.competence.reflexion.util.GraphUtil;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 @ManagedBean(name = "competencenTreeView")
 @ViewScoped
@@ -193,7 +193,7 @@ public class CompetencenTreeView implements Serializable{
 		if(graph == null) {
 			return new ArrayList<TreeNode>();
 		}
-		System.out.println(graph.toString());
+		//System.out.println(graph.toString());
 		final Map<String, TreeNode> nodes = new HashMap<String, TreeNode>();
 		
 		for(Entry<Integer, String> e: graph.nodeIdValues.entrySet()) {

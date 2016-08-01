@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.RequestBuilder;
 import uzuzjmd.competence.reflexion.util.UserTrees;
-import uzuzjmd.competence.shared.dto.UserTree;
+import uzuzjmd.competence.shared.moodle.UserTree;
 
 public class ActivityDao {
 

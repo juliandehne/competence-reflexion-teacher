@@ -8,8 +8,8 @@ import javax.ws.rs.core.MediaType;
 
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.RequestBuilder;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.UserCourseListItem;
+import datastructures.graph.Graph;
+import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 public class CourseDao {
 	

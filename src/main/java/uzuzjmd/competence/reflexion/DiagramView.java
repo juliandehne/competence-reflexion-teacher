@@ -19,9 +19,9 @@ import org.primefaces.model.diagram.overlay.LabelOverlay;
 
 import uzuzjmd.competence.reflexion.dto.TreeNode;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 @ManagedBean(name = "diagramView")
 @ViewScoped
@@ -123,6 +123,6 @@ public class DiagramView {
 			}
 		}
 		
-		System.out.println(tree);
+		//System.out.println(tree);
 	}
 }

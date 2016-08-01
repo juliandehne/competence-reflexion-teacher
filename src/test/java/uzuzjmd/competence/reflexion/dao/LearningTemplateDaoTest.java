@@ -10,13 +10,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
-import uzuzjmd.competence.shared.DESCRIPTORType;
-import uzuzjmd.competence.shared.StringList;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import uzuzjmd.competence.shared.epos.DESCRIPTORType;
+import datastructures.lists.StringList;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphNode;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 /**
  * This needs running RestServer in order to work

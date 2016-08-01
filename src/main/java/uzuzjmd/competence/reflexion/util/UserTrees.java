@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import uzuzjmd.competence.shared.dto.UserTree;
+import uzuzjmd.competence.shared.moodle.UserTree;
 
 @XmlRootElement
 public class UserTrees {

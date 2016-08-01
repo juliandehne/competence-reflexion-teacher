@@ -22,8 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.Label;
-import uzuzjmd.competence.shared.StringList;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.lists.StringList;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
@@ -59,7 +59,7 @@ public class LearningTemplateView implements Serializable, Validator{
 	    	tmpName = null;
 	    	fetchAllLearningTemplate();
 	    }
-	    System.out.println("rename with status: " + respone);
+	    //System.out.println("rename with status: " + respone);
 	}
 	
 	public List<String> complete(String query) {
@@ -90,7 +90,7 @@ public class LearningTemplateView implements Serializable, Validator{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Anfrage nicht ausgeführt!", "Sie müssen eine Template auswählen!"));
 		} else {
 			templateCompetenceView.update(selectedLearningTemplate);
-			System.out.println(selectedLearningTemplate);
+			//System.out.println(selectedLearningTemplate);
 			selectedLearningTemplate = "";
 		}
 		

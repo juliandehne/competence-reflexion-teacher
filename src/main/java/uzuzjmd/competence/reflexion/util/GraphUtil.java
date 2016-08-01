@@ -11,10 +11,10 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphNode;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 public class GraphUtil {
 

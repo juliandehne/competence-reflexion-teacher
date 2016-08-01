@@ -18,10 +18,10 @@ import com.google.gson.GsonBuilder;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.Label;
 import uzuzjmd.competence.reflexion.util.RequestBuilder;
-import uzuzjmd.competence.shared.StringList;
-import uzuzjmd.competence.shared.SuggestedCompetenceGrid;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.lists.StringList;
+import uzuzjmd.competence.shared.learningtemplate.SuggestedCompetenceGrid;
+import datastructures.graph.Graph;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 public class LearningTemplateDao {
 

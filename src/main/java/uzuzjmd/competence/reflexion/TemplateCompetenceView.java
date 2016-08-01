@@ -17,9 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.Label;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
+import datastructures.graph.GraphNode;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
@@ -65,11 +65,11 @@ public class TemplateCompetenceView implements Serializable{
 	}
 	
 	public void renameCatchword(String oldName) {
-		System.out.println("rename: " + oldName);
+		//System.out.println("rename: " + oldName);
 	}
 	
 	public void addSubCompetence(String selectedComptence) {
-		System.out.println("add new subCompetence : " + newSubCompetence + " for Competence " + selectedComptence);
+		//System.out.println("add new subCompetence : " + newSubCompetence + " for Competence " + selectedComptence);
 	}
 	
 	public void renameCompetence(ActionEvent e) {

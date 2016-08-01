@@ -9,11 +9,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.util.portlet.PortletProps;
 
 public class AppUtil {
+	
+	private static Boolean firstTimeFlag = true;
 	
 	public static String[] getTestUser() {
 		final String[] user = {"xunguyen@uni-potsdam.de", "xa8641933"};
@@ -21,15 +25,23 @@ public class AppUtil {
 	}
 	
 	public static String getBaseUrl() {
-//		try {
-//			String competenceRestServerUrl = GetterUtil.getString(PortletProps.get("competenceRestServerUrl"));
-//			return competenceRestServerUrl;
-//		} catch (Exception ex) {
-//			System.err.println(ex);
-//			return "http://fleckenroller.cs.uni-potsdam.de/app/competence-database/competence";
-//		}
+		String result = "";
+		try {
+			String competenceRestServerUrl = GetterUtil.getString(PortletProps.get("competenceRestServerUrl"));
+			result =  competenceRestServerUrl;
+		} catch (Exception ex) {
+			System.err.println(ex);
+			result = "http://fleckenroller.cs.uni-potsdam.de/app/competence-database/competence";
+		}
+		if (firstTimeFlag) {
+			AppUtil.firstTimeFlag = false;
+			System.out.println("Server used is: "+ result);
+		}
 		
-		return "http://localhost:8084";
+		return result;
+		
+		
+		//return "http://localhost:8084";
 	}
 	
 	public static User getUserLoggedIn() throws PortalException, SystemException {

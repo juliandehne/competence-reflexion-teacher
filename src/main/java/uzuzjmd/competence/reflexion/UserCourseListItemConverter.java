@@ -7,7 +7,7 @@ import javax.faces.convert.FacesConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import uzuzjmd.competence.shared.dto.UserCourseListItem;
+import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 @FacesConverter(value="userCourseListItemConverter")
 public class UserCourseListItemConverter implements Converter{

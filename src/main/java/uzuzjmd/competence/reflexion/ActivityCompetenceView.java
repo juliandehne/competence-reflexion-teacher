@@ -19,14 +19,14 @@ import org.primefaces.model.TreeNode;
 import uzuzjmd.competence.reflexion.dao.ActivityDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
-import uzuzjmd.competence.shared.dto.AbstractTreeEntry;
-import uzuzjmd.competence.shared.dto.ActivityEntry;
-import uzuzjmd.competence.shared.dto.ActivityTyp;
-import uzuzjmd.competence.shared.dto.Graph;
-import uzuzjmd.competence.shared.dto.GraphNode;
-import uzuzjmd.competence.shared.dto.GraphTriple;
-import uzuzjmd.competence.shared.dto.LearningTemplateResultSet;
-import uzuzjmd.competence.shared.dto.UserTree;
+import datastructures.trees.AbstractTreeEntry;
+import datastructures.trees.ActivityEntry;
+import uzuzjmd.competence.shared.activity.ActivityTyp;
+import datastructures.graph.Graph;
+import datastructures.graph.GraphNode;
+import datastructures.graph.GraphTriple;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
+import uzuzjmd.competence.shared.moodle.UserTree;
 
 @ManagedBean(name = "activityCompetenceView")
 @ViewScoped
