@@ -1,6 +1,5 @@
 package uzuzjmd.competence.reflexion.dao;
 
-import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -8,6 +7,7 @@ import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 
 public class CompetenceDaoTest {
 
+	/*
 	@Test
 	public void createOneCompetenceTest() {
 		int status = LearningTemplateDao.createOneCompetence("creating api", "op", "TestLernprojekt",
@@ -19,4 +19,5 @@ public class CompetenceDaoTest {
 		
 		System.out.println(subCompetencen);
 	}
+	*/
 }
