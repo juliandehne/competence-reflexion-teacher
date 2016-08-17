@@ -19,90 +19,103 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import uzuzjmd.competence.reflexion.dao.CompetenceDao;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 import datastructures.graph.Graph;
 import datastructures.graph.GraphTriple;
-import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 
 @ManagedBean(name = "competencenTreeView")
 @ViewScoped
-public class CompetencenTreeView implements Serializable{
+public class CompetencenTreeView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final String ADD_LABEL = "+";
-	
+
 	private Map<String, List<TreeNode>> treeNodeMap;
 	private List<String> catchWords;
-	
+
 	private String selectedCompetenceToNode;
 	private String selectedCompetenceFromNode;
 	private String newLevelCompetence;
 	private TreeNode selectedNode;
 	private String selectedCatchword;
-	
+
 	@ManagedProperty(value = "#{competencenTableView}")
 	private CompetencenTableView competencenTableView;
-	
+
 	@ManagedProperty(value = "#{courseCompetenceView}")
 	private CourseCompetenceView courseCompetenceView;
-	
+
 	@ManagedProperty(value = "#{activityCompetenceView}")
 	private ActivityCompetenceView activityCompetenceView;
-	
+
 	@PostConstruct
 	public void init() {
 		treeNodeMap = new HashMap<String, List<TreeNode>>();
 		catchWords = new ArrayList<String>();
 	}
-	
+
 	public void onNodeSelect(String catchword) {
-        if(ADD_LABEL.equals(selectedNode.getData())) {
-        	this.selectedCompetenceFromNode = (String) selectedNode.getParent().getData();
-            this.selectedCatchword = catchword;
-            
-        	if(selectedNode.getParent().getChildCount() > 1) {
-        		RequestContext.getCurrentInstance().execute("PF('branchCompetenceDialog').show();");
-        	} else {
-        		RequestContext.getCurrentInstance().execute("PF('newLevelCompetenceDialog').show();");
-        	}
-        } else {
-        	RequestContext.getCurrentInstance().execute("PF('editCompetenceDialog').show();");
-        }
-        
-    }
+		if (catchword != null && selectedNode != null) {
+			if (ADD_LABEL.equals(selectedNode.getData())) {
+				this.selectedCompetenceFromNode = (String) selectedNode
+						.getParent().getData();
+				this.selectedCatchword = catchword;
+				if (selectedNode.getParent().getChildCount() > 1) {
+					RequestContext.getCurrentInstance().execute(
+							"PF('branchCompetenceDialog').show();");
+				} else {
+					RequestContext.getCurrentInstance().execute(
+							"PF('newLevelCompetenceDialog').show();");
+				}
+			} else {
+				RequestContext.getCurrentInstance().execute(
+						"PF('editCompetenceDialog').show();");
+			}
+		}
+
+	}
 
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
-		if(learningTemplateResultSet == null || learningTemplateResultSet.getResultGraph() == null) {
+		if (learningTemplateResultSet == null
+				|| learningTemplateResultSet.getResultGraph() == null) {
 			return;
 		}
-		
+
 		treeNodeMap.clear();
 		catchWords.clear();
 		final Set<String> tmp = new HashSet<String>();
-		for(Entry<GraphTriple, String[]> entry : learningTemplateResultSet.getCatchwordMap().entrySet()) {
+		for (Entry<GraphTriple, String[]> entry : learningTemplateResultSet
+				.getCatchwordMap().entrySet()) {
 			tmp.addAll(Arrays.asList(entry.getValue()));
 		}
-		
+
 		catchWords.addAll(tmp);
-		for(String catchword : catchWords) {
-			treeNodeMap.put(catchword, getTreeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
+		for (String catchword : catchWords) {
+			treeNodeMap.put(
+					catchword,
+					getTreeForCatchword(
+							learningTemplateResultSet.getCatchwordMap(),
+							catchword));
 		}
-		
+
 		courseCompetenceView.update(learningTemplateResultSet);
-		competencenTableView.update(learningTemplateResultSet, courseCompetenceView.getCourses());
+		competencenTableView.update(learningTemplateResultSet,
+				courseCompetenceView.getCourses());
 		activityCompetenceView.update(learningTemplateResultSet);
 	}
 
 	public void addNewRootTreeNode(String catchword, String newCompetence) {
 		TreeNode node = createTreeNode(newCompetence);
 		final List<TreeNode> nodes = treeNodeMap.get(catchword);
-		if(nodes == null) {
+		if (nodes == null) {
 			treeNodeMap.put(catchword, Arrays.asList(node));
 		} else {
 			treeNodeMap.get(catchword).add(node);
 		}
 	}
-	
+
 	public Map<String, List<TreeNode>> getTreeNodeMap() {
 		return treeNodeMap;
 	}
@@ -158,23 +171,25 @@ public class CompetencenTreeView implements Serializable{
 	public void setNewLevelCompetence(String newLevelCompetence) {
 		this.newLevelCompetence = newLevelCompetence;
 	}
-	
+
 	public CompetencenTableView getCompetencenTableView() {
 		return competencenTableView;
 	}
 
-	public void setCompetencenTableView(CompetencenTableView competencenTableView) {
+	public void setCompetencenTableView(
+			CompetencenTableView competencenTableView) {
 		this.competencenTableView = competencenTableView;
 	}
-	
+
 	public CourseCompetenceView getCourseCompetenceView() {
 		return courseCompetenceView;
 	}
 
-	public void setCourseCompetenceView(CourseCompetenceView courseCompetenceView) {
+	public void setCourseCompetenceView(
+			CourseCompetenceView courseCompetenceView) {
 		this.courseCompetenceView = courseCompetenceView;
 	}
-	
+
 	public ActivityCompetenceView getActivityCompetenceView() {
 		return activityCompetenceView;
 	}
@@ -183,47 +198,62 @@ public class CompetencenTreeView implements Serializable{
 			ActivityCompetenceView activityCompetenceView) {
 		this.activityCompetenceView = activityCompetenceView;
 	}
-	
-	private List<TreeNode> getTreeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
+
+	private List<TreeNode> getTreeForCatchword(
+			Map<GraphTriple, String[]> catchwordMap, String catchword) {
 		Graph graph = GraphUtil.getGraphForCatchword(catchwordMap, catchword);
 		return getListTreeRootForGraph(graph);
 	}
 
+	// public StringList getSubCompetences(String topCompetence) {
+	// ArrayList<String> result = new ArrayList<String>();
+	// result.addAll(CompetenceDao.getSubCompetences(topCompetence));
+	// StringList result2 = new StringList();
+	// result2.setData(result);
+	// System.err.println("subcompetences are" + result2);
+	// return result2;
+	// }
+
+	public List<String> getSubCompetences(String topCompetence) {
+		return CompetenceDao.getSubCompetences(topCompetence).getData();
+	}
+
 	private List<TreeNode> getListTreeRootForGraph(Graph graph) {
-		if(graph == null) {
+		if (graph == null) {
 			return new ArrayList<TreeNode>();
 		}
-		//System.out.println(graph.toString());
 		final Map<String, TreeNode> nodes = new HashMap<String, TreeNode>();
-		
-		for(Entry<Integer, String> e: graph.nodeIdValues.entrySet()) {
+
+		for (Entry<Integer, String> e : graph.nodeIdValues.entrySet()) {
 			nodes.put(e.getValue(), createTreeNode(e.getValue()));
 		}
-		
+
 		final List<TreeNode> roots = new ArrayList<TreeNode>();
-		for(GraphTriple t : graph.triples) {
+		for (GraphTriple t : graph.triples) {
 			TreeNode fromNode = nodes.get(t.fromNode);
 			TreeNode toNode = nodes.get(t.toNode);
-			if(toNode.getParent() != null) {
-				fromNode.getChildren().add((fromNode.getChildCount() - 1),new DefaultTreeNode(t.toNode));
+			if (toNode.getParent() != null) {
+				fromNode.getChildren().add((fromNode.getChildCount() - 1),
+						new DefaultTreeNode(t.toNode));
 			} else {
-				fromNode.getChildren().add((fromNode.getChildCount() - 1),toNode);
+				fromNode.getChildren().add((fromNode.getChildCount() - 1),
+						toNode);
 			}
 		}
-		
-		for(Entry<String, TreeNode> n : nodes.entrySet()) {
-			if(n.getValue().getParent() == null) {
+
+		for (Entry<String, TreeNode> n : nodes.entrySet()) {
+			if (n.getValue().getParent() == null) {
 				roots.add(n.getValue());
 			}
 		}
-		
+
 		return roots;
 	}
-	
+
 	private TreeNode createTreeNode(String label) {
 		final TreeNode node = new DefaultTreeNode(label);
 		node.setExpanded(true);
-		node.getChildren().add( new DefaultTreeNode(ADD_LABEL));
+		node.getChildren().add(new DefaultTreeNode(ADD_LABEL));
 		return node;
 	}
 }
