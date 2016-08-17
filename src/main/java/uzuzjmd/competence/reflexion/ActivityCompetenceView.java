@@ -16,6 +16,9 @@ import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+
 import uzuzjmd.competence.reflexion.dao.ActivityDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
@@ -46,13 +49,13 @@ public class ActivityCompetenceView  implements Serializable{
 	private TreeNode selectedActivityNode;
 	
 	@PostConstruct
-	public void init() {
+	public void init() throws PortalException, SystemException {
 		activityTreeRoot = new DefaultTreeNode("Root", null);
 		competenceTreeRoot = new DefaultTreeNode("Root", null);
 		
 		activityMap = new HashMap<AbstractTreeEntry, List<String>>();
 		activities = ActivityDao.getActivityFromCourse("15", MOODLE, 
-				AppUtil.getTestUser()[0], null, AppUtil.getTestUser()[1], false);
+				AppUtil.getUser()[0], null, AppUtil.getUser()[1], false);
 		
 //		createActivityTree();
 	}
@@ -140,9 +143,13 @@ public class ActivityCompetenceView  implements Serializable{
 	}
 	
 	private void createCompetenceTreeNode(LearningTemplateResultSet learningTemplateResultSet) {
+		try {
 		final Set<String> catchWords = GraphUtil.getAllCatchword(learningTemplateResultSet);
 		for(String catchword : catchWords) {
 			competenceTreeRoot.getChildren().add(createTreeNodeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
+		}
+		} catch (NullPointerException e ) {
+			System.err.println(e.getMessage());
 		}
 	}
 	

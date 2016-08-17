@@ -12,9 +12,10 @@
 	</h:head>
 	<h:body>
 
+	<!-- Here a learning template is created -->
 	<h:form id="learningTemplateForm">
 		<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
-		     <img src="http://www.ajaxload.info/images/exemples/35.gif" width="45px"> </img>
+<!-- 		     <img src="http://www.ajaxload.info/images/exemples/35.gif" width="45px"> </img> -->
 		     Laden, Bitte warten Sie ...
 		</p:dialog>
 		<p:outputPanel id="learningTemplatePorlet">
@@ -27,6 +28,7 @@
 						</div>
 					</div>
 					<hr />
+					<!-- Here a learning project is selected by the user -->
 					<div class="ui-grid-row centered marginTop">
 						<div class="ui-grid-col-6">
 							<div>
@@ -63,6 +65,7 @@
 					</div>
 				</div>
 
+				<!-- Here a learning project can be created the dialog -->
 				<p:dialog header="neues Lernprojekt erstellen"  closeOnEscape="true"
 					widgetVar="newTemplateDialog" modal="true" height="120">
 					<div class="centered marginTop">
@@ -88,10 +91,11 @@
 			<p:messages id="autocompleteMessage" showDetail="true" autoUpdate="true" closable="true" />
 			<br />
 
+			<!-- Here the learning projected can be edited			 -->
 			<p:panel id="learningProjectEdit" rendered="#{templateCompetenceView.learningTemplateResultSet != null}">
 				<p:growl id="growl" showDetail="true" autoUpdate="true" />
 				<h2>
-					Lernprojekt : 
+					Lernprojekt: 
 					<p:inplace editor="true" label="#{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}">
 						<p:inputText value="#{learningTemplateView.tmpName}" placeholder="#{templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate}"/>
 			            <p:ajax event="save" update="learningTemplatePorlet" process="@this" listener="#{learningTemplateView.renameLearningTemplate(templateCompetenceView.learningTemplateResultSet.nameOfTheLearningTemplate)}" />
@@ -111,23 +115,24 @@
 				</p:confirmDialog>
 				<hr />
 
+				<!-- This is the tabview where competences the learningtemplates can can edited 			 -->
 				<p:tabView id="learningProjectEditTabView" >
 					<p:ajax event="tabChange" update="learningProjectEditTabView" />
 					<p:tab title="Kompetenzen verwalten" id="competenceTabView">
 						<ui:include src="competence-view.xhtml" />
 					</p:tab>
-					<p:tab title="Tabelle-Ansicht">
-						<ui:include src="table-view.xhtml" />
-					</p:tab>
-					<p:tab title="Kurs-Ansicht">
-						<ui:include src="course-view.xhtml" />
-					</p:tab>
+<!-- 					<p:tab title="Tabelle-Ansicht"> -->
+<!-- 						<ui:include src="table-view.xhtml" /> -->
+<!-- 					</p:tab> -->
+<!-- 					<p:tab title="Kurs-Ansicht"> -->
+<!-- 						<ui:include src="course-view.xhtml" /> -->
+<!-- 					</p:tab> -->
 <!-- 					<p:tab title="Aktivität-Ansicht"> -->
 <!-- 						<ui:include src="activity-view.xhtml" /> -->
 <!-- 					</p:tab> -->
 				</p:tabView>
 
-
+				<!-- In this dialog a new path can be added -->
 				<p:dialog header="neuer Lernpfad hinzufügen" widgetVar="newCompetenceDialog" 
 					modal="true" height="100%" closeOnEscape="true" >
 					<div class="centered marginTop">
@@ -155,35 +160,29 @@
 				<p:dialog header="Kompetence " widgetVar="editCompetenceDialog" 
 					modal="true" height="100%" closeOnEscape="true" >
 					<div class="centered marginTop">
-
 						<p:outputPanel id="editCompetencePanel" layout="block">
 							<div class="marginTop">
 								<h4><h:outputText value="''#{competencenTreeView.selectedNode.data}'' umbenennen: " /></h4>
 							</div>
 							<div class="marginTop">
-								neu Name:
+								Neuer Name:
 								<p:inputText value="#{templateCompetenceView.tmpName}" 
 										placeholder="#{competencenTreeView.selectedNode.data}" />
 							</div>
-
-							<hr />
-
+							<hr/>
 							<div class="marginTop">
 								<span class="pull-left">
 								<p:button icon="ui-icon-plus" value="Unter Kompetenzen" onclick="return false">
 									<p:effect type="blind" event="click" for="subCompetencePanel">
 										<f:param name="mode" value="'show'" />
 									</p:effect>
-
 									<p:effect event="click" for="editCompetencePanel">
 										<f:param name="mode" value="'hide'" />
 									</p:effect>
 								</p:button>
 								</span>
-
 								<span class="pull-right">
 									<p:commandButton value="abbrechen" onclick="PF('editCompetenceDialog').hide()" style="margin-right:5px;"/>
-
 									<p:commandButton value="update" icon="ui-icon-check"
 										update="learningProjectEdit"
 										onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"
@@ -194,16 +193,13 @@
 
 						<p:outputPanel id="subCompetencePanel" layout="block" style="display:none">
 							<div class="marginTop">
-								<h4><h:outputText value="Unter Kompetenze für Kompetenze ''#{competencenTreeView.selectedNode.data}'': " /></h4>
-
-
-								<p:inputText value="#{templateCompetenceView.newSubCompetence}"  placeholder="neue untere Kompetenze" />
+								<h4><h:outputText value="Unterkompetenzen für Kompetenz ''#{competencenTreeView.selectedNode.data}'': " /></h4>
+								<p:inputText value="#{templateCompetenceView.newSubCompetence}"  placeholder="neue untere Kompetenz" />
 								<p:commandButton actionListener="#{templateCompetenceView.addSubCompetence(competencenTreeView.selectedNode.data)}" value="hinzufügen" style="margin-left:5px; margin-bottom: 7px;" />
-
 								<hr />
 								<ul>
-									<li>
-										unter Kompetenze from #{competencenTreeView.selectedNode.data}
+<!-- 									<li> -->
+<!-- 										unter Kompetenze from #{competencenTreeView.selectedNode.data} -->
 <!-- 										<p:button icon="ui-icon-plus" value="" onclick="return false">
 											<p:effect type="fade" event="click" for="underCompetence-1">
 												<f:param name="mode" value="'show'" />
@@ -214,23 +210,20 @@
 											<p:inputText placeholder="unter Kompetenze" />
 											<p:commandButton value="hinzufügen" style="margin-left:5px;"/>
 										</p:outputPanel> -->
-									</li>
-									<li>
-										unter Kompetenze from #{competencenTreeView.selectedNode.data}
-									</li>
-									<li>
-										unter Kompetenze from #{competencenTreeView.selectedNode.data}
-									</li>
+<!-- 									</li> -->
+<!-- 									<li> -->
+<!-- 										unter Kompetenze from #{competencenTreeView.selectedNode.data} -->
+<!-- 									</li> -->
+<!-- 									<li> -->
+<!-- 										unter Kompetenze from #{competencenTreeView.selectedNode.data} -->
+<!-- 									</li> -->
 								</ul>
-
 								<hr />
-
 								<span class="pull-left">
 								<p:button icon="ui-icon-arrowreturnthick-1-w" value="zurück" onclick="return false">
 									<p:effect type="blind" event="click" for="editCompetencePanel">
 										<f:param name="mode" value="'show'" />
 									</p:effect>
-
 									<p:effect event="click" for="subCompetencePanel">
 										<f:param name="mode" value="'hide'" />
 									</p:effect>
@@ -241,9 +234,6 @@
 						</p:outputPanel>
 					</div>
 				</p:dialog>
-
-
-				
 				<p:dialog header="Kompetenz abzweigen" widgetVar="branchCompetenceDialog"
 					modal="true" height="170" closeOnEscape="true">
 					<div class="centered marginTop">
@@ -293,14 +283,13 @@
 				</p:dialog>
 				
 				
-				<p:dialog header="Vorhandene Kompetenz auswälen" widgetVar="branchCompetenceDbDialog"
+				<p:dialog header="Vorhandene Kompetenz auswählen" widgetVar="branchCompetenceDbDialog"
 					modal="true" height="120" closeOnEscape="true">
 					<div class="centered marginTop">
 						<div class="marginTop">
 					    	<h:outputText value="Wählen Sie eine Kompetenz aus! " />
 						</div>
 						<div class="marginTop">
-
 							<p:autoComplete maxResults="10"
 								dropdown="true"
 								value="#{templateCompetenceView.selectedDbCompetence}"
@@ -313,8 +302,7 @@
 							<p:commandButton value="abbrechen" onclick="PF('branchCompetenceDbDialog').hide()" style="margin-left:5px;" />
 						</div>
 					</div>
-				</p:dialog>
-				
+				</p:dialog>				
 			</p:panel>
 		</p:outputPanel>
 		</h:form>

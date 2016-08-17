@@ -19,9 +19,14 @@ public class AppUtil {
 	
 	private static Boolean firstTimeFlag = true;
 	
-	public static String[] getTestUser() {
+	public static String[] getUser() throws PortalException, SystemException {
 		final String[] user = {"xunguyen@uni-potsdam.de", "xa8641933"};
 		return user;
+				
+		
+//		User userx = getUserLoggedIn();
+//		final String[] user2 = new String [] {userx.getEmailAddress(), userx.getPassword()};
+//		return user2;
 	}
 	
 	public static String getBaseUrl() {

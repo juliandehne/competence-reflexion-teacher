@@ -14,6 +14,7 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.lang3.StringUtils;
 
+import uzuzjmd.competence.reflexion.dao.CompetenceDao;
 import uzuzjmd.competence.reflexion.dao.LearningTemplateDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.Label;
@@ -69,7 +70,14 @@ public class TemplateCompetenceView implements Serializable{
 	}
 	
 	public void addSubCompetence(String selectedComptence) {
-		//System.out.println("add new subCompetence : " + newSubCompetence + " for Competence " + selectedComptence);
+		String learningTemplate = learningTemplateResultSet.getNameOfTheLearningTemplate();
+		Collection<String[]> catchwords = learningTemplateResultSet.getCatchwordMap().values();
+		ArrayList<String> catchwords2 = new ArrayList<String>();
+		for (String[] list : catchwords) {
+			catchwords2.addAll(Arrays.asList(list));
+		}
+		CompetenceDao.addCompetenceStringGiven(newSubCompetence,learningTemplate, catchwords2, "nicht angegeben");		
+		CompetenceDao.addSubCompetence(selectedComptence, newSubCompetence);		
 	}
 	
 	public void renameCompetence(ActionEvent e) {

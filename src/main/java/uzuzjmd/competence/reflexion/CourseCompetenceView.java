@@ -28,6 +28,8 @@ import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 
 @ManagedBean(name = "courseCompetenceView")
 @ViewScoped
@@ -49,8 +51,16 @@ public class CourseCompetenceView implements Serializable {
 	public void init() {
 		root = new DefaultTreeNode("Root", null);
 		courseKeyMap = new HashMap<UserCourseListItem, List<String>>();
-		courses = CourseDao.getCourseFromUser(MOODLE, AppUtil.getTestUser()[0], 
-											null, AppUtil.getTestUser()[1]);
+		try {
+			courses = CourseDao.getCourseFromUser(MOODLE, AppUtil.getUser()[0], 
+												null, AppUtil.getUser()[1]);
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		getCourseCompetenceMap();
 	}
