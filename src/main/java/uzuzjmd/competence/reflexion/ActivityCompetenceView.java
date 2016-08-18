@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
@@ -48,6 +49,20 @@ public class ActivityCompetenceView  implements Serializable{
 	private TreeNode[] selectedKompetenceNodes;
 	private TreeNode selectedActivityNode;
 	
+	
+	@ManagedProperty("#{userLoginView}")
+	private UserLoginView userLoginView;
+
+	public UserLoginView getUserLoginView() {
+		return userLoginView;
+	}
+	
+	public void setUserLoginView(UserLoginView userLoginView) {
+		this.userLoginView = userLoginView;
+	}
+	
+	
+	
 	@PostConstruct
 	public void init() throws PortalException, SystemException {
 		activityTreeRoot = new DefaultTreeNode("Root", null);
@@ -55,8 +70,7 @@ public class ActivityCompetenceView  implements Serializable{
 		
 		activityMap = new HashMap<AbstractTreeEntry, List<String>>();
 		activities = ActivityDao.getActivityFromCourse("15", MOODLE, 
-				AppUtil.getUser()[0], null, AppUtil.getUser()[1], false);
-		
+				userLoginView.getUsername(), null, userLoginView.getPassword(), false);		
 //		createActivityTree();
 	}
 	

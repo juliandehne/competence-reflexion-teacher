@@ -1,0 +1,52 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:outputPanel>
+		<div>
+			<p:growl id="growl" sticky="true" showDetail="true" life="3000" />
+			<p:panel id="loginPanel" header="Login" widgetVar="dlg"
+				resizable="false" visible="#{!userLoginView.loggedIn}">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputLabel for="username" value="Username:" />
+					<p:inputText id="username" value="#{userLoginView.username}"
+						required="true" label="username" />
+
+					<h:outputLabel for="password" value="Password:" />
+					<p:password id="password" value="#{userLoginView.password}"
+						required="true" label="password" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Login"
+							actionListener="#{userLoginView.login}"
+							update="growl,loginPanel,learningTemplatePorlet, coursePanel"
+							oncomplete="handleLoginRequest(xhr, status, args)"							
+							>							
+						</p:commandButton>
+					</f:facet>
+				</h:panelGrid>
+			</p:panel>
+		</div>
+
+		<script type="text/javascript">
+			function handleLoginRequest(xhr, status, args) {
+				if (args.validationFailed || !args.loggedIn) {
+					PF('dlg').jq.effect("shake", {
+						times : 5
+					}, 100);
+				} else {
+					//$('coursePanel').puirefresh();
+					//PF('coursePanelWidget').refresh();
+					//PF('dlg').hide();
+					//PF('coursePanel').show();
+					//$('#loginLink').fadeOut();
+				}
+			}
+		</script>
+	</p:outputPanel>
+</ui:composition>

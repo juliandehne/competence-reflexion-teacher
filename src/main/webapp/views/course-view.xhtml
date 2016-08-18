@@ -1,113 +1,107 @@
 
-<ui:composition 
-			xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:c="http://java.sun.com/jsp/jstl/core"
-			xmlns:f="http://java.sun.com/jsf/core"
-			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:p="http://primefaces.org/ui"
-			xmlns:ui="http://java.sun.com/jsf/facelets"
-			xmlns:pe="http://primefaces.org/ui/extensions">
-	<p:outputPanel id="competencePanelViewForCourse">
-	
-		<p:button id="courseOrderButton" icon="ui-icon-plus" value="Kurse zuordnen" onclick="return false">
-			<p:effect type="fade" event="click" for="courseManagerPanel">
-				<f:param name="mode" value="'show'" />
-			</p:effect>
-			<p:effect type="fade" event="click" for="courseOrderButton">
-				<f:param name="mode" value="'hide'" />
-			</p:effect>
-		</p:button>
-	
-		<p:outputPanel id="courseManagerPanel" layout="block" style="display:none">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 
-		<p:button value="abbrechen" onclick="return false" style="margin-left:5px;">
-			<p:effect type="fade" event="click" for="courseManagerPanel">
-				<f:param name="mode" value="'hide'" />
-			</p:effect>
-			<p:effect type="fade" event="click" for="courseOrderButton">
-				<f:param name="mode" value="'show'" />
-			</p:effect>
-		</p:button>
+	<p:outputPanel id="coursePanel" widgetVar="coursePanelWidget"
+		autoUpdate="true">
+		<p:panel visible="#{userLoginView.loggedIn}">
+			<p:button id="courseOrderButton" icon="ui-icon-plus"
+				value="Kurse zuordnen" onclick="return false">
+				<p:effect type="fade" event="click" for="courseManagerPanel">
+					<f:param name="mode" value="'show'" />
+				</p:effect>
+				<p:effect type="fade" event="click" for="courseOrderButton">
+					<f:param name="mode" value="'hide'" />
+				</p:effect>
+			</p:button>
+
+			<p:outputPanel id="courseManagerPanel" layout="block"
+				style="display:none">
+
+				<p:button value="abbrechen" onclick="return false"
+					style="margin-left:5px;">
+					<p:effect type="fade" event="click" for="courseManagerPanel">
+						<f:param name="mode" value="'hide'" />
+					</p:effect>
+					<p:effect type="fade" event="click" for="courseOrderButton">
+						<f:param name="mode" value="'show'" />
+					</p:effect>
+				</p:button>
 
 
-		<p:outputPanel id="courseManager">
-		<div class="ui-grid-row">
-			<div class="ui-grid-col-4 centered">
-				<h5>Wählen Sie bitte einen Kurs aus: </h5>
-				<div class="marginTop">
-					<p:autoComplete maxResults="10"
-						value="#{courseCompetenceView.selectedCourse}"
-						completeMethod="#{courseCompetenceView.complete}"
-						converter="userCourseListItemConverter"
-						dropdown="true" var="userCourseListItem"
-						itemLabel="#{userCourseListItem.name}" itemValue="#{userCourseListItem}" >
-						<p:ajax event="itemSelect" update="courseManager" />
-					</p:autoComplete>
-				</div>
-				<br />
-				<div>
-					<h:outputText value=" Sie haben den Kurs #{courseCompetenceView.selectedCourse.name} ausgewählt." 
-								rendered="#{courseCompetenceView.selectedCourse != null}"/>
-				</div>
-			</div>
-			
-			<p:outputPanel id="competenceSelecteTree" rendered="#{courseCompetenceView.selectedCourse != null}">
-				<div class="ui-grid-col-4 border-left-right">
-					<h5>Wählen Sie bitte die Kompetenzen aus: </h5>
-					<div class="marginTop">
-						<p:scrollPanel mode="native" style="width:auto;height:300px">
-						<p:tree value="#{courseCompetenceView.root}" var="node" 
-							selectionMode="checkbox" selection="#{courseCompetenceView.selectedNodes}"
-							dynamic="true" style="width:100%">
-							<p:treeNode >
-								<h:outputText value="#{node}" />
-							</p:treeNode>
-						</p:tree>
-						</p:scrollPanel>
+				<p:outputPanel id="courseManager">
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-4 centered">
+							<h5>Wählen Sie bitte einen Kurs aus:</h5>
+							<div class="marginTop">
+								<p:autoComplete maxResults="10"
+									value="#{courseCompetenceView.selectedCourse}"
+									completeMethod="#{courseCompetenceView.complete}"
+									converter="userCourseListItemConverter" dropdown="true"
+									var="userCourseListItem" itemLabel="#{userCourseListItem.name}"
+									itemValue="#{userCourseListItem}">
+									<p:ajax event="itemSelect" update="courseManager" />
+								</p:autoComplete>
+							</div>
+							<br />
+							<div>
+								<h:outputText
+									value=" Sie haben den Kurs #{courseCompetenceView.selectedCourse.name} ausgewählt."
+									rendered="#{courseCompetenceView.selectedCourse != null}" />
+							</div>
+						</div>
+
+						<p:outputPanel id="competenceSelecteTree"
+							rendered="#{courseCompetenceView.selectedCourse != null}">
+							<div class="ui-grid-col-4 border-left-right">
+								<h5>Wählen Sie bitte die Kompetenzen aus:</h5>
+								<div class="marginTop">
+									<p:scrollPanel mode="native" style="width:auto;height:300px">
+										<p:tree value="#{courseCompetenceView.root}" var="node"
+											selectionMode="checkbox"
+											selection="#{courseCompetenceView.selectedNodes}"
+											dynamic="true" style="width:100%">
+											<p:treeNode>
+												<h:outputText value="#{node}" />
+											</p:treeNode>
+										</p:tree>
+									</p:scrollPanel>
+								</div>
+							</div>
+							<div class="ui-grid-col-3 centered">
+								<br /> <br /> <br />
+								<p:commandButton value="Kurs zuordnen"
+									update="competencePanelViewForCourse"
+									actionListener="#{courseCompetenceView.courseCompetenceCollate}" />
+							</div>
+						</p:outputPanel>
 					</div>
-				</div>
-				<div class="ui-grid-col-3 centered">
-<!-- 					<h5>Anforderung für Kurs #{courseCompetenceView.selectedCourse.name}:</h5> -->
-<!-- 					<p:inputTextarea value="#{courseCompetenceView.requirement}" /> -->
-					
-					<br /><br /><br />
-					<p:commandButton value="Kurs zuordnen"
-							update="competencePanelViewForCourse" 
-							actionListener="#{courseCompetenceView.courseCompetenceCollate}" />
-				</div>
+				</p:outputPanel>
 			</p:outputPanel>
-		</div>
-		</p:outputPanel>
-		</p:outputPanel>
-		
-		
-		<hr />
-		<p:outputPanel id="competencenListFromCourse" autoUpdate="true">
-		<ui:repeat var="entry" value="#{courseCompetenceView.courseKeyMap.entrySet().toArray()}">
-			<h5><h:outputText value="Kompetenzenliste von #{entry.key.name} : " /></h5>
-<!-- 			<p:commandButton value="kurs löschen" /> -->
-<!-- 			<p>Anforderungen: #{courseCompetenceView.requirementFromCourse(entry.key.courseid)}</p> -->
-<!-- 			<ul> -->
-			<div class="ui-grid ui-grid-fixed">
-				<ui:repeat var="competence" value="#{entry.value}">
-<!-- 					<li> -->
-<!-- 						<div></div> -->
-					<div class="ui-grid-row" style="margin-left:20px; margin-bottom:10px">
-						<div class="ui-grid-col-4">
-							<h:outputText value="#{competence}" />
-						</div>
-						<div class="ui-grid-col-3">
-							<p:commandButton value="löschen" >
-								<p:ajax event="click"
-									listener="#{courseCompetenceView.deleteCompetenceFromCourse(competence,entry.key.courseid)}"></p:ajax>
-							</p:commandButton>
-	<!-- 					</li> -->
-						</div>
+
+			<hr />
+			<p:outputPanel id="competencenListFromCourse">
+				<p:dataList var="entry"
+					value="#{courseCompetenceView.courseKeyMap.entrySet().toArray()}">
+					<h5>
+						<h:outputText value="Kompetenzenliste von #{entry.key.name} : " />
+					</h5>
+					<div class="ui-grid ui-grid-fixed">
+						<p:dataList var="competence" value="#{entry.value}">
+							<p:outputLabel value="#{competence}" />
+						</p:dataList>
+						<p:commandButton value="löschen">
+							<p:ajax event="click"
+								listener="#{courseCompetenceView.deleteCompetenceFromCourse(competence,entry.key.courseid)}"></p:ajax>
+						</p:commandButton>
 					</div>
-				</ui:repeat>
-			</div>
-<!-- 			</ul> -->
-		</ui:repeat>
-		</p:outputPanel>
+				</p:dataList>
+			</p:outputPanel>
+		</p:panel>
 	</p:outputPanel>
 </ui:composition>
