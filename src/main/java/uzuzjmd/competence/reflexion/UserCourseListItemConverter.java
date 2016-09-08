@@ -15,6 +15,8 @@ public class UserCourseListItemConverter implements Converter{
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String value) {
+		
+		System.err.println("entering converter");
 		if(StringUtils.isEmpty(value))
 			return null;
 		
@@ -25,14 +27,19 @@ public class UserCourseListItemConverter implements Converter{
 				result = c;
 			}
 		}
+		
+		System.err.println("leaving converter");		
 		return result;
 	}
 
 	@Override
 	public String getAsString(FacesContext context, UIComponent component,
 			Object value) {
+		
+		System.err.println("entering converter");
 		if(value == null)
 			return null;
+		System.err.println("leaving converter");
 		return ((UserCourseListItem) value).getName();
 	}
 

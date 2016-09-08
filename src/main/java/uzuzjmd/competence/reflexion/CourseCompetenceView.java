@@ -2,17 +2,21 @@ package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -20,9 +24,11 @@ import javax.faces.event.ActionListener;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.PrimeFacesContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import uzuzjmd.competence.reflexion.dao.CompetenceDao;
 import uzuzjmd.competence.reflexion.dao.CourseDao;
 import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
@@ -53,25 +59,31 @@ public class CourseCompetenceView implements Serializable {
 	private TreeNode root;
 	private TreeNode[] selectedNodes;
 	private String requirement;
-
-//	@ManagedProperty("#{userLoginView}")
-//	private UserLoginView userLoginView;
-//
-//	public UserLoginView getUserLoginView() {
-//		return userLoginView;
-//	}
-//
-//	public void setUserLoginView(UserLoginView userLoginView) {
-//		this.userLoginView = userLoginView;
-//	}
+	private Boolean showCompetenceForCourse;
+	private List<String> selectedCompetences;
 
 	@PostConstruct
-	public void init() {
-		//update();
+	public void init() {		
 		root = new DefaultTreeNode("Root", null);
 		courses = new ArrayList<UserCourseListItem>();
 		courseKeyMap = new HashMap<UserCourseListItem, List<String>>();
+		showCompetenceForCourse = false;		
 	}
+	
+	public void connectCourseAndCompetences() {						
+		
+		for (String selectedCompetence : selectedCompetences) {
+			CourseDao.addSuggestedCourseForCompetence(selectedCompetence, selectedCourse.getCourseid()+"");
+		}
+		
+		System.err.println(selectedCompetences + "  "+ selectedCourse.getCourseid()+ " connnected");		
+		showLinkMessage();
+	}
+	
+    public void showLinkMessage() {
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "It worked", "It maybe worked");         
+        RequestContext.getCurrentInstance().showMessageInDialog(message);
+    }
 
 	public void update(String username, String password) {									
 			courses.addAll(CourseDao.getCourseFromUser(MOODLE,
@@ -109,8 +121,6 @@ public class CourseCompetenceView implements Serializable {
 
 	public String requirementFromCourse(String course) {
 		final String requirement = CourseDao.getRequirementFromCourse(course);
-		// System.out.println("requirement from Course with id " + course + " "
-		// + requirement);
 		return requirement;
 	}
 
@@ -146,27 +156,43 @@ public class CourseCompetenceView implements Serializable {
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
 		createTreeNode(learningTemplateResultSet);
 	}
+	
+	
+	public List<String> completeCompetence(final String query) {		
+		List<String> tmp = CompetenceDao.getSubCompetences("Kompetenz", query).getData();
+		Collection<String> result = Collections2.filter(tmp, new Predicate<String>() {
+
+			@Override
+			public boolean apply(String arg0) {
+				if (arg0.contains(query)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
+		
+		return new LinkedList<String>(result);
+	}
+	
 
 	public List<UserCourseListItem> complete(final String query) {
+		System.err.println(this.courses.size() + " loaded");		
 		final List<UserCourseListItem> results = new ArrayList<UserCourseListItem>();
 		final Collection<UserCourseListItem> tmp = Collections2.filter(courses,
 				new Predicate<UserCourseListItem>() {
-
 					@Override
 					public boolean apply(UserCourseListItem arg0) {
 						final String courseName = arg0.getName();
-						if (StringUtils.isEmpty(query)) {
-							return true;
-						}
-						return StringUtils.equals(courseName, query);
+						return courseName.contains(query);
 					}
 				});
 		results.addAll(tmp == null ? new ArrayList<UserCourseListItem>() : tmp);
-
+		System.err.println("returning " + results.size() + "courses");		
 		return results;
 	}
 
-	public List<UserCourseListItem> getCourses() {
+	public List<UserCourseListItem> getCourses() {		
 		return courses;
 	}
 
@@ -240,6 +266,22 @@ public class CourseCompetenceView implements Serializable {
 							.getCourseid())));
 			courseKeyMap.put(course, competences);
 		}
+	}
+
+	public Boolean getShowCompetenceForCourse() {
+		return showCompetenceForCourse;
+	}
+
+	public void setShowCompetenceForCourse(Boolean showCompetenceForCourse) {
+		this.showCompetenceForCourse = showCompetenceForCourse;
+	}
+
+	public List<String> getSelectedCompetences() {
+		return selectedCompetences;
+	}
+
+	public void setSelectedCompetences(List<String> selectedCompetences) {
+		this.selectedCompetences = selectedCompetences;
 	}
 
 	

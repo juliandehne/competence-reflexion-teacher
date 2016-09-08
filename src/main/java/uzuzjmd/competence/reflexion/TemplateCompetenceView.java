@@ -51,8 +51,7 @@ public class TemplateCompetenceView implements Serializable{
 
 	@PostConstruct
 	public void init() {
-		learningTemplateResultSet = null;
-		
+		learningTemplateResultSet = null;		
 		competencenTreeView.update(learningTemplateResultSet);
 	}
 

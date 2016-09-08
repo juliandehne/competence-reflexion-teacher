@@ -23,7 +23,7 @@ import datastructures.trees.HierarchyChangeSet;
 public class CompetenceDao {
 
 	public static void addCompetenceStringGiven(String competence,
-			String learningTemplate, List<String> catchwords, String operator) {		
+			String learningTemplate, List<String> catchwords, String operator) {
 		CompetenceData data = new CompetenceData();
 		data.setCatchwords(catchwords);
 		if (catchwords.isEmpty()) {
@@ -64,52 +64,75 @@ public class CompetenceDao {
 		System.err.println(result.getStatus() + " for update hierarchy 2");
 	}
 
-//	public static HashSet<String> getSubCompetences(String superCompetence) {
-//		HashSet<String> result1 = new HashSet<String>();
-//		if (superCompetence != null && !superCompetence.trim().equals("")) {
-//			final StringBuilder url = new StringBuilder();
-//			url.append(AppUtil.getBaseUrl()).append("/api1/competences");
-//			System.err.println("getting subcompetences 2 with url:" + url);
-//			Client client = ClientBuilder.newClient();
-//			try {
-//			java.util.List<CompetenceXMLTree> result = client
-//					.target(url.toString()).queryParam("asTree", true)
-//					.request(MediaType.APPLICATION_XML)
-//					.get(java.util.List.class);
-//			// .queryParam("rootCompetence", superCompetence).
-//						// queryParam("courseId", "university").
-//						System.err.println("result is" + result.toString());
-//						if (result1 != null) {
-//							SortedList<CompetenceXMLTree> children = result.iterator()
-//									.next().getChildren();
-//							for (CompetenceXMLTree competenceXMLTree : children) {
-//								result1.add(competenceXMLTree.getName());
-//							}
-//						}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}			
-//		}
-//		return result1;
-//	}
-	
+	// public static HashSet<String> getSubCompetences(String superCompetence) {
+	// HashSet<String> result1 = new HashSet<String>();
+	// if (superCompetence != null && !superCompetence.trim().equals("")) {
+	// final StringBuilder url = new StringBuilder();
+	// url.append(AppUtil.getBaseUrl()).append("/api1/competences");
+	// System.err.println("getting subcompetences 2 with url:" + url);
+	// Client client = ClientBuilder.newClient();
+	// try {
+	// java.util.List<CompetenceXMLTree> result = client
+	// .target(url.toString()).queryParam("asTree", true)
+	// .request(MediaType.APPLICATION_XML)
+	// .get(java.util.List.class);
+	// // .queryParam("rootCompetence", superCompetence).
+	// // queryParam("courseId", "university").
+	// System.err.println("result is" + result.toString());
+	// if (result1 != null) {
+	// SortedList<CompetenceXMLTree> children = result.iterator()
+	// .next().getChildren();
+	// for (CompetenceXMLTree competenceXMLTree : children) {
+	// result1.add(competenceXMLTree.getName());
+	// }
+	// }
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// return result1;
+	// }
+
 	public static StringList getSubCompetences(String superCompetence) {
+		return getSubCompetences(superCompetence, null);
+	}
+
+	public static StringList getSubCompetences(String superCompetence,
+			String textfilter) {
 		if (superCompetence != null && !superCompetence.trim().equals("")) {
 			final StringBuilder url = new StringBuilder();
 			url.append(AppUtil.getBaseUrl()).append("/api1/competences");
 			System.err.println("getting subcompetences 3 with url:" + url);
 			try {
-			Client client = ClientBuilder.newClient();		
-			List<String> result = client
-					.target(url.toString()).queryParam("asTree", false).queryParam("rootCompetence", superCompetence)
-					.request()
-					.get(List.class);
-			System.err.println("result for subs is:" + result.toString());
-			return new StringList(result);
+				Client client = ClientBuilder.newClient();
+				List<String> result = client.target(url.toString())
+						.queryParam("asTree", false)
+						.queryParam("textFilter", textfilter)
+						.queryParam("rootCompetence", superCompetence)
+						.request().get(List.class);
+				System.err.println("result for subs is:" + result.toString());
+				return new StringList(result);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return new StringList();
 	}
+
+//	public static void linkCompetencesAndCourse(List<String> competences,
+//			String course) {
+//		final StringBuilder url = new StringBuilder();
+//		url.append(AppUtil.getBaseUrl()).append(
+//				"/SuggestedCourseForCompetence/create");
+//		System.err.println("linking with url" + url.toString());
+//		Client client = ClientBuilder.newClient();
+//
+//		for (String competence : competences) {
+//			Response result = client.target(url.toString())
+//					.queryParam("competence", competence)
+//					.queryParam("course", "course")
+//					.request(MediaType.APPLICATION_JSON).post(null);
+//		}
+//		
+//	}
 }
