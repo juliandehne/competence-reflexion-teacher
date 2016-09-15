@@ -17,23 +17,24 @@ import javax.faces.event.ActionEvent;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+
+import uzuzjmd.competence.reflexion.dao.ActivityDao;
+import uzuzjmd.competence.reflexion.util.GraphUtil;
+import uzuzjmd.competence.shared.activity.ActivityTyp;
+import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
+import uzuzjmd.competence.shared.moodle.UserTree;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
-import uzuzjmd.competence.reflexion.dao.ActivityDao;
-import uzuzjmd.competence.reflexion.util.AppUtil;
-import uzuzjmd.competence.reflexion.util.GraphUtil;
-import datastructures.trees.AbstractTreeEntry;
-import datastructures.trees.ActivityEntry;
-import uzuzjmd.competence.shared.activity.ActivityTyp;
 import datastructures.graph.Graph;
 import datastructures.graph.GraphNode;
 import datastructures.graph.GraphTriple;
-import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
-import uzuzjmd.competence.shared.moodle.UserTree;
+import datastructures.trees.AbstractTreeEntry;
+import datastructures.trees.ActivityEntry;
 
 @ManagedBean(name = "activityCompetenceView")
 @ViewScoped
@@ -55,6 +56,10 @@ public class ActivityCompetenceView implements Serializable {
 	@ManagedProperty("#{courseCompetenceView}")
 	private CourseCompetenceView courseCompetenceView;
 
+	private String userName;
+
+	private String password;
+
 	public void setCourseCompetenceView(
 			CourseCompetenceView courseCompetenceView) {
 		this.courseCompetenceView = courseCompetenceView;
@@ -73,17 +78,30 @@ public class ActivityCompetenceView implements Serializable {
 	}
 
 	public void update(String userName, String password) {
+		this.userName = userName;
+		this.password = password;
 		activityMap = new HashMap<AbstractTreeEntry, List<String>>();
-		activities = ActivityDao.getActivityFromCourse("15", MOODLE, userName,
-				null, password, false);
-		createActivityTree();
+		
 	}
 
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
 		createCompetenceTreeNode(learningTemplateResultSet);
 	}
 
+	public void activityCompetenceCollate(SelectEvent e) {
+		fillActivityTree();
+	}
+	
 	public void activityCompetenceCollate(ActionEvent e) {
+		fillActivityTree();
+	}
+
+
+	private void fillActivityTree() {
+		activities = ActivityDao.getActivityFromCourse(courseCompetenceView.getSelectedCourse().getCourseid() +"", MOODLE, userName,
+				null, password, false);
+		createActivityTree();
+		
 		final List<String> competences = new ArrayList<String>();
 		try {
 			for (TreeNode node : selectedKompetenceNodes) {
@@ -97,7 +115,9 @@ public class ActivityCompetenceView implements Serializable {
 		} catch (Exception ex) {
 			// todo find out wtf
 		}
+	}
 
+	public void writeConnection() {
 		List<String> competencesSelected = courseCompetenceView
 				.getSelectedCompetences();
 		for (String selectedCompetence : competencesSelected) {
@@ -114,6 +134,8 @@ public class ActivityCompetenceView implements Serializable {
 			}
 		}
 	}
+	
+	
 
 	public List<UserTree> getActivities() {
 		return activities;

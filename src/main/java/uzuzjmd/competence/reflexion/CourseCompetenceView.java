@@ -136,7 +136,6 @@ public class CourseCompetenceView implements Serializable {
 			}
 			node.setSelected(false);
 		}
-
 		addCompetencenIntoCourseMap(selectedCourse, competences);
 		selectedCourse = null;
 		requirement = null;

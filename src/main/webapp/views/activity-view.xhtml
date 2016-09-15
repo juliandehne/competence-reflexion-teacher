@@ -16,14 +16,14 @@
 					converter="userCourseListItemConverter" dropdown="true"
 					var="userCourseListItem" itemLabel="#{userCourseListItem.name}"
 					itemValue="#{userCourseListItem}">
-					<p:ajax event="itemSelect" update="competenceManager2" />
+					<p:ajax event="itemSelect" update="competenceManager2,activityTree" listener="#{activityCompetenceView.activityCompetenceCollate}"/>
 				</p:autoComplete>
 			</div>
 			<br />
 		</p:outputPanel>
 
 		<h5>Wählen Sie bitte einen Aktivität aus:</h5>
-		<p:tree value="#{activityCompetenceView.activityTreeRoot}" var="node"
+		<p:tree value="#{activityCompetenceView.activityTreeRoot}" var="node" id="activityTree"
 			selectionMode="single"
 			selection="#{activityCompetenceView.selectedActivityNode}"
 			dynamic="false" style="width:100%">
@@ -59,7 +59,7 @@
 			</ul>
 			<p:commandButton value="Aktivität zuordnen"
 				update="competencePanelViewForActivity"
-				actionListener="#{activityCompetenceView.activityCompetenceCollate}" />
+				actionListener="#{activityCompetenceView.writeConnection}" />
 		</p:outputPanel>
 		<hr />
 		<div>
