@@ -26,8 +26,20 @@ public class UserLoginView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	
+	@ManagedProperty(value="#{activityCompetenceView}")
+	private ActivityCompetenceView activityCompetenceView;
+	
 	@ManagedProperty(value="#{courseCompetenceView}")
 	private CourseCompetenceView courseCompetenceView;
+	
+	public void setActivityCompetenceView(
+			ActivityCompetenceView activityCompetenceView) {
+		this.activityCompetenceView = activityCompetenceView;
+	}
+	
+	public ActivityCompetenceView getActivityCompetenceView() {
+		return activityCompetenceView;
+	}
 	
 	public void setCourseCompetenceView(
 			CourseCompetenceView courseCompetenceView) {
@@ -95,6 +107,7 @@ public class UserLoginView implements Serializable {
         if(loggedIn) {            
             message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Welcome", username);
             courseCompetenceView.update(username, password);
+            activityCompetenceView.update(username, password);
         } else {
             loggedIn = false;
             message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Loggin Error", "Invalid credentials");

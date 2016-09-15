@@ -2,43 +2,31 @@ package uzuzjmd.competence.reflexion;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.context.PrimeFacesContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import uzuzjmd.competence.reflexion.dao.CompetenceDao;
 import uzuzjmd.competence.reflexion.dao.CourseDao;
-import uzuzjmd.competence.reflexion.util.AppUtil;
 import uzuzjmd.competence.reflexion.util.GraphUtil;
 import uzuzjmd.competence.shared.learningtemplate.LearningTemplateResultSet;
 import uzuzjmd.competence.shared.moodle.UserCourseListItem;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 
 import datastructures.graph.Graph;
 import datastructures.graph.GraphNode;
@@ -49,47 +37,61 @@ import datastructures.graph.GraphTriple;
 public class CourseCompetenceView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
 	private static final String MOODLE = "moodle";
-	
 	private Map<UserCourseListItem, List<String>> courseKeyMap;
 	private List<UserCourseListItem> courses;
 
+	//
 	private UserCourseListItem selectedCourse;
 	private TreeNode root;
 	private TreeNode[] selectedNodes;
 	private String requirement;
 	private Boolean showCompetenceForCourse;
+	//
 	private List<String> selectedCompetences;
 
+	public CourseCompetenceView() {		
+	}
+
 	@PostConstruct
-	public void init() {		
+	public void init() {
+		System.err.println("initializing coursecompetenceview bean");
 		root = new DefaultTreeNode("Root", null);
 		courses = new ArrayList<UserCourseListItem>();
 		courseKeyMap = new HashMap<UserCourseListItem, List<String>>();
-		showCompetenceForCourse = false;		
+		showCompetenceForCourse = false;
 	}
-	
-	public void connectCourseAndCompetences() {						
-		
+
+//	public void showCompetenceSelected() {
+//		System.err.println(selectedCompetences.iterator().next());
+//		System.err.println(selectedCourse.getName() + " is selected");
+//	}
+//
+//	public void showCourseSelected() {
+//		System.err.println(selectedCourse.getName() + " is selected");
+//		if (selectedCompetences != null) {
+//			System.err.println(selectedCompetences.iterator().next());
+//		}
+//	}
+
+	public void connectCourseAndCompetences(ActionEvent e) {
 		for (String selectedCompetence : selectedCompetences) {
-			CourseDao.addSuggestedCourseForCompetence(selectedCompetence, selectedCourse.getCourseid()+"");
+			CourseDao.addSuggestedCourseForCompetence(selectedCompetence,
+					selectedCourse.getCourseid() + "");
 		}
-		
-		System.err.println(selectedCompetences + "  "+ selectedCourse.getCourseid()+ " connnected");		
 		showLinkMessage();
 	}
-	
-    public void showLinkMessage() {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "It worked", "It maybe worked");         
-        RequestContext.getCurrentInstance().showMessageInDialog(message);
-    }
 
-	public void update(String username, String password) {									
-			courses.addAll(CourseDao.getCourseFromUser(MOODLE,
-					username, null,
-					password));
-			getCourseCompetenceMap();			
+	public void showLinkMessage() {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"It worked", "It maybe worked");
+		RequestContext.getCurrentInstance().showMessageInDialog(message);
+	}
+
+	public void update(String username, String password) {
+		courses.addAll(CourseDao.getCourseFromUser(MOODLE, username, null,
+				password));
+		getCourseCompetenceMap();
 	}
 
 	public Map<UserCourseListItem, List<String>> getCourseKeyMap() {
@@ -156,28 +158,27 @@ public class CourseCompetenceView implements Serializable {
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
 		createTreeNode(learningTemplateResultSet);
 	}
-	
-	
-	public List<String> completeCompetence(final String query) {		
-		List<String> tmp = CompetenceDao.getSubCompetences("Kompetenz", query).getData();
-		Collection<String> result = Collections2.filter(tmp, new Predicate<String>() {
 
-			@Override
-			public boolean apply(String arg0) {
-				if (arg0.contains(query)) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-		});
-		
+	public List<String> completeCompetence(final String query) {
+		List<String> tmp = CompetenceDao.getSubCompetences("Kompetenz", query)
+				.getData();
+		Collection<String> result = Collections2.filter(tmp,
+				new Predicate<String>() {
+
+					@Override
+					public boolean apply(String arg0) {
+						if (arg0.contains(query)) {
+							return true;
+						} else {
+							return false;
+						}
+					}
+				});
+
 		return new LinkedList<String>(result);
 	}
-	
 
-	public List<UserCourseListItem> complete(final String query) {
-		System.err.println(this.courses.size() + " loaded");		
+	public List<UserCourseListItem> complete(final String query) {		
 		final List<UserCourseListItem> results = new ArrayList<UserCourseListItem>();
 		final Collection<UserCourseListItem> tmp = Collections2.filter(courses,
 				new Predicate<UserCourseListItem>() {
@@ -187,12 +188,11 @@ public class CourseCompetenceView implements Serializable {
 						return courseName.contains(query);
 					}
 				});
-		results.addAll(tmp == null ? new ArrayList<UserCourseListItem>() : tmp);
-		System.err.println("returning " + results.size() + "courses");		
+		results.addAll(tmp == null ? new ArrayList<UserCourseListItem>() : tmp);		
 		return results;
 	}
 
-	public List<UserCourseListItem> getCourses() {		
+	public List<UserCourseListItem> getCourses() {
 		return courses;
 	}
 
@@ -284,5 +284,4 @@ public class CourseCompetenceView implements Serializable {
 		this.selectedCompetences = selectedCompetences;
 	}
 
-	
 }

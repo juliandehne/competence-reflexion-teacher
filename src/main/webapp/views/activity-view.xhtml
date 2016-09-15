@@ -1,68 +1,75 @@
-<ui:composition 
-			xmlns="http://www.w3.org/1999/xhtml"
-			xmlns:c="http://java.sun.com/jsp/jstl/core"
-			xmlns:f="http://java.sun.com/jsf/core"
-			xmlns:h="http://java.sun.com/jsf/html"
-			xmlns:p="http://primefaces.org/ui"
-			xmlns:ui="http://java.sun.com/jsf/facelets"
-			xmlns:pe="http://primefaces.org/ui/extensions">
-	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
 	<p:outputPanel id="competencePanelViewForActivity">
-	
-		<div class="ui-grid-row">
-			<div class="ui-grid-col-4">
-				<h5>Wählen Sie bitte einen Aktivität aus: </h5>
-				<p:tree value="#{activityCompetenceView.activityTreeRoot}" var="node" 
-					selectionMode="single" selection="#{activityCompetenceView.selectedActivityNode}"
-					dynamic="true" style="width:100%">
-					<p:treeNode >
-						<h:outputText value="#{node.name}" />
-					</p:treeNode>
-				</p:tree>
-				<div class="pull-right marginTop">
-					<p:commandButton value="Aktivität auswählen" update="competencePanelViewForActivity" />
-				</div>
+		<p:outputPanel id="courseManager2">
+			<h5>Wählen Sie bitte einen Kurs aus:</h5>
+			<div class="marginTop">
+				<p:autoComplete maxResults="10"
+					value="#{courseCompetenceView.selectedCourse}"
+					completeMethod="#{courseCompetenceView.complete}"
+					converter="userCourseListItemConverter" dropdown="true"
+					var="userCourseListItem" itemLabel="#{userCourseListItem.name}"
+					itemValue="#{userCourseListItem}">
+					<p:ajax event="itemSelect" update="competenceManager2" />
+				</p:autoComplete>
 			</div>
-			
-			<p:outputPanel id="competenceActivitySelecteTree" rendered="#{activityCompetenceView.selectedActivityNode != null}">
-				<div class="ui-grid-col-4 border-left-right">
-					<h5>Wählen Sie bitte die Kompetenzen aus: </h5>
-					<div class="marginTop">
-						<p:scrollPanel mode="native" style="width:auto;height:300px">
-						<p:tree value="#{activityCompetenceView.competenceTreeRoot}" var="node" 
-							selectionMode="checkbox" selection="#{activityCompetenceView.selectedKompetenceNodes}"
-							dynamic="true" style="width:100%">
-							<p:treeNode >
-								<h:outputText value="#{node}" />
-							</p:treeNode>
-						</p:tree>
-						</p:scrollPanel>
-					</div>
+			<br />
+		</p:outputPanel>
+
+		<h5>Wählen Sie bitte einen Aktivität aus:</h5>
+		<p:tree value="#{activityCompetenceView.activityTreeRoot}" var="node"
+			selectionMode="single"
+			selection="#{activityCompetenceView.selectedActivityNode}"
+			dynamic="false" style="width:100%">
+			<p:treeNode>
+				<h:outputText value="#{node.name}" />
+			</p:treeNode>
+		</p:tree>
+
+		<p:commandButton value="Aktivität auswählen"
+			update="competencePanelViewForActivity" />
+		<p:outputPanel id="competenceActivitySelecteTree">
+			<p:outputPanel id="competenceManager2">
+				<h5>Wählen Sie bitte Kompetenzen aus (einfach tippen):</h5>
+				<div class="marginTop">
+					<p:autoComplete maxResults="10"
+						value="#{courseCompetenceView.selectedCompetences}"
+						completeMethod="#{courseCompetenceView.completeCompetence}"
+						multiple="true">
+						<!-- 				<p:ajax event="itemSelect" update="competenceSelecteTree" /> -->
+					</p:autoComplete>
 				</div>
-				
-				<div class="ui-grid-col-3 centered">
-					<div>
-						<h:outputText value="ausgewählte Aktivität: #{activityCompetenceView.selectedActivityNode.data.name}" />
-					</div>
-					<ul>
-						<ui:repeat var="selectedCompetence" value="#{activityCompetenceView.selectedKompetenceNodes}">
-							<li><h:outputText value="#{selectedCompetence}" /></li>
-						</ui:repeat>
-					</ul>
-					<p:commandButton value="Aktivität zuordnen" update="competencePanelViewForActivity" 
-						actionListener="#{activityCompetenceView.activityCompetenceCollate}"/>
-				</div>
+				<br />
 			</p:outputPanel>
-		</div>
-		
+			<div>
+				<h:outputText
+					value="ausgewählte Aktivität: #{activityCompetenceView.selectedActivityNode.data.name}" />
+			</div>
+			<ul>
+				<ui:repeat var="selectedCompetence"
+					value="#{activityCompetenceView.selectedKompetenceNodes}">
+					<li><h:outputText value="#{selectedCompetence}" /></li>
+				</ui:repeat>
+			</ul>
+			<p:commandButton value="Aktivität zuordnen"
+				update="competencePanelViewForActivity"
+				actionListener="#{activityCompetenceView.activityCompetenceCollate}" />
+		</p:outputPanel>
 		<hr />
-		
 		<div>
-			<ui:repeat var="entry" value="#{activityCompetenceView.activityMap.entrySet().toArray()}">
+			<ui:repeat var="entry"
+				value="#{activityCompetenceView.activityMap.entrySet().toArray()}">
 				<div class="ui-grid-row">
 					<h5>
 						<img src="#{entry.key.icon}" />
-						<h:outputText value="Kompetenzenliste von Lernaktivität #{entry.key.name} : " />
+						<h:outputText
+							value="Kompetenzenliste von Lernaktivität #{entry.key.name} : " />
 					</h5>
 					<ul>
 						<ui:repeat var="competence" value="#{entry.value}">
@@ -72,5 +79,5 @@
 				</div>
 			</ui:repeat>
 		</div>
-	</p:outputPanel>		
+	</p:outputPanel>
 </ui:composition>

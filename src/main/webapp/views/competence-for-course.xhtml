@@ -14,35 +14,44 @@
 	<!-- 		<p:ajax update="coursePanel" /> -->
 	<!-- 	</p:selectBooleanButton> -->
 
-	<p:outputPanel id="courseManager">
-		<h5>Wählen Sie bitte einen Kurs aus:</h5>
-		<div class="marginTop">
-			<p:autoComplete maxResults="10"
-				value="#{courseCompetenceView.selectedCourse}"
-				completeMethod="#{courseCompetenceView.complete}"
-				converter="userCourseListItemConverter" dropdown="true"
-				var="userCourseListItem" itemLabel="#{userCourseListItem.name}"
-				itemValue="#{userCourseListItem}">				
-			</p:autoComplete>
-		</div>
-		<br />	
-	</p:outputPanel>
-	
-	<p:outputPanel id="competenceManager">
-		<h5>Wählen Sie bitte Kompetenzen aus (einfach tippen):</h5>
-		<div class="marginTop">
-			<p:autoComplete maxResults="10"
-				value="#{courseCompetenceView.selectedCompetences}"
-				completeMethod="#{courseCompetenceView.completeCompetence}"												
-				multiple="true"
-				>
-<!-- 				<p:ajax event="itemSelect" update="competenceSelecteTree" /> -->
-			</p:autoComplete>
-		</div>
-		<br />		
-	</p:outputPanel>
-	
-	<p:commandButton update="coursePanel" value="verknüpfen" actionListener="#{courseCompetenceView.connectCourseAndCompetences}"></p:commandButton>	
+	<div>
+		<p:outputPanel id="courseManager">
+			<h5>Wählen Sie bitte einen Kurs aus:</h5>
+			<div class="marginTop">
+				<p:autoComplete maxResults="10"
+					value="#{courseCompetenceView.selectedCourse}"
+					completeMethod="#{courseCompetenceView.complete}"
+					converter="userCourseListItemConverter" dropdown="true"
+					var="userCourseListItem" itemLabel="#{userCourseListItem.name}"
+					itemValue="#{userCourseListItem}">
+<!-- 					<p:ajax event="itemSelect" -->
+<!-- 						listener="#{courseCompetenceView.showCourseSelected}" /> -->
+				</p:autoComplete>
+			</div>
+			<br />
+		</p:outputPanel>
+
+		<p:outputPanel id="competenceManager">
+			<h5>Wählen Sie bitte Kompetenzen aus (einfach tippen):</h5>
+			<div class="marginTop">
+				<p:autoComplete maxResults="10"
+					value="#{courseCompetenceView.selectedCompetences}"
+					completeMethod="#{courseCompetenceView.completeCompetence}"
+					multiple="true">
+<!-- 					<p:ajax event="itemSelect" -->
+<!-- 						listener="#{courseCompetenceView.showCompetenceSelected}" /> -->
+				</p:autoComplete>
+			</div>
+			<br />
+
+			<p:commandButton process="courseManager,competenceManager"
+				actionListener="#{courseCompetenceView.connectCourseAndCompetences}"
+				value="abschicken">
+				<p:ajax update="coursePanel"></p:ajax>
+			</p:commandButton>
+		</p:outputPanel>
+
+	</div>
 
 	<!-- 	<p:panel id="competenceSelecteTree" -->
 	<!-- 		visible="#{courseCompetenceView.selectedCourse != null}"> -->

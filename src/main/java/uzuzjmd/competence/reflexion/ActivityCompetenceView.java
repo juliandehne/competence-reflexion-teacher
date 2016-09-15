@@ -3,6 +3,7 @@ package uzuzjmd.competence.reflexion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,61 +35,72 @@ import uzuzjmd.competence.shared.moodle.UserTree;
 
 @ManagedBean(name = "activityCompetenceView")
 @ViewScoped
-public class ActivityCompetenceView  implements Serializable{
-	
+public class ActivityCompetenceView implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private static final String MOODLE = "moodle";
-	
+
 	private List<UserTree> activities;
 	private Map<AbstractTreeEntry, List<String>> activityMap;
-	
+
 	private TreeNode activityTreeRoot;
 	private TreeNode competenceTreeRoot;
-	
+
 	private TreeNode[] selectedKompetenceNodes;
 	private TreeNode selectedActivityNode;
-	
-	
-	@ManagedProperty("#{userLoginView}")
-	private UserLoginView userLoginView;
 
-	public UserLoginView getUserLoginView() {
-		return userLoginView;
+	private CourseCompetenceView courseCompetenceView;
+
+	public void setCourseCompetenceView(
+			CourseCompetenceView courseCompetenceView) {
+		this.courseCompetenceView = courseCompetenceView;
 	}
-	
-	public void setUserLoginView(UserLoginView userLoginView) {
-		this.userLoginView = userLoginView;
+
+	public CourseCompetenceView getCourseCompetenceView() {
+		return courseCompetenceView;
 	}
-	
-	
-	
+
 	@PostConstruct
 	public void init() throws PortalException, SystemException {
 		activityTreeRoot = new DefaultTreeNode("Root", null);
 		competenceTreeRoot = new DefaultTreeNode("Root", null);
-		
 		activityMap = new HashMap<AbstractTreeEntry, List<String>>();
-		activities = ActivityDao.getActivityFromCourse("15", MOODLE, 
-				userLoginView.getUsername(), null, userLoginView.getPassword(), false);		
-//		createActivityTree();
+		activities = new LinkedList<UserTree>();
 	}
-	
+
+	public void update(String userName, String password) {
+		activityMap = new HashMap<AbstractTreeEntry, List<String>>();
+		activities = ActivityDao.getActivityFromCourse("15", MOODLE, userName,
+				null, password, false);
+		createActivityTree();
+	}
+
 	public void update(LearningTemplateResultSet learningTemplateResultSet) {
 		createCompetenceTreeNode(learningTemplateResultSet);
 	}
-	
+
 	public void activityCompetenceCollate(ActionEvent e) {
 		final List<String> competences = new ArrayList<String>();
-		for(TreeNode node : selectedKompetenceNodes) {
-			competences.add(node.getData().toString());
-			
-			node.setSelected(false);
+		try {
+			for (TreeNode node : selectedKompetenceNodes) {
+				competences.add(node.getData().toString());
+				node.setSelected(false);
+			}
+			activityMap.put((AbstractTreeEntry) selectedActivityNode.getData(),
+					competences);
+			selectedActivityNode.setSelected(false);
+			selectedActivityNode = null;
+		} catch (Exception ex) {
+			// todo find out wtf
 		}
-		activityMap.put((AbstractTreeEntry) selectedActivityNode.getData(), competences);
-		
-		selectedActivityNode.setSelected(false);
-		selectedActivityNode = null;
+
+		List<String> competencesSelected = courseCompetenceView
+				.getSelectedCompetences();
+		for (String selectedCompetence : competencesSelected) {
+			ActivityDao.addSuggestedActivityForCompetence(selectedCompetence,
+					selectedActivityNode.getData().toString());
+		}
 	}
 
 	public List<UserTree> getActivities() {
@@ -130,7 +142,7 @@ public class ActivityCompetenceView  implements Serializable{
 	public void setSelectedActivityNode(TreeNode selectedActivityNode) {
 		this.selectedActivityNode = selectedActivityNode;
 	}
-	
+
 	public Map<AbstractTreeEntry, List<String>> getActivityMap() {
 		return activityMap;
 	}
@@ -138,42 +150,72 @@ public class ActivityCompetenceView  implements Serializable{
 	public void setActivityMap(Map<AbstractTreeEntry, List<String>> activityMap) {
 		this.activityMap = activityMap;
 	}
-	
+
 	private void createActivityTree() {
-		for(UserTree userTree : activities) {
+		System.err.println(activities);
+		for (UserTree userTree : activities) {
 			final TreeNode userNode = new DefaultTreeNode(userTree);
 			userNode.setExpanded(true);
-			activityTreeRoot.getChildren().add(userNode);
-			for(ActivityTyp activityTyp : userTree == null ? new ArrayList<ActivityTyp>() : userTree.getActivityTypes()) {
-				final TreeNode activityTypNode = new DefaultTreeNode(activityTyp);
-				activityTypNode.setExpanded(true);
-				userNode.getChildren().add(activityTypNode);
-				for(ActivityEntry activityEntry : (CollectionUtils.isEmpty(activityTyp.getActivities()) ? new ArrayList<ActivityEntry>() : activityTyp.getActivities())) {
-					final TreeNode activityEntryNode = new DefaultTreeNode(activityEntry);
-					activityTypNode.getChildren().add(activityEntryNode);
+			if (activityTreeRoot == null) {
+				try {
+					init();
+				} catch (PortalException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				activityTreeRoot.getChildren().add(userNode);
+				try {
+					for (ActivityTyp activityTyp : userTree == null ? new ArrayList<ActivityTyp>()
+							: userTree.getActivityTypes()) {
+						final TreeNode activityTypNode = new DefaultTreeNode(
+								activityTyp);
+						activityTypNode.setExpanded(true);
+						userNode.getChildren().add(activityTypNode);
+						for (ActivityEntry activityEntry : (CollectionUtils
+								.isEmpty(activityTyp.getActivities()) ? new ArrayList<ActivityEntry>()
+								: activityTyp.getActivities())) {
+							final TreeNode activityEntryNode = new DefaultTreeNode(
+									activityEntry);
+							activityTypNode.getChildren()
+									.add(activityEntryNode);
+						}
+					}
+				} catch (Exception exception) {
+
 				}
 			}
 		}
 	}
-	
-	private void createCompetenceTreeNode(LearningTemplateResultSet learningTemplateResultSet) {
+
+	private void createCompetenceTreeNode(
+			LearningTemplateResultSet learningTemplateResultSet) {
 		try {
-		final Set<String> catchWords = GraphUtil.getAllCatchword(learningTemplateResultSet);
-		for(String catchword : catchWords) {
-			competenceTreeRoot.getChildren().add(createTreeNodeForCatchword(learningTemplateResultSet.getCatchwordMap(), catchword));
-		}
-		} catch (NullPointerException e ) {
+			final Set<String> catchWords = GraphUtil
+					.getAllCatchword(learningTemplateResultSet);
+			for (String catchword : catchWords) {
+				competenceTreeRoot.getChildren().add(
+						createTreeNodeForCatchword(
+								learningTemplateResultSet.getCatchwordMap(),
+								catchword));
+			}
+		} catch (NullPointerException e) {
 			System.err.println(e.getMessage());
 		}
 	}
-	
-	private TreeNode createTreeNodeForCatchword(Map<GraphTriple, String[]> catchwordMap,String catchword) {
-		final Graph graph = GraphUtil.getGraphForCatchword(catchwordMap, catchword);
-		
+
+	private TreeNode createTreeNodeForCatchword(
+			Map<GraphTriple, String[]> catchwordMap, String catchword) {
+		final Graph graph = GraphUtil.getGraphForCatchword(catchwordMap,
+				catchword);
+
 		final TreeNode catchwordNode = new DefaultTreeNode(catchword);
 		catchwordNode.setExpanded(true);
-		
-		for(GraphNode gn : graph.nodes) {
+
+		for (GraphNode gn : graph.nodes) {
 			catchwordNode.getChildren().add(new DefaultTreeNode(gn.getLabel()));
 		}
 		return catchwordNode;
