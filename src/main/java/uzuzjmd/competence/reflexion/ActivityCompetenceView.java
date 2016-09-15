@@ -9,12 +9,14 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -50,6 +52,7 @@ public class ActivityCompetenceView implements Serializable {
 	private TreeNode[] selectedKompetenceNodes;
 	private TreeNode selectedActivityNode;
 
+	@ManagedProperty("#{courseCompetenceView}")
 	private CourseCompetenceView courseCompetenceView;
 
 	public void setCourseCompetenceView(
@@ -98,8 +101,17 @@ public class ActivityCompetenceView implements Serializable {
 		List<String> competencesSelected = courseCompetenceView
 				.getSelectedCompetences();
 		for (String selectedCompetence : competencesSelected) {
-			ActivityDao.addSuggestedActivityForCompetence(selectedCompetence,
-					selectedActivityNode.getData().toString());
+			int result = ActivityDao.addSuggestedActivityForCompetence(selectedCompetence,
+					((AbstractTreeEntry)selectedActivityNode.getData()).getName());
+			if (result != 200) {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"It worked", "It maybe worked");				
+				RequestContext.getCurrentInstance().showMessageInDialog(message);
+			} else {
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"It worked", "It maybe worked");
+				RequestContext.getCurrentInstance().showMessageInDialog(message);
+			}
 		}
 	}
 
@@ -151,8 +163,7 @@ public class ActivityCompetenceView implements Serializable {
 		this.activityMap = activityMap;
 	}
 
-	private void createActivityTree() {
-		System.err.println(activities);
+	private void createActivityTree() {		
 		for (UserTree userTree : activities) {
 			final TreeNode userNode = new DefaultTreeNode(userTree);
 			userNode.setExpanded(true);
